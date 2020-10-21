@@ -1,6 +1,8 @@
 <h1 align="center">Quantization - team project</h1>
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![Run Tests](https://github.com/karlosos/image_vector_quantization/workflows/Run%20Tests/badge.svg)
+![Lint](https://github.com/karlosos/image_vector_quantization/workflows/Lint/badge.svg)
 
 ## Development
 
@@ -9,6 +11,12 @@
 3. Install packages with `pip install -r requirements.txt`.
 4. Go to `vector_quantization` subfolder.
 5. Launch application with `python main.py`.
+
+> **IMPORTANT**: on commiting *black* formatter and *flake8* will check code. To enable this checking run command `pre-commit install`.
+
+### Running tests
+
+Run tests with `pytest` in root
 
 ## LaTeX document
 
