@@ -163,3 +163,5 @@ img/output/
 *.mtc1
 *.out
 *.synctex.gz
+
+.vscode/
