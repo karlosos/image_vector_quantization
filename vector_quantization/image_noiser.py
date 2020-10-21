@@ -1,24 +1,15 @@
-from PIL import Image
-import numpy as np
-import math
+from metrics import PSNR
+from image import load_image, save_image
 
 
-def PSNR(original, compressed):
-    mse = np.mean((original - compressed) ** 2)
-    if mse == 0:  # MSE is zero means no noise is present in the signal .
-        # Therefore PSNR have no importance.
-        return 100
-    max_pixel = 255.0
-    psnr = 20 * math.log10(max_pixel / math.sqrt(mse))
-    return psnr
+def add_noise(original_image):
+    noise_image = original_image & 254
+    return noise_image
 
 
-img = Image.open("./img/input/balloon.bmp")
+if __name__ == "__main__":
+    img = load_image("balloon.bmp")
+    img_noise = add_noise(img)
 
-img_arr = np.array(img)
-img_arr_noise = img_arr & 254
-
-img_noise = Image.fromarray(img_arr_noise)
-img_noise.save("./img/input/balloon_noise.bmp")
-
-print(f"PSNR: {PSNR(img_arr, img_arr_noise)}")
+    save_image(img_noise, "balloon_noise.bmp")
+    print(f"PSNR: {PSNR(img, img_noise)}")
