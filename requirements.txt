@@ -31,6 +31,7 @@ pytz==2020.1
 PyYAML==5.3.1
 regex==2020.10.15
 six==1.15.0
+timebudget==0.7.1
 toml==0.10.1
 typed-ast==1.4.1
 typing-extensions==3.7.4.3
