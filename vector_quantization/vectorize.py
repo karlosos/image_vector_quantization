@@ -29,6 +29,17 @@ def vectorize(img, window_size):
     return vectors
 
 
+def image_from_vectors(vectors, image):
+    height, width = image.shape
+    index = 0
+    ws = int(np.sqrt(vectors[0].size))
+    for i in range(height // ws):
+        for j in range(width // ws):
+            image[i * ws : i * ws + ws, j * ws : j * ws + ws].flat = vectors[index, :]
+            index += 1
+    return image
+
+
 if __name__ == "__main__":
     from image import load_image
 

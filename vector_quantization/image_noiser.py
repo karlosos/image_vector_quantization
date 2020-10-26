@@ -1,5 +1,5 @@
 from metrics import PSNR
-from image import load_image, save_image
+from vectot_quantization.image import load_image, save_image
 
 
 def add_noise(original_image):
