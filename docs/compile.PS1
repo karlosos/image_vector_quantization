@@ -1,0 +1,4 @@
+pdflatex quantization
+bibtex quantization
+pdflatex quantization
+pdflatex quantization
