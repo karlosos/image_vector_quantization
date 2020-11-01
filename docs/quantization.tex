@@ -119,6 +119,50 @@ Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu \tex
 
 Druga metoda tworzenie słownika, czyli metoda grupowania pozwala osiągnąć lepsze wyniki niż metoda losowa, ale za to jest dużo bardziej czasochłonna. Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
 
+Algorytm metody PNN:
+
+\begin{enumerate}
+ \item Rozważamy zestaw \textit{N} wektorów treningowych w przestrzeni euklidesowej \textit{K} - wymiarowej. Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych \textit{M} poprzez minimalizacja średniej kwadratowej odległości \textit{M} pomiędzy wektorami treningowymi $T_{i}$ a ich
+reprezentatywne wektory kodu $C_{j}$:
+
+\begin{equation}
+D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
+\end{equation}
+
+\item Tutaj \textit{S={$S_{1}$,...,$S_{m}$}} definiuje grupowanie zestawu treningowego \textit{T}. Dla danego kodeksu \textit{C}. Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora \textit{$T_{i}$} do klaster \textit{$j_{0}$} dla którego:
+
+\begin{equation}
+||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
+\end{equation}
+
+\item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy \textit{$T_{i}$} jako własny klaster \textit{$S_{i}$}. Na każdym etapie algorytmu, dwa najbliższe klastry (\textit{$S_{a}$} i \textit{$S_{b}$}) są przeszukiwane i łączone. Odległość (koszt połączenia) \textit{d} pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
+
+\begin{equation}
+d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
+\end{equation}
+
+\item Wybrane klastry \textit{$S_{a}$} i \textit{$S_{b}$} są następnie łączone. Wielkość połączonego klastra \textit{$S_{a}$} + \textit{$S_{b}$} wynosi $n_{a+b}$=$n_{a}$+$n_{b}$, a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
+
+\begin{equation}
+C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
+\end{equation}
+
+\item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu. Proces łączenia jest powtarzany do momentu książka kodowa osiąga rozmiar \textit{M}. 
+
+\end{enumerate}
+
+gdzie:
+\begin{itemize}[label=]
+    \item \textit{T} - Zestaw \textit{N} wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
+    \item \textit{C} - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
+    \item \textit{M} - Rozmiar książki kodowej
+    \item \textit{K} - Wymiar wektorów
+    \item \textit{$S_{i}$} - Klaster (zestaw) wektorów treningowych $n_{i}$
+    \item \textit{$NN_{i}$} - Indeksy najbliższego sąsiada klastra $S_{i}$
+    \item \textit{$d_{i}$} - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
+    \item \textit{$R_{i}$} - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne. 
+\end{itemize}
+
 Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu optymalnej książki. Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego. W \textit{i} - tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory. Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
 
 \begin{figure}[H]
