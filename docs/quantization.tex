@@ -62,14 +62,14 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 Kwantyzacja polega na przyporządkowaniu wartościom sygnału z jakiegoś określonego ciągłego przedziału wartości dyskretnych z przyjętego skończonego zbioru. Maksymalna wartość sygnału dzielona jest na szereg drobniejszych przedziałów. Zazwyczaj przedziały mają taką samą wielkość (jest to kwantyzacja liniowa), ale są wyjątki od tej reguły i niekiedy stosuje się kwantyzację nieliniową. Z każdym przedziałem powiązana jest określona liczba. Jeśli wielkość sygnału wejściowego mieści się w danym przedziale, to wówczas jest ona reprezentowana przez liczbę związaną z tym przedziałem.
 
-Proces kwantyzacji sygnału jest zaokrąglany i w rezultacie powstają błędy. Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. Im większe przedziały kwantyzacji, tym mniejsza jej dokładność i tym większy szum kwantyzacji. W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez ilość bitów wykorzystywanych do zapisu skwantowanej wartości. Zwiększenie ilości bitów prowadzi do zwiększenia ilości przedziałów i dokładniejszego odwzorowania sygnału \cite{drozdek2007wprowadzenie}.
+Podczas procesu kwantyzacji sygnał jest zaokrąglany i w rezultacie powstają błędy. Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. Im większe przedziały kwantyzacji, tym mniejsza jej dokładność i tym większy jest szum kwantyzacji. W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez ilość bitów wykorzystywanych do zapisu skwantyzowanej wartości. Zwiększenie ilości bitów prowadzi do zwiększenia ilości przedziałów, co w rezultacie prowadzi do dokładniejszego odwzorowania sygnału \cite{drozdek2007wprowadzenie}.
 
 \section{Opis projektu}
 
 Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej.
 
 \subsection{Kwantyzacja wektorowa}
-Kwantyzacja wektorowa (\textit{ang. vector quantization}) to przypisanie jednego słowa kodowego do grupy dwóch lub więcej elementów obrazu. Kompresja jest osiągana dzięki liczbie dostępnych słów kodowych mniejszej niż liczba permutacji możliwych wartości pikseli wejściowych w grupie. W ten sposób kilka wzorców wejściowych jest mapowanych na jeden kod wyjściowy. To ponownie wykorzystuje prawdopodobne podobieństwa między pikselami w tym samym sąsiedztwie przestrzeni lub czasu lub obu i maskowanie zniekształceń w bardzo szczegółowych obszarach.
+Kwantyzacja wektorowa (\textit{ang. vector quantization}) to przypisanie jednego słowa kodowego do grupy dwóch lub więcej elementów obrazu. Do kompresja wykorzystywane są dostępne słowa kodowe, których liczba jest mniejsza niż liczba permutacji możliwych wartości pikseli wejściowych w grupie. W ten sposób kilka wzorców wejściowych jest mapowanych na jeden kod wyjściowy. To ponownie wykorzystuje podobieństwa między pikselami w tym samym sąsiedztwie przestrzeni lub czasu lub obu. Dzięki temu dokonywane jest maskowanie zniekształceń w bardzo szczegółowych obszarach.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
@@ -80,8 +80,8 @@ Kwantyzacja wektorowa (\textit{ang. vector quantization}) to przypisanie jednego
 \subsection{Ogólny przebieg etapów pracy kwantyzatora wektorowego}
 
 \begin{enumerate}
-  \item Formowanie danych wejściowych do postaci N wektorów n-wymiarowych (etap wstępny). 
-  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki kodowej (słownika) zawierającej K najbardziej reprezentatywnych wektorów całego zbioru danych, tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
+  \item Formowanie danych wejściowych do postaci \textit{N} wektorów \textit{n} - wymiarowych (etap wstępny). 
+  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki kodowej (słownika) zawierającej \textit{K} najbardziej reprezentatywnych wektorów całego zbioru danych, tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
   \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. 
 \end{enumerate}
 
@@ -115,11 +115,11 @@ W procesie kwantyzacji wektorowej ważna rolę odgrywa postać książki kodowej
   \item metoda rozdzielania (ang. splitting) 
 \end{enumerate}
 
-Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu N wektorów, gdzie N jet liczba całkowitą. Oczywiście takie rozwiązanie jest odpowiednie, wtedy gdy nie mamy informacji na temat danych wektorowych. Posiadając informacje możemy wykorzystać ją do zawężenia obszaru losowego.
+Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu \textit{N} wektorów, gdzie \textit{N} jet liczba całkowitą. Oczywiście takie rozwiązanie jest odpowiednie, wtedy gdy nie mamy informacji na temat danych wektorowych. Posiadając informacje możemy wykorzystać ją do zawężenia obszaru losowego.
 
-Druga metoda tworzenie słownika, czyli metoda grupowania pozwala osiągnąć lepsze wyniki niż metoda losowa, ale za to jest nieco bardziej czasochłonna. Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbe grup.
+Druga metoda tworzenie słownika, czyli metoda grupowania pozwala osiągnąć lepsze wyniki niż metoda losowa, ale za to jest dużo bardziej czasochłonna. Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
 
-Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu optymalnej książki. Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego. W i-tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory. Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
+Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu optymalnej książki. Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego. W \textit{i} - tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory. Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
 
 \begin{figure}[H]
     \centering
@@ -142,9 +142,9 @@ Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu o
 Algorytm popularności jest prostym algorytmem generacji książki kodowej, który charakteryzuje się:
 
 \begin{itemize}
-  \item wektorami kodowymi staje się ustalona liczba wektorów danych występujących w obrazie najczęściej (konieczne jest ustalenie progu liczby wystąpień) 
+  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących w obrazie (konieczne jest ustalenie progu liczby wystąpień) 
   \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji 
-  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych barw (dominujących). Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i wprowadzenie kolejnego wektora pod względem liczby wystąpień. 
+  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących). Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i wprowadzenie kolejnych wektorów pod względem liczby wystąpień. 
 
 \begin{figure}[H]
     \centering
@@ -161,36 +161,36 @@ rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}}
 Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \begin{itemize} 
-\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest w strumieniu bitowym przez mapę bitową zawierającą $n^{2} = n \times n$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
+\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
      \begin{itemize}[label=$\star$]
         \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
         \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych, 
      \end{itemize}
 \item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
-\item w fazie indeksacji, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku. Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. Mapą najbardziej podobną do zadanej jest mapa minimalizująca tak zdefiniowaną miarę,
+\item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku. Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
 \item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji. Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
 \end{itemize}
 
-\subsubsection{Algorytm Lindego-Buza-Graya}
+\subsection{Algorytm Lindego-Buza-Graya}
 
 Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
 
 \begin{itemize} 
-\item określ wektory danych zbioru uczącego. Spośród wszystkich N wektorów wejściowych wybierz losowo K wektorów stanowiących wstępną wersję słownika,
-\item korzystając metryki euklidesowej, d(X,Y), dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
+\item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
+\item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}[label=$\star$]
-        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie ,
-        \item następnie sumujemy różnic 16 kwadratów
-        \item sprawdzamy kwadrat z obrazu z każdym reprezentantem słownika centroid
+        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie ,
+        \item następnie sumujemy różnicę 16 kwadratów
+        \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
      \end{itemize}
-\item wyznacz globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
+\item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
  
 \begin{equation}
 e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
 \end{equation}
 
-\item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to zakończ algorytm (dla uproszczenia ustaliliśmy, że ilość iteracji będzie podawana z ręki)
+\item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
 \item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2. 
 \end{itemize}
  
