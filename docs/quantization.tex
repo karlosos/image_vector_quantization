@@ -59,20 +59,21 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 
 \section{Wstęp}
-Kwantyzacja - polega na przyporządkowaniu wartościom sygnału z jakiegoś określonego ciągłego przedziału wartości dyskretnych z przyjętego skończonego zbioru. Maksymalna wartość sygnału dzielona jest na szereg drobniejszych przedziałów. Zazwyczaj przedziały mają taką samą wielkość (jest to kwantyzacja liniowa), ale są wyjątki od tej reguły i niekiedy stosuje się kwantyzację nieliniową. Z każdym przedziałem powiązana jest określona liczba. Jeśli wielkość sygnału wejściowego mieści się w danym przedziale, to wówczas jest ona reprezentowana przez liczbę związaną z tym przedziałem.
 
-Proces kwantyzacji sygnału jest zaokrąglany w rezultacie powstają błędy. Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. Im większe przedziały kwantyzacji, tym mniejsza dokładność kwantyzacji i tym większy szum kwantyzacji. W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez ilość bitów wykorzystywanych do zapisu skwantowanej wartości. Zwiększenie ilości bitów prowadzi do zwiększenia ilości przedziałów i dokładniejszego odwzorowania sygnału [2].
+Kwantyzacja polega na przyporządkowaniu wartościom sygnału z jakiegoś określonego ciągłego przedziału wartości dyskretnych z przyjętego skończonego zbioru. Maksymalna wartość sygnału dzielona jest na szereg drobniejszych przedziałów. Zazwyczaj przedziały mają taką samą wielkość (jest to kwantyzacja liniowa), ale są wyjątki od tej reguły i niekiedy stosuje się kwantyzację nieliniową. Z każdym przedziałem powiązana jest określona liczba. Jeśli wielkość sygnału wejściowego mieści się w danym przedziale, to wówczas jest ona reprezentowana przez liczbę związaną z tym przedziałem.
+
+Proces kwantyzacji sygnału jest zaokrąglany i w rezultacie powstają błędy. Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. Im większe przedziały kwantyzacji, tym mniejsza jej dokładność i tym większy szum kwantyzacji. W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez ilość bitów wykorzystywanych do zapisu skwantowanej wartości. Zwiększenie ilości bitów prowadzi do zwiększenia ilości przedziałów i dokładniejszego odwzorowania sygnału \cite{drozdek2007wprowadzenie}.
 
 \section{Opis projektu}
 
 Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej.
 
 \subsection{Kwantyzacja wektorowa}
-Kwantyzacja wektorowa (\textit{ang. vector quantisation}) to przypisanie jednego słowa kodowego do grupy dwóch lub więcej elementów obrazu. Kompresja jest osiągana dzięki liczbie dostępnych słów kodowych mniejszej niż liczba permutacji możliwych wartości pikseli wejściowych w grupie. W ten sposób kilka wzorców wejściowych jest mapowanych na jeden kod wyjściowy. To ponownie wykorzystuje prawdopodobne podobieństwa między pikselami w tym samym sąsiedztwie przestrzeni lub czasu lub obu i maskowanie zniekształceń w bardzo szczegółowych obszarach.
+Kwantyzacja wektorowa (\textit{ang. vector quantization}) to przypisanie jednego słowa kodowego do grupy dwóch lub więcej elementów obrazu. Kompresja jest osiągana dzięki liczbie dostępnych słów kodowych mniejszej niż liczba permutacji możliwych wartości pikseli wejściowych w grupie. W ten sposób kilka wzorców wejściowych jest mapowanych na jeden kod wyjściowy. To ponownie wykorzystuje prawdopodobne podobieństwa między pikselami w tym samym sąsiedztwie przestrzeni lub czasu lub obu i maskowanie zniekształceń w bardzo szczegółowych obszarach.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
-    \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło [1]}
+    \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}}
     \label{fig:crossing}
 \end{figure}
 
@@ -80,21 +81,21 @@ Kwantyzacja wektorowa (\textit{ang. vector quantisation}) to przypisanie jednego
 
 \begin{enumerate}
   \item Formowanie danych wejściowych do postaci N wektorów n-wymiarowych (etap wstępny). 
-  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki kodowej (słownika) zawierającej K najbardziej reprezentatywnych wektorów całego zbioru danych, tzw. wektorów kodowych. Konstrukcja książki kodowej może by ć wykonana w fazie wstępnej na podstawie zbioru treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej! 
+  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki kodowej (słownika) zawierającej K najbardziej reprezentatywnych wektorów całego zbioru danych, tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
   \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. 
 \end{enumerate}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/schemat_kwantyzatora.png}
-    \caption{Ogólny schemat pracy kwantyzatora. Źródło [1]}
+    \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}}
     \label{fig:crossing}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/wektory_danych.png}
-    \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło [1]}
+    \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}}
     \label{fig:crossing}
 \end{figure}
 
@@ -123,14 +124,14 @@ Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu o
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło [1]}
+    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło \cite{mwilczewski}}
     \label{fig:crossing}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło [1]}
+    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło \cite{mwilczewski}}
     \label{fig:crossing}
 \end{figure}
 
@@ -149,7 +150,7 @@ Algorytm popularności jest prostym algorytmem generacji książki kodowej, któ
     \centering
     \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
     \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności. Efekt kwantyzacji wektorowej z książkami kodowymi
-rozmiaru odpowiednio: 16, 32 oraz 64. Źródło [3]}
+rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}}
     \label{fig:crossing}
 \end{figure}
  
@@ -160,7 +161,7 @@ rozmiaru odpowiednio: 16, 32 oraz 64. Źródło [3]}
 Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \begin{itemize} 
-\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest w strumieniu bitowym przez mapę bitową zawierającą $n^{2}$ = n x n bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
+\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest w strumieniu bitowym przez mapę bitową zawierającą $n^{2} = n \times n$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
      \begin{itemize}[label=$\star$]
         \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
         \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych, 
@@ -185,7 +186,10 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
      \end{itemize}
 \item wyznacz globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
  
- $$ e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) $$
+\begin{equation}
+e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
+\end{equation}
+
 \item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to zakończ algorytm (dla uproszczenia ustaliliśmy, że ilość iteracji będzie podawana z ręki)
 \item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2. 
 \end{itemize}
@@ -205,7 +209,9 @@ Najczęściej PSNR stosowany jest do oceny jakości kodeków wykorzystujących s
 
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
-$$ MSE = \frac{1}{N * M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2 $$
+\begin{equation}
+MSE = \frac{1}{N * M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
+\end{equation}
 
 gdzie:
 \begin{itemize}[label=]
@@ -216,7 +222,9 @@ gdzie:
 
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
-$$ PSNR = 10 * \log_10 \frac{[max(f(i,j))]^2}{MSE} $$
+\begin{equation}
+PSNR = 10 * \log_10 \frac{[max(f(i,j))]^2}{MSE}
+\end{equation}
 
 gdzie:
 \begin{itemize}[label=]
@@ -229,17 +237,8 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Do implementacji aplikacji wykorzystano język programowania Python.
 
-\section{Literatura}
-
-\begin{enumerate}
-  \item M. Wilczewski. \textit{Algorytmy graficzne - Kwantyzacja wektorowa obrazów cyfrowych}. 
-  \item A. Drozdek. \textit{Wprowadzenie do kompresji danych}, 2001  
-  \item A. Przelaskowski. \textit{Kompresja stratna obrazów - PODSTAWY TECHNIK MULTIMEDIALNYCH }, 2011  
-\end{enumerate}
-
-
 \bibliographystyle{unsrt}  
-\bibliography{sample}  %%% Remove comment to use the external .bib file (using bibtex).
+\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
 %% and comment out the ``thebibliography'' section.
 
 \end{document}
