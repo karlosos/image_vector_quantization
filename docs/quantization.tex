@@ -160,7 +160,8 @@ gdzie:
     \item \textit{$S_{i}$} - Klaster (zestaw) wektorów treningowych $n_{i}$
     \item \textit{$NN_{i}$} - Indeksy najbliższego sąsiada klastra $S_{i}$
     \item \textit{$d_{i}$} - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
-    \item \textit{$R_{i}$} - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne. 
+    \item \textit{$R_{i}$} - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
+    \cite{tkaukoranta} 
 \end{itemize}
 
 Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu optymalnej książki. Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego. W \textit{i} - tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory. Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
