@@ -212,7 +212,7 @@ Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \begin{itemize} 
 \item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
-     \begin{itemize}[label=$\star$]
+     \begin{itemize}
         \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
         \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych, 
      \end{itemize}
@@ -231,7 +231,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
 \item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
 \item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}
-        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie,
+        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie TODO opisać wzorem,
         \item następnie sumujemy różnicę 16 kwadratów
         \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
@@ -252,6 +252,14 @@ Problemy tego algorytmu:
 	\item wrażliwość na inicjalną postać książki kodowej 
 	\item problem pustych przedziałów 
 \end{itemize}
+
+TODO sparametryzowany wzór pliku wynikowego
+
+\subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
+
+TODO opisać to że usuwamy średnią wartość z danego kwadratu i tę liczbę odejmujemy od każdego koloru. Zastanowić się czy w dobrej sekcji umiejscowione.
+
+TODO sparametryzowany wzór na długość pliku wynikowego
 
 \subsection{Wykorzystywane metryki}
 
@@ -284,6 +292,12 @@ gdzie:
 \begin{itemize}[label=]
     \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała, np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
 \end{itemize}
+
+\subsubsection{SSIM}
+
+\subsubsection{FSIM}
+
+\subsubsection{CR}
 
 \section{Badania}
 
