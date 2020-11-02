@@ -255,7 +255,7 @@ Najczęściej PSNR stosowany jest do oceny jakości kodeków wykorzystujących s
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
 \begin{equation}
-MSE = \frac{1}{N * M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
+MSE = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
 \end{equation}
 
 gdzie:
@@ -268,7 +268,7 @@ gdzie:
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
 \begin{equation}
-PSNR = 10 * \log_10 \frac{[max(f(i,j))]^2}{MSE}
+PSNR = 10 \cdot \log_10 \frac{[max(f(i,j))]^2}{MSE}
 \end{equation}
 
 gdzie:

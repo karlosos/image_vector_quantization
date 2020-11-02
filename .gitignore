@@ -165,3 +165,4 @@ img/output/
 *.synctex.gz
 
 .vscode/
+docs/*.pdf
