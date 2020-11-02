@@ -53,6 +53,11 @@
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Do implementacji aplikacji wykorzystano język programowania Python.
 \end{abstract}
 
+\newpage
+
+\tableofcontents
+
+\newpage
 
 % keywords can be removed
 %\keywords{First keyword \and Second keyword \and More}
@@ -107,7 +112,7 @@ Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
 
 \subsection{Inicjalizacja książki kodowej}
 
-W procesie kwantyzacji wektorowej ważna rolę odgrywa postać książki kodowej ze względu na zbieżność do lokalnego minimum błędu kwantyzacji. Podstawowymi metodami inicjalizacji książki kodowej :
+W procesie kwantyzacji wektorowej ważna rolę odgrywa postać książki kodowej ze względu na zbieżność do lokalnego minimum błędu kwantyzacji. Podstawowymi metodami inicjalizacji książki kodowej:
 
 \begin{enumerate}
   \item metoda losowania,
@@ -115,7 +120,7 @@ W procesie kwantyzacji wektorowej ważna rolę odgrywa postać książki kodowej
   \item metoda rozdzielania (ang. splitting) 
 \end{enumerate}
 
-Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu \textit{N} wektorów, gdzie \textit{N} jet liczba całkowitą. Oczywiście takie rozwiązanie jest odpowiednie, wtedy gdy nie mamy informacji na temat danych wektorowych. Posiadając informacje możemy wykorzystać ją do zawężenia obszaru losowego.
+Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu \textit{N} wektorów, gdzie \textit{N} jest liczba całkowitą. Oczywiście takie rozwiązanie jest odpowiednie, wtedy gdy nie mamy informacji na temat danych wektorowych. Posiadając informacje możemy wykorzystać ją do zawężenia obszaru losowego.
 
 Druga metoda tworzenie słownika, czyli metoda grupowania pozwala osiągnąć lepsze wyniki niż metoda losowa, ale za to jest dużo bardziej czasochłonna. Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
 
@@ -216,15 +221,17 @@ Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 \item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji. Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
 \end{itemize}
 
-\subsection{Algorytm Lindego-Buza-Graya}
+\subsection{Algorytmy budowy słownika}
+
+\subsubsection{Algorytm Lindego-Buza-Graya}
 
 Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
 
 \begin{itemize} 
 \item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
 \item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
-     \begin{itemize}[label=$\star$]
-        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie ,
+     \begin{itemize}
+        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie,
         \item następnie sumujemy różnicę 16 kwadratów
         \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
@@ -246,7 +253,9 @@ Problemy tego algorytmu:
 	\item problem pustych przedziałów 
 \end{itemize}
 
-\subsection{PSNR}
+\subsection{Wykorzystywane metryki}
+
+\subsubsection{PSNR}
 
 Szczytowy stosunek sygnału do szumu, (ang. peak signal-to-noise ratio ( PSNR) ) – stosunek maksymalnej mocy sygnału do mocy szumu zakłócającego ten sygnał.  
 
@@ -275,6 +284,8 @@ gdzie:
 \begin{itemize}[label=]
     \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała, np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
 \end{itemize}
+
+\section{Badania}
 
 \section{Podsumowanie}
 
