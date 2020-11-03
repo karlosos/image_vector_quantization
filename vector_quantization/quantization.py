@@ -1,12 +1,10 @@
 import numpy as np
 import timeit
-from timebudget import timebudget
 from scipy.cluster.vq import vq
 
 from vector_quantization.vectorize import vectorize, image_from_vectors
 
 
-@timebudget
 def quantize(image, window_size, codebook_fun, codebook_size, verbose=False):
     quantized_img = image.copy()
     vectors = vectorize(quantized_img, window_size=window_size)
@@ -18,7 +16,6 @@ def quantize(image, window_size, codebook_fun, codebook_size, verbose=False):
     return quantized_img
 
 
-@timebudget
 def quantize_from_codebook(vectors, codebook):
     quantized_vectors = np.zeros_like(vectors)
     codes, _ = vq(vectors, codebook)
