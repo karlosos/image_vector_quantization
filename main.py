@@ -1,4 +1,3 @@
-import numpy as np
 from PIL import Image
 
 from vector_quantization.metrics import PSNR
@@ -12,7 +11,7 @@ if __name__ == "__main__":
     img = load_image("balloon.bmp")
     vectors = vectorize(img, window_size=4)
     initial_codebook = random_codebook(vectors, length=32)
-    codebook, distortions = lbg(vectors, np.array(initial_codebook), 50, 0.01)
+    codebook, distortions = lbg(vectors, initial_codebook, 50, 0.01)
     quantized_img_lbg = image_from_vectors(quantize_from_codebook(vectors, initial_codebook), img)
     Image.fromarray(quantized_img_lbg).show()
 
