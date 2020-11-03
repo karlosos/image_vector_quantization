@@ -12,7 +12,7 @@ if __name__ == "__main__":
     vectors = vectorize(img, window_size=4)
     initial_codebook = random_codebook(vectors, length=32)
     codebook, distortions = lbg(vectors, initial_codebook, 50, 0.01)
-    quantized_img_lbg = image_from_vectors(quantize_from_codebook(vectors, initial_codebook), img)
+    quantized_img_lbg = image_from_vectors(quantize_from_codebook(vectors, codebook), img.copy())
     Image.fromarray(quantized_img_lbg).show()
 
     print(codebook)

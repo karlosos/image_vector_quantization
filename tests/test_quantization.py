@@ -2,16 +2,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from vector_quantization.quantization import find_closest, quantize_from_codebook
-
-
-class TestFindClosest(unittest.TestCase):
-    def test_find_closest(self):
-        codebook = np.array([[1, 1, 1], [2, 2, 2], [5, 5, 5]])
-        vector = np.array([2.5, 2.5, 2.5])
-        closest = find_closest(vector, codebook)
-
-        npt.assert_almost_equal(closest, np.array([2, 2, 2]))
+from vector_quantization.quantization import quantize_from_codebook
 
 
 class TestQuantizeFromCodebook(unittest.TestCase):
