@@ -6,8 +6,11 @@ import numpy as np
 import os
 
 
-def load_image(file_name):
-    img = Image.open("./img/input/" + file_name)
+def load_image(file_name, path=None):
+    if path is None:
+        img = Image.open("./img/input/" + file_name)
+    else:
+        img = Image.open(path + file_name)
     img_arr = np.array(img)
     return img_arr
 

@@ -3,7 +3,7 @@ from scipy.spatial import distance
 from scipy.cluster.vq import vq
 
 
-def lbg(vectors, initial_codebook, iterations, error):
+def lbg(vectors, initial_codebook, iterations, error=None):
     m = 1
     distortions = [np.inf]
     finished = False
@@ -17,14 +17,16 @@ def lbg(vectors, initial_codebook, iterations, error):
         distortions.append(np.mean(dists))
         # Find new centroids
         for i in range(cb_length):
-            code_book[i] = np.mean(vectors[codes == i])
+            code_book[i, :] = np.mean(vectors[codes == i], axis=0)
         # Check condition if gain of distortion is small
-        print(distortions[-1])
-        if (distortions[m - 1] - distortions[m]) / distortions[m] < error:
-            finished = True
+        distortion_difference = (distortions[m - 1] - distortions[m]) / distortions[m]
+        # print(f"lbg iteration: {m}, distortion: {distortions[-1]}, diff: {distortion_difference}")
+        if error is not None:
+            if distortion_difference < error:
+                finished = True
         m += 1
 
-    return code_book, distortions
+    return code_book.astype("int32"), distortions
 
 
 if __name__ == "__main__":
