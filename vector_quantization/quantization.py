@@ -1,6 +1,7 @@
 import numpy as np
 import timeit
 from timebudget import timebudget
+from scipy.cluster.vq import vq
 
 from vector_quantization.vectorize import vectorize, image_from_vectors
 
@@ -20,18 +21,10 @@ def quantize(image, window_size, codebook_fun, codebook_size, verbose=False):
 @timebudget
 def quantize_from_codebook(vectors, codebook):
     quantized_vectors = np.zeros_like(vectors)
+    codes, _ = vq(vectors, codebook)
     for idx, vector in enumerate(vectors):
-        quantized_vectors[idx, :] = find_closest(vector, codebook)
+        quantized_vectors[idx, :] = codebook[codes[idx], :]
     return quantized_vectors
-
-
-def find_closest(vector, codebook):
-    # TODO: optimize
-    # Probably it will be faster to calculate distances for all vectors
-    dists = np.sum(np.sqrt((codebook - vector) ** 2), axis=1)
-    closest_id = np.argmin(dists)
-    closest = codebook[closest_id]
-    return closest
 
 
 if __name__ == "__main__":
