@@ -295,6 +295,23 @@ gdzie:
 
 \subsubsection{SSIM}
 
+Podobieństwo strukturalne miarą indeksu \textit{( ang. structural similarity index measure )} jest to metoda, która służy do pomiaru podobieństwa między dwoma obrazami. Indeks \textit{SSIM} to pomiar jakości obrazu bazowego ( nieskompresowanego ) do obrazu po przekształceniach. SSIM to model oparty na percepcji, który traktuje degradację obrazu jako postrzeganą zmianę w informacjach strukturalnych , przy jednoczesnym uwzględnieniu ważnych zjawisk percepcyjnych, w tym zarówno terminów maskowania luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak \textit{MSE} lub \textit{PSNR}, polega na tym, że te podejścia szacują błędy bezwzględne. Informacje strukturalne to idea, że   piksele mają silne współzależności, zwłaszcza gdy są przestrzennie blisko. Zależności te niosą ważne informacje o strukturze obiektów na scenie wizualnej.
+
+Algorytm SSIM:
+
+\begin{equation}
+SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) (\delta_{x}^2 + \delta_{x}^2 + c_2)}
+\end{equation}
+
+gdzie:
+\begin{itemize}[label=]
+    \item $\mu_{x}$ - średnia x
+    \item $\mu_{y}$ - średnia y
+    \item $\delta_{x}^2$ - odchylenie od x
+    \item $\delta_{y}^2$ - odchylenie od y
+    \item $\delta_{xy}$ - kowariancja x i y
+\end{itemize}
+
 \subsubsection{FSIM}
 
 \subsubsection{CR}
