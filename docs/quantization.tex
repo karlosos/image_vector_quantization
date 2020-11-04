@@ -15,6 +15,9 @@
 \usepackage{enumitem}
 \usepackage[polish]{babel} % English language hyphenation
 \usepackage{float} % for H in \begin{figure}[H]. Force including file in place.
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
 
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
@@ -316,8 +319,108 @@ gdzie:
 
 \subsubsection{CR}
 
+\subsection{RMSE}
+
 \section{Badania}
 
+\subsection{Algorytm LBG z losową inicjalizacją słownika}
+
+Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
+kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:lbg_random}} i podsumowano w tablice \mbox{\ref{tab:lbg_summary}}.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Obraz              & PSNR {[}dB{]} & SSIM  & MSE     & NRMSE \\ \midrule
+Aerial.bmp         & 31.664        & 0.875 & 137.526 & 0.063 \\
+airfield.bmp       & 30.867        & 0.794 & 156.119 & 0.080 \\
+airplane.bmp       & 34.643        & 0.924 & 49.780  & 0.038 \\
+baboonTMW.bmp      & 29.995        & 0.789 & 219.172 & 0.109 \\
+balloon.bmp        & 39.313        & 0.953 & 10.635  & 0.029 \\
+balloon\_noise.bmp & 39.123        & 0.950 & 11.251  & 0.030 \\
+BARB.bmp           & 32.285        & 0.884 & 89.974  & 0.079 \\
+BARB2.bmp          & 32.166        & 0.885 & 89.544  & 0.075 \\
+barb512.bmp        & 32.149        & 0.881 & 95.252  & 0.075 \\
+BOARD.bmp          & 36.423        & 0.931 & 28.914  & 0.046 \\
+boat512.bmp        & 32.811        & 0.865 & 71.712  & 0.061 \\
+boats.bmp          & 34.349        & 0.913 & 43.605  & 0.051 \\
+bridge.bmp         & 30.383        & 0.804 & 157.664 & 0.099 \\
+bridge256.bmp      & 30.312        & 0.832 & 141.058 & 0.095 \\
+camera256.bmp      & 33.794        & 0.905 & 94.873  & 0.073 \\
+couple.bmp         & 32.454        & 0.863 & 74.454  & 0.067 \\
+couple256.bmp      & 35.577        & 0.934 & 29.818  & 0.120 \\
+crowd512.bmp       & 33.414        & 0.917 & 64.579  & 0.082 \\
+EARTH.bmp          & 33.517        & 0.933 & 65.992  & 0.084 \\
+elaine.bmp         & 33.200        & 0.836 & 40.895  & 0.044 \\
+ELIF.bmp           & 37.813        & 0.959 & 16.708  & 0.054 \\
+finger.bmp         & 29.940        & 0.901 & 131.642 & 0.093 \\
+FROG512.BMP        & 29.866        & 0.728 & 168.358 & 0.101 \\
+GIRL.bmp           & 35.244        & 0.917 & 26.810  & 0.037 \\
+GOLD.bmp           & 33.349        & 0.867 & 45.429  & 0.059 \\
+GOLDHILL.BMP       & 32.913        & 0.863 & 52.181  & 0.059 \\
+harbour512.bmp     & 32.240        & 0.856 & 127.080 & 0.085 \\
+HOTEL.bmp          & 33.377        & 0.896 & 67.131  & 0.075 \\
+lax512.bmp         & 30.927        & 0.780 & 160.827 & 0.142 \\
+lenaTMW.bmp        & 33.625        & 0.870 & 52.225  & 0.064 \\
+lennagrey.bmp      & 34.603        & 0.899 & 39.032  & 0.047 \\
+man512.bmp         & 33.023        & 0.871 & 64.138  & 0.066 \\
+noisesquare.bmp    & 32.929        & 0.825 & 35.693  & 0.031 \\
+OMAHA.bmp          & 29.903        & 0.838 & 327.289 & 0.104 \\
+peppersTMW.bmp     & 34.226        & 0.874 & 42.658  & 0.050 \\
+SAILBOAT.bmp       & 32.998        & 0.877 & 64.407  & 0.059 \\
+seismic.bmp        & 39.978        & 0.973 & 7.469   & 0.021 \\
+SENA.bmp           & 37.546        & 0.954 & 15.212  & 0.044 \\
+SENSIN.bmp         & 35.372        & 0.947 & 23.957  & 0.045 \\
+shapes.bmp         & 38.456        & 0.961 & 22.223  & 0.053 \\
+SINAN.bmp          & 36.585        & 0.949 & 18.150  & 0.032 \\
+Tank512.bmp        & 33.634        & 0.850 & 37.751  & 0.045 \\
+Truck512.bmp       & 33.956        & 0.883 & 33.521  & 0.052 \\
+woman1.bmp         & 33.346        & 0.862 & 65.147  & 0.057 \\
+woman2.bmp         & 37.731        & 0.942 & 13.121  & 0.029 \\
+ZELDA.bmp          & 36.589        & 0.916 & 18.557  & 0.037 \\ \bottomrule
+\end{tabular}
+\caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
+\label{tab:lbg_random}
+\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lrrrr@{}}
+         & PSNR {[}dB{]} & SSIM  & MSE     & NRMSE \\ \midrule
+Minimum  & 29.866        & 0.728 & 7.469   & 0.021 \\
+Maksimum & 39.978        & 0.973 & 327.289 & 0.142 \\
+Średnia  & 33.883        & 0.885 & 72.816  & 0.064 \\ \bottomrule
+\end{tabular}
+\caption{TODO ładny opis}
+\label{tab:lbg_summary}
+\end{table}
+
+\subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
+
+TODO: opisać jak to zostało przeprowadzone i jakie wnioski
+
+\begin{figure}[H]
+\centering
+  \centering
+  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
+  \caption{TODO ładny opis (każda linia to jeden obraz).}
+  \label{fig:lbg_iterations}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
+  \caption{TODO ładny opis (średnia z wszystkich obrazów).}
+  \label{fig:lbg_iterations_mean}
+\end{figure}
+
+
+\FloatBarrier
 \section{Podsumowanie}
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Do implementacji aplikacji wykorzystano język programowania Python.
