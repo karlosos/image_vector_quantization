@@ -13,19 +13,20 @@
 \usepackage{microtype}      % microtypography
 \usepackage{lipsum}
 \usepackage{enumitem}
-\usepackage[polish]{babel} % English language hyphenation
-\usepackage{float} % for H in \begin{figure}[H]. Force including file in place.
+\usepackage[polish]{babel}  % English language hyphenation
+\usepackage{float}          % for H in \begin{figure}[H]. Force including file in place.
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{placeins}
-
 \usepackage{graphicx}
+\usepackage{lmodern}
 \graphicspath{ {./images/} }
 
-\fancyhf{} % sets both header and footer to nothing
+%\fancyhf{} % sets both header and footer to nothing
 \renewcommand{\headrulewidth}{0pt}
 % your new footer definitions here
 
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
 
 % kolory odnośników
 \usepackage[dvipsnames]{xcolor}
@@ -234,7 +235,9 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
 \item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
 \item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}
-        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie TODO opisać wzorem,
+        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
+        naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie 
+        \todo{Opisać wzorem}:,
         \item następnie sumujemy różnicę 16 kwadratów
         \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
@@ -256,13 +259,13 @@ Problemy tego algorytmu:
 	\item problem pustych przedziałów 
 \end{itemize}
 
-TODO sparametryzowany wzór pliku wynikowego
+\todo{Sparametryzowany wzór pliku wynikowego}
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
-TODO opisać to że usuwamy średnią wartość z danego kwadratu i tę liczbę odejmujemy od każdego koloru. Zastanowić się czy w dobrej sekcji umiejscowione.
+\todo{Opisać to że usuwamy średnią wartość z danego kwadratu i tę liczbę odejmujemy od każdego koloru. Zastanowić się czy w dobrej sekcji umiejscowione.}
 
-TODO sparametryzowany wzór na długość pliku wynikowego
+\todo{Sparametryzowany wzór na długość pliku wynikowego}
 
 \subsection{Wykorzystywane metryki}
 
@@ -298,7 +301,7 @@ gdzie:
 
 \subsubsection{SSIM}
 
-TODO: sprawdzić to co napisane
+\todo{Zredagować tekst SSIM}
 
 Podobieństwo strukturalne miarą indeksu \textit{(ang. structural similarity index measure)} jest to metoda, która służy 
 do pomiaru podobieństwa między dwoma obrazami. Indeks \textit{SSIM} to pomiar jakości obrazu bazowego (nieskompresowanego) 
@@ -324,6 +327,8 @@ gdzie:
 \end{itemize}
 
 \subsubsection{FSIM}
+
+\todo{Opisać FSIM}
 
 \subsubsection{CR}
 
@@ -404,26 +409,26 @@ Minimum  & 29.8664       & 0.7281 & 7.4695   & 0.0213 \\
 Maksimum & 39.9778       & 0.9726 & 327.2889 & 0.1421 \\
 Średnia  & 33.8828       & 0.8853 & 72.8159  & 0.0641 \\ bottomrule
 \end{tabular}
-\caption{TODO ładny opis}
+\caption{\todo{Podpis tabeli}}
 \label{tab:lbg_summary}
 \end{table}
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
 
-TODO: opisać jak to zostało przeprowadzone i jakie wnioski
+\todo{Opisać jak wyznaczono optymalną liczbę iteracji oraz wnioski}
 
 \begin{figure}[H]
 \centering
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
-  \caption{TODO ładny opis (każda linia to jeden obraz).}
+  \caption{\todo{Opis wykresu (każda linia to jeden obraz).}}
   \label{fig:lbg_iterations}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
-  \caption{TODO ładny opis (średnia z wszystkich obrazów).}
+  \caption{\todo{Opis wykresu (średnia z wszystkich obrazów).}}
   \label{fig:lbg_iterations_mean}
 \end{figure}
 
