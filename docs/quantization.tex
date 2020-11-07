@@ -237,7 +237,19 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
      \begin{itemize}
         \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
         naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie 
-        \todo{Opisać wzorem}:,
+        \todo{Sprawdzić czy wzór został poprawnie zapisany}:
+        
+		\begin{equation}
+		d(B_{m}, C_{i}) < d(B_{m}, C_{j})
+		\end{equation}
+		
+		gdzie:
+		\begin{itemize}[label=]
+    		\item $B_{m}$ - block obrazu,
+    		\item $C_{i}$ - słowo kodowe ze słownika
+    		\item $C_{j}$ - kolejne słowo kodowe ze słownika
+		\end{itemize}	        
+        
         \item następnie sumujemy różnicę 16 kwadratów
         \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
