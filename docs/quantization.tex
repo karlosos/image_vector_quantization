@@ -275,7 +275,7 @@ Problemy tego algorytmu:
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
-Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu. Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się na siebie bloki obrazów o \textit{4×4} pikseli. Każdy blok obrazów treningowych składający się z \textit{4×4} pikseli może być postrzegany jako wektor \textit{k} -wymiarowy, gdzie \textit{k} = \textit{4x4}. Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
+Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu. Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się na siebie bloki obrazów o $4 \times 4$ pikseli. Każdy blok obrazów treningowych składający się z $4 \times 4$ pikseli może być postrzegany jako wektor \textit{k} -wymiarowy, gdzie \textit{k} = $4 \times 4$. Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
 
 Wartość średnia bloku \textit{bm} dla każdego bloku obrazu \textit{x} jest obliczana za pomocą wyrażenia: 
 
@@ -428,7 +428,7 @@ Minimum  & 29.8664       & 0.7281 & 7.4695   & 0.0213 \\
 Maksimum & 39.9778       & 0.9726 & 327.2889 & 0.1421 \\
 Średnia  & 33.8828       & 0.8853 & 72.8159  & 0.0641 \\ \bottomrule
 \end{tabular}
-\caption{\todo{Podpis tabeli}}
+\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk}
 \label{tab:lbg_summary}
 \end{table}
 
