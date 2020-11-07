@@ -235,7 +235,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
 \item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
 \item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}
-        \item bierzemy każdy kwadrat z obrazu (4x4) i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
+        \item bierzemy każdy kwadrat z obrazu o rozmiarze \textit{(4x4)} i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
         naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie 
         \todo{Sprawdzić czy wzór został poprawnie zapisany}:
         
@@ -275,7 +275,15 @@ Problemy tego algorytmu:
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
-\todo{Opisać to że usuwamy średnią wartość z danego kwadratu i tę liczbę odejmujemy od każdego koloru. Zastanowić się czy w dobrej sekcji umiejscowione.}
+Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu. Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się na siebie bloki obrazów o \textit{4×4} pikseli. Każdy blok obrazów treningowych składający się z \textit{4×4} pikseli może być postrzegany jako wektor \textit{k} -wymiarowy, gdzie \textit{k} = \textit{4x4}. Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
+
+Wartość średnia bloku \textit{bm} dla każdego bloku obrazu \textit{x} jest obliczana za pomocą wyrażenia: 
+
+\begin{equation}
+bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i}
+\end{equation}
+
+Następnie generowany jest pozostały wektor \textit{rv} poprzez odjęcie wartości \textit{bm} od każdej wartości piksela w \textit{x}. Przeszukiwane jest najbliższe pozostałe słowo kodowe w \textit{RCB} dla pozostałego wektora \textit{rv} i zapisywany jest indeks najbliższego pozostałego słowa kodowego.\cite{meanremovedVQ} 
 
 \todo{Sparametryzowany wzór na długość pliku wynikowego}
 
@@ -313,15 +321,13 @@ gdzie:
 
 \subsubsection{SSIM}
 
-\todo{Zredagować tekst SSIM}
-
 Podobieństwo strukturalne miarą indeksu \textit{(ang. structural similarity index measure)} jest to metoda, która służy 
 do pomiaru podobieństwa między dwoma obrazami. Indeks \textit{SSIM} to pomiar jakości obrazu bazowego (nieskompresowanego) 
 do obrazu po przekształceniach. SSIM to model oparty na percepcji, który traktuje degradację obrazu jako postrzeganą zmianę
 w informacjach strukturalnych, przy jednoczesnym uwzględnieniu ważnych zjawisk percepcyjnych, w tym zarówno terminów maskowania 
 luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak \textit{MSE} lub \textit{PSNR},
-polega na tym, że te podejścia szacują błędy bezwzględne. Informacje strukturalne to idea, że piksele mają silne współzależności,
-zwłaszcza gdy są przestrzennie blisko. Zależności te niosą ważne informacje o strukturze obiektów \mbox{na scenie wizualnej \cite{channappayya2008rate}.}
+polega na tym, że te podejścia szacują błędy bezwzględne. Idea informacji strukturalnych polega na tym, że piksele mają silne współzależności,
+zwłaszcza gdy są znajdują się blisko siebie w przestrzenni. Zależności te niosą ważne informacje o strukturze obiektów \mbox{na scenie wizualnej \cite{channappayya2008rate}.}
 
 Algorytm SSIM:
 
