@@ -352,6 +352,21 @@ gdzie:
 
 \subsubsection{RMSE}
 
+Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy średnią wielkość błędu. Jest to pierwiastek kwadratowy każdej różnicy między prognozowaną a odpowiadającą jej wartościom, podniesiona do kwadratu, a następnie uśredniona w próbie. Ponieważ błędy są podnoszone do kwadratu, zanim zostaną uśrednione, sprawia to, że RMSE nadaje stosunkowo dużą wagę dużym błędom. Oznacza to, że RMSE jest najbardziej przydatny, gdy duże błędy są szczególnie niepożądane.
+
+Wzór RMSE:
+
+\begin{equation}
+RMSE = \sqrt{\frac{1}{n} \sum_{j=1}{n} (y_{j} - \hat{y_{j}} )^2}
+\end{equation}
+
+gdzie:
+\begin{itemize}[label=]
+    \item $n$ - średnia próby
+    \item $y_{j}$ - prognozowana wartość błędu
+    \item $\hat{y_{j}}$ - rzeczywista wartość błędu\cite{rmse}
+\end{itemize}
+
 \section{Badania}
 
 \subsection{Algorytm LBG z losową inicjalizacją słownika}
