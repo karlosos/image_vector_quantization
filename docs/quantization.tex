@@ -345,10 +345,10 @@ gdzie:
 
 \subsubsection{FSIM}
 
-Zastosowanie wskaźnika podobieństwa funkcji \textit{(ang. A Feature Similarity Index)} do oceny jakości obrazu, jest zagadnieniem skoncentrowanym wokół pomiaru podobieństwa między dwoma obrazami. W celu interpretacji danego wskaźnika wymagane jest wyjaśnienie dwóch pojęć: zgodności fazowej (PC) oraz wielkości gradientu (GM) [].
+Zastosowanie wskaźnika podobieństwa funkcji \textit{(ang. A Feature Similarity Index)} do oceny jakości obrazu, jest zagadnieniem skoncentrowanym wokół pomiaru podobieństwa między dwoma obrazami. W celu interpretacji danego wskaźnika wymagane jest wyjaśnienie dwóch pojęć: zgodności fazowej (PC) oraz wielkości gradientu (GM) \cite{fsim_theory}.
 
 \paragraph{Zgodność fazowa \textit{(ang. Phase Congruency)} (PC):}
-Nową metodą wykrywania cech obrazu jest zgodność fazowa. Ważną cechą charakterystyczną zgodności fazowej jest to, że jest stała dla zmiennych wartości światła na obrazie. Wskaźnik ten podkreśla cechy obrazu w częstotliwości fazowej. Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P. Kovesi, szeroko stosowanej w literaturze, można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu []:
+Nową metodą wykrywania cech obrazu jest zgodność fazowa. Ważną cechą charakterystyczną zgodności fazowej jest to, że jest stała dla zmiennych wartości światła na obrazie. Wskaźnik ten podkreśla cechy obrazu w częstotliwości fazowej. Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P. Kovesi, szeroko stosowanej w literaturze, można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu \cite{pc}:
 
 \begin{equation}
 PC(x) = E(x) / (\varepsilon + \sum\limits{_{n}} A_n(x))
@@ -356,13 +356,13 @@ PC(x) = E(x) / (\varepsilon + \sum\limits{_{n}} A_n(x))
 
 \paragraph{Wielkość gradientu  \textit{(ang. Gradient Magnitude)} (GM):}
 Obliczanie gradientu obrazu jest bardzo tradycyjnym tematem w cyfrowym przetwarzaniu obrazu. Maski splotu są używane do wyrażania operatorów gradientu. Istnieje wiele masek konwolucyjnych do pomiaru gradientów. 
-Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziomy i pionowy. Wtedy wielkośc gradientu $f(x)$ można zdefiniować następująco []:
+Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziomy i pionowy. Wtedy wielkośc gradientu $f(x)$ można zdefiniować następująco \cite{gm}:
 
 \begin{equation}
 \sqrt{G^2_x+G^2_y}
 \end{equation}
 
-\paragraph{Algorytm FSIM []:}
+\paragraph{Algorytm FSIM \cite{fsim_alg}:}
 Obliczanie indeksu FSIM składa się z dwóch etapów. 
 W pierwszym etapie obliczana jest lokalna mapa wartości, a następnie w drugim etapie łączy się lokalne mapy podobieństwa w jeden wynik. Wyliczany jest następnie oddzielny pomiar podobieństwa cech pomiędzy $f_1(x)$ i $f_2(x)$ obliczając wartości po dwie składowe na pomiar dla PC lub GM. Najpierw, miara podobieństwa dla $PC_1 (x)$ i $PC_2(x)$ jest zdefiniowana jako:
 
@@ -397,7 +397,7 @@ gdzie:
     \item $\alpha$, $\beta$ - parametry używane do dostosowania względnego znaczenia cech PC i GM
 \end{itemize}
 
-Po uzyskaniu podobieństwa $S_L(x)$ w każdym miejscu $x$ można obliczyć całkowite podobieństwo między $f_1$ i $f_2$. Jednak różne lokalizacje mają różny wpływ na postrzeganie obrazu przez HVS (ludzki system widzenia). Na przykład lokalizacje krawędzi przekazują ważniejsze informacje wizualne niż lokalizacje na gładkim obszarze. Ponieważ ludzka kora wzrokowa jest wrażliwa na struktury zgodne fazowo [], wartość PC w danej lokalizacji może odzwierciedlać prawdopodobieństwo, że jest to dostrzegalnie istotny punkt obrazu. Intuicyjnie, dla danej lokalizacji $x$, jeśli którykolwiek wartość z $f_1(x)$ i $f_2(x)$ ma znaczącą wartość PC, oznacza to, że ta pozycja $x$ będzie miała duży wpływ na HVS w ocenie podobieństwa między $f_1$ i $f_2$. Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, aby nadać wagę parametrowi $S_L(x)$ w ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks $FSIM$ między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
+Po uzyskaniu podobieństwa $S_L(x)$ w każdym miejscu $x$ można obliczyć całkowite podobieństwo między $f_1$ i $f_2$. Jednak różne lokalizacje mają różny wpływ na postrzeganie obrazu przez HVS (ludzki system widzenia). Na przykład lokalizacje krawędzi przekazują ważniejsze informacje wizualne niż lokalizacje na gładkim obszarze. Ponieważ ludzka kora wzrokowa jest wrażliwa na struktury zgodne fazowo \cite{kora_wzrokowa}, wartość PC w danej lokalizacji może odzwierciedlać prawdopodobieństwo, że jest to dostrzegalnie istotny punkt obrazu. Intuicyjnie, dla danej lokalizacji $x$, jeśli którykolwiek wartość z $f_1(x)$ i $f_2(x)$ ma znaczącą wartość PC, oznacza to, że ta pozycja $x$ będzie miała duży wpływ na HVS w ocenie podobieństwa między $f_1$ i $f_2$. Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, aby nadać wagę parametrowi $S_L(x)$ w ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks $FSIM$ między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
 
 \begin{equation}
 {\rm FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
