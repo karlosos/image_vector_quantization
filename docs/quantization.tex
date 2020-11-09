@@ -20,7 +20,7 @@
 \usepackage{placeins}
 \usepackage{graphicx}
 \usepackage{lmodern}
-\graphicspath{ {./images/} }
+\graphicspath{./images/}
 
 %\fancyhf{} % sets both header and footer to nothing
 \renewcommand{\headrulewidth}{0pt}
@@ -69,43 +69,67 @@
 
 \section{Wstęp}
 
-Kwantyzacja polega na przyporządkowaniu wartościom sygnału z jakiegoś określonego ciągłego przedziału wartości dyskretnych z przyjętego skończonego zbioru. Maksymalna wartość sygnału dzielona jest na szereg drobniejszych przedziałów. Zazwyczaj przedziały mają taką samą wielkość (jest to kwantyzacja liniowa), ale są wyjątki od tej reguły i niekiedy stosuje się kwantyzację nieliniową. Z każdym przedziałem powiązana jest określona liczba. Jeśli wielkość sygnału wejściowego mieści się w danym przedziale, to wówczas jest ona reprezentowana przez liczbę związaną z tym przedziałem.
+Kwantyzacja polega na przyporządkowaniu wartościom sygnału ciągłego wartości dyskretnych należących do skończonego zbioru.
+Przedział wartości sygnału dzielony jest na zbiór przedziałów.
+Zazwyczaj przedziały mają taką samą wielkość (kwantyzacja liniowa).
+Stosuje się też kwantyzację nieliniową, gdzie przedziały nie są równomiernie podzielone. 
 
-Podczas procesu kwantyzacji sygnał jest zaokrąglany i w rezultacie powstają błędy. Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. Im większe przedziały kwantyzacji, tym mniejsza jej dokładność i tym większy jest szum kwantyzacji. W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez ilość bitów wykorzystywanych do zapisu skwantyzowanej wartości. Zwiększenie ilości bitów prowadzi do zwiększenia ilości przedziałów, co w rezultacie prowadzi do dokładniejszego odwzorowania sygnału \cite{drozdek2007wprowadzenie}.
+Z każdym przedziałem powiązany jest określony poziom kwantyzacji. 
+Gdy wartość sygnału wejściowego należy do danego przedziału przyporządkowuje mu się odpowiednią wartość kwantyzacji.
+
+Podczas procesu kwantyzacji powstają błędy kwantyzacji wynikające z różnicy rzeczywistej wartości od wartości kwantyzacji. 
+Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. 
+Im większe przedziały kwantyzacji tym mniejsza jej dokładność i tym większy jest szum kwantyzacji. 
+W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez liczbę bitów wykorzystywanych do zapisu skwantyzowanej wartości. 
+Zwiększenie liczby bitów prowadzi do zwiększenia liczby przedziałów, co w rezultacie prowadzi do dokładniejszego odwzorowania \mbox{sygnału \cite{drozdek2007wprowadzenie}.}
 
 \section{Opis projektu}
 
-Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej.
+Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej oraz przeprowadzenie badań
+zaimplementowanych metod.
 
 \subsection{Kwantyzacja wektorowa}
-Kwantyzacja wektorowa (\textit{ang. vector quantization}) to przypisanie jednego słowa kodowego do grupy dwóch lub więcej elementów obrazu. Do kompresja wykorzystywane są dostępne słowa kodowe, których liczba jest mniejsza niż liczba permutacji możliwych wartości pikseli wejściowych w grupie. W ten sposób kilka wzorców wejściowych jest mapowanych na jeden kod wyjściowy. To ponownie wykorzystuje podobieństwa między pikselami w tym samym sąsiedztwie przestrzeni lub czasu lub obu. Dzięki temu dokonywane jest maskowanie zniekształceń w bardzo szczegółowych obszarach.
+Kwantyzacja wektorowa (ang. \emph{vector quantization}) polega na podziale wielowymiarowych przestrzeni na obszary i
+przyporządkowanie każdemu obszarowi odpowiedniego poziomu kwantyzacji.
+Obszary reprezentowanego są w formie wektorów.
+Przykładem zastosowania kwantyzacji wektorowej jest kompresja obrazów.
+
+W celu kwantyzacji obraz dzielony jest na obszary o zadanym rozmiarze, np. $4 \times 4$ pikseli, co tworzy wektory o długości $16$.
+Budowana jest książka kodowa reprezentująca poziomy kwantyzacji na podstawie wyznacznych wektorów.
+Dla każdego obszaru detekcyjnego przyporządkowuje się indeks wyznaczonego najbliższego poziomu kwantyzacji.
+
+Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej (procesu jego budowy i długości).
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
-    \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}}
-    \label{fig:crossing}
+    \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}.}
+    \label{fig:kwantyzacja_wektorowa}
 \end{figure}
 
 \subsection{Ogólny przebieg etapów pracy kwantyzatora wektorowego}
 
 \begin{enumerate}
-  \item Formowanie danych wejściowych do postaci \textit{N} wektorów \textit{n} - wymiarowych (etap wstępny). 
-  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki kodowej (słownika) zawierającej \textit{K} najbardziej reprezentatywnych wektorów całego zbioru danych, tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
+  \item Formowanie danych wejściowych do postaci $N$ wektorów $n$ -- wymiarowych (etap wstępny). 
+  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki 
+    kodowej (słownika) zawierającej $K$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
+    tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru 
+    treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
   \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. 
 \end{enumerate}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/schemat_kwantyzatora.png}
-    \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}}
-    \label{fig:crossing}
+    \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}.}
+    \label{fig:schemat_kwantyzatora}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/wektory_danych.png}
-    \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}}
-    \label{fig:crossing}
+    \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}.}
+    \label{fig:wektory_danych}
 \end{figure}
 
 Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
@@ -116,77 +140,99 @@ Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
 
 \subsection{Inicjalizacja książki kodowej}
 
-W procesie kwantyzacji wektorowej ważna rolę odgrywa postać książki kodowej ze względu na zbieżność do lokalnego minimum błędu kwantyzacji. Podstawowymi metodami inicjalizacji książki kodowej:
+W procesie kwantyzacji wektorowej ważną rolę odgrywa proces inicjalizacji książki kodowej.
+Ma to znaczenie w procesie budowy książki kodowej, gdzie efektywność zależy od początkowych wartości.
+Źle dobrane wartości inicjalizacyjne mogą przeszkadzać w zbieżności algorytmu.
+
+Podstawowymi metodami inicjalizacji książki kodowej są:
 
 \begin{enumerate}
   \item metoda losowania,
-  \item metoda grupowania najbliższych sąsiadów (ang. PNN - pairwise nearest neighbour)
-  \item metoda rozdzielania (ang. splitting) 
+  \item metoda grupowania najbliższych sąsiadów (ang. PNN - pairwise nearest neighbour),
+  \item metoda rozdzielania (ang. splitting).
 \end{enumerate}
 
-Pierwsza z wymienionych powyżej, czyli metoda losowa polega na wylosowaniu \textit{N} wektorów, gdzie \textit{N} jest liczba całkowitą. Oczywiście takie rozwiązanie jest odpowiednie, wtedy gdy nie mamy informacji na temat danych wektorowych. Posiadając informacje możemy wykorzystać ją do zawężenia obszaru losowego.
+Metoda losowa polega na wylosowaniu $N$ wektorów, gdzie $N$ jest liczba całkowitą. 
+Rozwiązanie jest wykorzystywane gdy posiada się mało informacji na temat danych wektorowych lub liczy się
+szybkość inicjalizaci. 
 
-Druga metoda tworzenie słownika, czyli metoda grupowania pozwala osiągnąć lepsze wyniki niż metoda losowa, ale za to jest dużo bardziej czasochłonna. Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
+Druga metoda tworzenie słownika, czyli metoda grupowania najbliższych sąsiadów pozwala osiągnąć lepsze wyniki niż metoda losowa, 
+ale za to jest dużo bardziej czasochłonna. 
+Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. 
+W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. 
+Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
 
 Algorytm metody PNN:
 
 \begin{enumerate}
- \item Rozważamy zestaw \textit{N} wektorów treningowych w przestrzeni euklidesowej \textit{K} - wymiarowej. Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych \textit{M} poprzez minimalizacja średniej kwadratowej odległości \textit{M} pomiędzy wektorami treningowymi $T_{i}$ a ich
-reprezentatywne wektory kodu $C_{j}$:
+ \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej. 
+   Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację 
+   średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
 
 \begin{equation}
 D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
 \end{equation}
 
-\item Tutaj \textit{S={$S_{1}$,...,$S_{m}$}} definiuje grupowanie zestawu treningowego \textit{T}. Dla danego kodeksu \textit{C}. Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora \textit{$T_{i}$} do klaster \textit{$j_{0}$} dla którego:
+\item Tutaj $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$. 
+  Dla danego kodeksu $C$. 
+  Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klaster $j_{0}$ dla którego:
 
 \begin{equation}
 ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
 \end{equation}
 
-\item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy \textit{$T_{i}$} jako własny klaster \textit{$S_{i}$}. Na każdym etapie algorytmu, dwa najbliższe klastry (\textit{$S_{a}$} i \textit{$S_{b}$}) są przeszukiwane i łączone. Odległość (koszt połączenia) \textit{d} pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
+\item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$. 
+  Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone. 
+  Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
 
 \begin{equation}
 d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
 \end{equation}
 
-\item Wybrane klastry \textit{$S_{a}$} i \textit{$S_{b}$} są następnie łączone. Wielkość połączonego klastra \textit{$S_{a}$} + \textit{$S_{b}$} wynosi $n_{a+b}$=$n_{a}$+$n_{b}$, a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
+\item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$, 
+  a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
 
 \begin{equation}
 C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
 \end{equation}
 
-\item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu. Proces łączenia jest powtarzany do momentu książka kodowa osiąga rozmiar \textit{M}. 
+\item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu. 
+  Proces łączenia jest powtarzany do momentu aż książka kodowa osiągnie rozmiar $M$. 
 
 \end{enumerate}
 
 gdzie:
 \begin{itemize}[label=]
-    \item \textit{T} - Zestaw \textit{N} wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
-    \item \textit{C} - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
-    \item \textit{M} - Rozmiar książki kodowej
-    \item \textit{K} - Wymiar wektorów
-    \item \textit{$S_{i}$} - Klaster (zestaw) wektorów treningowych $n_{i}$
-    \item \textit{$NN_{i}$} - Indeksy najbliższego sąsiada klastra $S_{i}$
-    \item \textit{$d_{i}$} - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
-    \item \textit{$R_{i}$} - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
+    \item $T$ - Zestaw $N$ wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
+    \item $C$ - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
+    \item $M$ - Rozmiar książki kodowej
+    \item $K$ - Wymiar wektorów
+    \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
+    \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
+    \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
+    \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
     \cite{tkaukoranta} 
 \end{itemize}
 
-Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu optymalnej książki. Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego. W \textit{i} - tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory. Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
+Ostatnia wymieniona metoda jaką jest metoda rozdzielania polega na szukaniu optymalnej książki.
+Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego.
+W $i$-tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory.
+Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło \cite{mwilczewski}}
-    \label{fig:crossing}
+    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych 
+    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
+    \label{fig:rozdzielania_1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym).  Źródło \cite{mwilczewski}}
-    \label{fig:crossing}
+    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych 
+    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
+    \label{fig:rozdzielania_2}
 \end{figure}
 
 \subsection{Algorytmy inicjalizowania słownika}
@@ -196,16 +242,19 @@ Ostatnia wymieniona metoda jaką jest metoda rozdzielania - polega na szukaniu o
 Algorytm popularności jest prostym algorytmem generacji książki kodowej, który charakteryzuje się:
 
 \begin{itemize}
-  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących w obrazie (konieczne jest ustalenie progu liczby wystąpień) 
-  \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji 
-  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących). Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i wprowadzenie kolejnych wektorów pod względem liczby wystąpień. 
+  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących 
+    w obrazie (konieczne jest ustalenie progu liczby wystąpień),
+  \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji,
+  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących). 
+    Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i 
+    wprowadzenie kolejnych wektorów pod względem liczby wystąpień.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
-    \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności. Efekt kwantyzacji wektorowej z książkami kodowymi
-rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}}
-    \label{fig:crossing}
+    \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności.
+      Efekt kwantyzacji wektorowej z książkami kodowymi rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}.}
+    \label{fig:motyle_2}
 \end{figure}
  
 \end{itemize}
@@ -215,14 +264,20 @@ rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}}
 Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \begin{itemize} 
-\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
+\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień 
+  bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
      \begin{itemize}
         \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
         \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych, 
      \end{itemize}
-\item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
-\item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku. Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
-\item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji. Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
+\item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest 
+  kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
+\item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku. 
+  Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. 
+  Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
+\item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji. 
+  Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących 
+  elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
 \end{itemize}
 
 \subsection{Algorytmy budowy słownika}
@@ -232,10 +287,11 @@ Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
 
 \begin{itemize} 
-\item określić wektory danych zbioru uczącego. Spośród wszystkich \textit{N} wektorów wejściowych wybierz losowo \textit{K} wektorów stanowiących wstępną wersję słownika,
-\item korzystając z metryki euklidesowej, \textit{d(X,Y)}, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
+\item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych 
+  wybierz losowo $K$ wektorów stanowiących wstępną wersję słownika,
+\item korzystając z metryki euklidesowej, $d(X,Y)$, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}
-        \item bierzemy każdy kwadrat z obrazu o rozmiarze \textit{(4x4)} i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
+        \item bierzemy każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
         naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie 
         
 		\begin{equation}
@@ -253,13 +309,15 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
         \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
         \item przypisujemy wybrany kwadrat do reprezentanta słownika
      \end{itemize}
-\item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
+\item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich 
+  znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
  
 \begin{equation}
 e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
 \end{equation}
 
-\item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
+\item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm 
+  (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
 \item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2. 
 \end{itemize}
  
@@ -274,15 +332,28 @@ Problemy tego algorytmu:
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
-Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu. Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się na siebie bloki obrazów o $4 \times 4$ pikseli. Każdy blok obrazów treningowych składający się z $4 \times 4$ pikseli może być postrzegany jako wektor \textit{k} -wymiarowy, gdzie \textit{k} = $4 \times 4$. Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
+Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. 
+Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. 
+Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. 
+Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu.
+Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. 
+Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. 
+Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się 
+na siebie bloki obrazów o $4 \times 4$ pikseli. 
+Każdy blok obrazów treningowych składający się z $4 \times 4$ pikseli może być postrzegany jako wektor $k$-wymiarowy, gdzie $k=4 \times 4$. 
+Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. 
+Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki 
+kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
 
-Wartość średnia bloku \textit{bm} dla każdego bloku obrazu \textit{x} jest obliczana za pomocą wyrażenia: 
+Wartość średnia bloku $bm$ dla każdego bloku obrazu $x$ jest obliczana za pomocą wyrażenia: 
 
 \begin{equation}
 bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i}
 \end{equation}
 
-Następnie generowany jest pozostały wektor \textit{rv} poprzez odjęcie wartości \textit{bm} od każdej wartości piksela w \textit{x}. Przeszukiwane jest najbliższe pozostałe słowo kodowe w \textit{RCB} dla pozostałego wektora \textit{rv} i zapisywany jest indeks najbliższego pozostałego słowa kodowego.\cite{meanremovedVQ} 
+Następnie generowany jest pozostały wektor $rv$ poprzez odjęcie wartości $bm$ od każdej wartości piksela w $x$.
+Przeszukiwane jest najbliższe pozostałe słowo kodowe w $RCB$ dla pozostałego wektora $rv$ i zapisywany jest indeks
+najbliższego pozostałego słowa kodowego \cite{meanremovedVQ}. 
 
 \todo{Sparametryzowany wzór na długość pliku wynikowego}
 
@@ -290,9 +361,10 @@ Następnie generowany jest pozostały wektor \textit{rv} poprzez odjęcie warto�
 
 \subsubsection{PSNR}
 
-Szczytowy stosunek sygnału do szumu, (ang. peak signal-to-noise ratio ( PSNR)) – stosunek maksymalnej mocy sygnału do mocy szumu zakłócającego ten sygnał.  
+Szczytowy stosunek sygnału do szumu, (ang. \emph{peak signal-to-noise ratio (PSNR)}) – stosunek maksymalnej mocy sygnału do mocy szumu zakłócającego ten sygnał.  
 
-Najczęściej PSNR stosowany jest do oceny jakości kodeków wykorzystujących stratną kompresję obrazków. W takim przypadku sygnałem są nieskompresowane dane źródłowe, a szumem – artefakty (zniekształcenia) spowodowane zastosowaniem kompresji stratnej. 
+Najczęściej PSNR stosowany jest do oceny jakości kodeków wykorzystujących stratną kompresję obrazków. 
+W takim przypadku sygnałem są nieskompresowane dane źródłowe, a szumem – artefakty (zniekształcenia) spowodowane zastosowaniem kompresji stratnej. 
 
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
@@ -315,16 +387,17 @@ PSNR = 10 \cdot \log_10 \frac{[max(f(i,j))]^2}{MSE}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała, np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
+    \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała,
+      np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
 \end{itemize}
 
 \subsubsection{SSIM}
 
-Podobieństwo strukturalne miarą indeksu \textit{(ang. structural similarity index measure)} jest to metoda, która służy 
-do pomiaru podobieństwa między dwoma obrazami. Indeks \textit{SSIM} to pomiar jakości obrazu bazowego (nieskompresowanego) 
+Podobieństwo strukturalne miarą indeksu (ang. \emph{structural similarity index measure}) jest to metoda, która służy 
+do pomiaru podobieństwa między dwoma obrazami. Indeks $SSIM$ to pomiar jakości obrazu bazowego (nieskompresowanego) 
 do obrazu po przekształceniach. SSIM to model oparty na percepcji, który traktuje degradację obrazu jako postrzeganą zmianę
 w informacjach strukturalnych, przy jednoczesnym uwzględnieniu ważnych zjawisk percepcyjnych, w tym zarówno terminów maskowania 
-luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak \textit{MSE} lub \textit{PSNR},
+luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak $MSE$ lub $PSNR$,
 polega na tym, że te podejścia szacują błędy bezwzględne. Idea informacji strukturalnych polega na tym, że piksele mają silne współzależności,
 zwłaszcza gdy są znajdują się blisko siebie w przestrzenni. Zależności te niosą ważne informacje o strukturze obiektów \mbox{na scenie wizualnej \cite{channappayya2008rate}.}
 
@@ -345,18 +418,25 @@ gdzie:
 
 \subsubsection{FSIM}
 
-Zastosowanie wskaźnika podobieństwa funkcji \textit{(ang. A Feature Similarity Index)} do oceny jakości obrazu, jest zagadnieniem skoncentrowanym wokół pomiaru podobieństwa między dwoma obrazami. W celu interpretacji danego wskaźnika wymagane jest wyjaśnienie dwóch pojęć: zgodności fazowej (PC) oraz wielkości gradientu (GM) \cite{fsim_theory}.
+Zastosowanie wskaźnika podobieństwa funkcji (ang. \emph{A Feature Similarity Index}) do oceny jakości obrazu, 
+jest zagadnieniem skoncentrowanym wokół pomiaru podobieństwa między dwoma obrazami.
+W celu interpretacji danego wskaźnika wymagane jest wyjaśnienie dwóch pojęć: zgodności fazowej (PC) oraz wielkości gradientu (GM) \cite{fsim_theory}.
 
-\paragraph{Zgodność fazowa \textit{(ang. Phase Congruency)} (PC):}
-Nową metodą wykrywania cech obrazu jest zgodność fazowa. Ważną cechą charakterystyczną zgodności fazowej jest to, że jest stała dla zmiennych wartości światła na obrazie. Wskaźnik ten podkreśla cechy obrazu w częstotliwości fazowej. Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P. Kovesi, szeroko stosowanej w literaturze, można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu \cite{pc}:
+\paragraph{Zgodność fazowa (ang. \emph{Phase Congruency}) (PC):}
+Nową metodą wykrywania cech obrazu jest zgodność fazowa. Ważną cechą charakterystyczną zgodności fazowej jest to,
+że jest stała dla zmiennych wartości światła na obrazie. Wskaźnik ten podkreśla cechy obrazu w częstotliwości fazowej. 
+Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P. Kovesi, szeroko stosowanej w literaturze, 
+można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu \cite{pc}:
 
 \begin{equation}
 PC(x) = E(x) / (\varepsilon + \sum\limits{_{n}} A_n(x))
 \end{equation}
 
-\paragraph{Wielkość gradientu  \textit{(ang. Gradient Magnitude)} (GM):}
-Obliczanie gradientu obrazu jest bardzo tradycyjnym tematem w cyfrowym przetwarzaniu obrazu. Maski splotu są używane do wyrażania operatorów gradientu. Istnieje wiele masek konwolucyjnych do pomiaru gradientów. 
-Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziomy i pionowy. Wtedy wielkośc gradientu $f(x)$ można zdefiniować następująco \cite{gm}:
+\paragraph{Wielkość gradientu  (ang. \emph{Gradient Magnitude}) (GM):}
+Obliczanie gradientu obrazu jest bardzo tradycyjnym tematem w cyfrowym przetwarzaniu obrazu. 
+Maski splotu są używane do wyrażania operatorów gradientu. Istnieje wiele masek konwolucyjnych do pomiaru gradientów. 
+Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziomy i pionowy. 
+Wtedy wielkośc gradientu $f(x)$ można zdefiniować następująco \cite{gm}:
 
 \begin{equation}
 \sqrt{G^2_x+G^2_y}
@@ -364,7 +444,9 @@ Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziom
 
 \paragraph{Algorytm FSIM \cite{fsim_alg}:}
 Obliczanie indeksu FSIM składa się z dwóch etapów. 
-W pierwszym etapie obliczana jest lokalna mapa wartości, a następnie w drugim etapie łączy się lokalne mapy podobieństwa w jeden wynik. Wyliczany jest następnie oddzielny pomiar podobieństwa cech pomiędzy $f_1(x)$ i $f_2(x)$ obliczając wartości po dwie składowe na pomiar dla PC lub GM. Najpierw, miara podobieństwa dla $PC_1 (x)$ i $PC_2(x)$ jest zdefiniowana jako:
+W pierwszym etapie obliczana jest lokalna mapa wartości, a następnie w drugim etapie łączy się lokalne mapy podobieństwa w jeden wynik.
+Wyliczany jest następnie oddzielny pomiar podobieństwa cech pomiędzy $f_1(x)$ i $f_2(x)$ obliczając wartości po dwie 
+składowe na pomiar dla PC lub GM. Najpierw, miara podobieństwa dla $PC_1 (x)$ i $PC_2(x)$ jest zdefiniowana jako:
 
 \begin{equation}
 S_{PC}(x) = \frac{2PC_1(x) \cdot PC_2(x) + T_1}{PC^2_1(x) + PC^2_2(x) + T_1}
@@ -397,10 +479,18 @@ gdzie:
     \item $\alpha$, $\beta$ - parametry używane do dostosowania względnego znaczenia cech PC i GM
 \end{itemize}
 
-Po uzyskaniu podobieństwa $S_L(x)$ w każdym miejscu $x$ można obliczyć całkowite podobieństwo między $f_1$ i $f_2$. Jednak różne lokalizacje mają różny wpływ na postrzeganie obrazu przez HVS (ludzki system widzenia). Na przykład lokalizacje krawędzi przekazują ważniejsze informacje wizualne niż lokalizacje na gładkim obszarze. Ponieważ ludzka kora wzrokowa jest wrażliwa na struktury zgodne fazowo \cite{kora_wzrokowa}, wartość PC w danej lokalizacji może odzwierciedlać prawdopodobieństwo, że jest to dostrzegalnie istotny punkt obrazu. Intuicyjnie, dla danej lokalizacji $x$, jeśli którykolwiek wartość z $f_1(x)$ i $f_2(x)$ ma znaczącą wartość PC, oznacza to, że ta pozycja $x$ będzie miała duży wpływ na HVS w ocenie podobieństwa między $f_1$ i $f_2$. Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, aby nadać wagę parametrowi $S_L(x)$ w ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks $FSIM$ między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
+Po uzyskaniu podobieństwa $S_L(x)$ w każdym miejscu $x$ można obliczyć całkowite podobieństwo między $f_1$ i $f_2$. 
+Jednak różne lokalizacje mają różny wpływ na postrzeganie obrazu przez HVS (ludzki system widzenia). 
+Na przykład lokalizacje krawędzi przekazują ważniejsze informacje wizualne niż lokalizacje na gładkim obszarze. 
+Ponieważ ludzka kora wzrokowa jest wrażliwa na struktury zgodne fazowo \cite{kora_wzrokowa}, wartość PC w danej 
+lokalizacji może odzwierciedlać prawdopodobieństwo, że jest to dostrzegalnie istotny punkt obrazu. 
+Intuicyjnie, dla danej lokalizacji $x$, jeśli którykolwiek wartość z $f_1(x)$ i $f_2(x)$ ma znaczącą wartość PC, 
+oznacza to, że ta pozycja $x$ będzie miała duży wpływ na HVS w ocenie podobieństwa między $f_1$ i $f_2$. 
+Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, aby nadać wagę parametrowi $S_L(x)$ w 
+ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks FSIM między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
 
 \begin{equation}
-{\rm FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
+{FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
 \end{equation}
 
 gdzie:
@@ -422,9 +512,9 @@ RMSE = \sqrt{\frac{1}{n} \sum_{j=1}{n} (y_{j} - \hat{y_{j}} )^2}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $n$ - średnia próby
-    \item $y_{j}$ - prognozowana wartość błędu
-    \item $\hat{y_{j}}$ - rzeczywista wartość błędu\cite{rmse}
+    \item $n$ - średnia próby,
+    \item $y_{j}$ - prognozowana wartość błędu,
+    \item $\hat{y_{j}}$ - rzeczywista wartość błędu \cite{rmse}.
 \end{itemize}
 
 \section{Badania}
@@ -436,7 +526,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:lbg
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -502,7 +592,7 @@ Minimum  & 29.8664       & 0.7281 & 7.4695   & 0.0213 \\
 Maksimum & 39.9778       & 0.9726 & 327.2889 & 0.1421 \\
 Średnia  & 33.8828       & 0.8853 & 72.8159  & 0.0641 \\ bottomrule
 \end{tabular}
-\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk}
+\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk.}
 \label{tab:lbg_summary}
 \end{table}
 
