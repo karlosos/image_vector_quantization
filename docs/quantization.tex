@@ -164,6 +164,8 @@ Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać
 
 Algorytm metody PNN:
 
+\todo{Poprawić opis metody PNN}
+
 \begin{enumerate}
  \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej. 
    Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację 
@@ -173,9 +175,9 @@ Algorytm metody PNN:
 D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
 \end{equation}
 
-\item Tutaj $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$. 
+\item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$. 
   Dla danego kodeksu $C$. 
-  Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klaster $j_{0}$ dla którego:
+  Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
 
 \begin{equation}
 ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
@@ -222,7 +224,7 @@ Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymaliz
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych 
+    \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych 
     (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
     \label{fig:rozdzielania_1}
 \end{figure}
@@ -230,7 +232,7 @@ Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymaliz
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
-    \caption{Konstrukcja słownika metodą rozdzialania. Kolejne etapy konstrukcji wektorów kodowych 
+    \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych 
     (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
     \label{fig:rozdzielania_2}
 \end{figure}
@@ -284,7 +286,7 @@ Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \subsubsection{Algorytm Lindego-Buza-Graya}
 
-Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
+Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
 
 \begin{itemize} 
 \item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych 
@@ -292,7 +294,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
 \item korzystając z metryki euklidesowej, $d(X,Y)$, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
      \begin{itemize}
         \item bierzemy każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
-        naszego kwadratu, każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie 
+        naszego kwadratu. Każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie.
         
 		\begin{equation}
 		d(B_{m}, C_{i}) < d(B_{m}, C_{j})
@@ -300,7 +302,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy od do generowania ksi�
 		
 		gdzie:
 		\begin{itemize}[label=]
-    		\item $B_{m}$ - block obrazu,
+    		\item $B_{m}$ - blok obrazu,
     		\item $C_{i}$ - słowo kodowe ze słownika
     		\item $C_{j}$ - kolejne słowo kodowe ze słownika
 		\end{itemize}	        
@@ -328,7 +330,29 @@ Problemy tego algorytmu:
 	\item problem pustych przedziałów 
 \end{itemize}
 
-\todo{Sparametryzowany wzór pliku wynikowego}
+\paragraph{Sparametryzowany wzór pliku wynikowego}
+Plik wynikowy kwantyzacji wektorowej składa się ze słownika o określonej długości $K$ oraz wartości przyporządkowanych indeksów do każdego bloku. Każdy element słownika reprezentowany jest przez wektor o długości $v$, który zapisywany jest na $v \cdot 8$ bitach.
+
+Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bitach. Przykładowo dla słownika o $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
+
+
+Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
+
+\begin{equation}
+	\textrm{dict\_size} = K \cdot v \cdot 8 \quad \textrm{[bitów]}.
+\end{equation}
+
+Każdy blok przechowujący indeks ma rozmiar:
+
+\begin{equation}
+	\textrm{block\_size} = log_2(K)  \quad  \textrm{[bitów]}.
+\end{equation}
+
+Dla obrazie o wielkości $m \times n$ otrzymujemy $\frac{mn}{v}$ bloków. Cały obraz zapisany na: 
+
+\begin{equation}
+	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]}.
+\end{equation}
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
