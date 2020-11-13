@@ -315,6 +315,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania ksi�
   znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
  
 \begin{equation}
+\label{eq:lbg_error}
 e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
 \end{equation}
 
@@ -331,6 +332,7 @@ Problemy tego algorytmu:
 \end{itemize}
 
 \paragraph{Sparametryzowany wzór pliku wynikowego}
+\label{sec:lgb_file_size}
 Plik wynikowy kwantyzacji wektorowej składa się ze słownika o określonej długości $K$ oraz wartości przyporządkowanych indeksów do każdego bloku. Każdy element słownika reprezentowany jest przez wektor o długości $v$, który zapisywany jest na $v \cdot 8$ bitach.
 
 Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bitach. Przykładowo dla słownika o $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
@@ -340,18 +342,21 @@ Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości we
 
 \begin{equation}
 	\textrm{dict\_size} = K \cdot v \cdot 8 \quad \textrm{[bitów]}.
+	\label{eq:lgb_dict_size}
 \end{equation}
 
 Każdy blok przechowujący indeks ma rozmiar:
 
 \begin{equation}
 	\textrm{block\_size} = log_2(K)  \quad  \textrm{[bitów]}.
+	\label{eq:lgb_indeks_size}
 \end{equation}
 
 Dla obrazie o wielkości $m \times n$ otrzymujemy $\frac{mn}{v}$ bloków. Cały obraz zapisany na: 
 
 \begin{equation}
 	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]}.
+	\label{eq:lgb_image_size}
 \end{equation}
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
@@ -367,7 +372,7 @@ na siebie bloki obrazów o $4 \times 4$ pikseli.
 Każdy blok obrazów treningowych składający się z $4 \times 4$ pikseli może być postrzegany jako wektor $k$-wymiarowy, gdzie $k=4 \times 4$. 
 Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. 
 Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki 
-kodów resztkowych RCB = ( $rcw_{0}$, $rcw_{1}$, \dots , , $rcw_{N-1}$ ) przy użyciu wektorów resztkowych.
+kodów resztkowych RCB = ($rcw_{0}$, $rcw_{1}$, \dots, $rcw_{N-1}$) przy użyciu wektorów resztkowych.
 
 Wartość średnia bloku $bm$ dla każdego bloku obrazu $x$ jest obliczana za pomocą wyrażenia: 
 
@@ -379,7 +384,25 @@ Następnie generowany jest pozostały wektor $rv$ poprzez odjęcie wartości $bm
 Przeszukiwane jest najbliższe pozostałe słowo kodowe w $RCB$ dla pozostałego wektora $rv$ i zapisywany jest indeks
 najbliższego pozostałego słowa kodowego \cite{meanremovedVQ}. 
 
-\todo{Sparametryzowany wzór na długość pliku wynikowego}
+\paragraph{Sparametryzowany wzór na długość pliku wynikowego}
+
+Plik wynikowy budowany jest analogicznie do pliku wynikowego przedstawionego w sekcji \ref{sec:lgb_file_size} z tą różnicą, że dla każdego bloku przechowującego indeks musimy przechowywać też usuniętą średnią, która zapisana jest na $8$ bitach.
+
+Każdy blok przechowujący indeks ma rozmiar:
+
+\begin{equation}
+	\textrm{block\_size} = log_2(K) + 8 \quad  \textrm{[bitów]}.
+	\label{eq:mrev_indeks_size}
+\end{equation}
+
+Łącząc wzór na wielkość słownika w bitach (\ref{eq:lgb_dict_size}) oraz wzór na reprezentację pojedynczego wektora w bitach (\ref{eq:mrev_indeks_size}) otrzymujemy:
+
+\begin{equation}
+	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
+	\label{eq:lgb_image_size}
+\end{equation}
+
+dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
 
 \subsection{Wykorzystywane metryki}
 
@@ -623,20 +646,20 @@ Maksimum & 39.9778       & 0.9726 & 327.2889 & 0.1421 \\
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
 
-\todo{Opisać jak wyznaczono optymalną liczbę iteracji oraz wnioski}
+Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}. Na podstawie zebranych danych wyznaczono optymalną liczbę iteracji na przedział od 10 do 20. 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
-  \caption{\todo{Opis wykresu (każda linia to jeden obraz).}}
+  \caption{Błędy w poszczególnych iteracjach algorytmu LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
-  \caption{\todo{Opis wykresu (średnia z wszystkich obrazów).}}
+  \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations_mean}
 \end{figure}
 
