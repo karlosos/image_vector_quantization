@@ -564,6 +564,23 @@ gdzie:
     \item $\hat{y_{j}}$ - rzeczywista wartość błędu \cite{rmse}.
 \end{itemize}
 
+\subsubsection{NRMSE}
+
+Znormalizowany błąd średniokwadratowy (NRMSE) - ułatwiający porównywanie zestawów danych lub modeli o różnych skalach. Często wykorzystywanymi środkami normalizacji jest średnia lub zakres (zdefiniowany jako wartość maksymalna minus wartość minimalna mierzonych danych). NRMSE jest zazwyczaj wyrażana w procentach.
+
+Wzór NRMSE:
+
+\begin{equation}
+NRMSE = \frac{RMSE}{y_{max} - y_{min}}
+\end{equation}
+
+gdzie:
+\begin{itemize}[label=]
+    \item $RMSE$ - Podstawowy błąd średniokwadratowy
+    \item $y_{max}$ - wartość maksymalna
+    \item $y_{min}$ - wartość minimalna
+\end{itemize}
+
 \section{Badania}
 
 \subsection{Algorytm LBG z losową inicjalizacją słownika}
