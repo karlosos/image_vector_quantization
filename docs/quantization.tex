@@ -110,9 +110,9 @@ Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej 
 \subsection{Ogólny przebieg etapów pracy kwantyzatora wektorowego}
 
 \begin{enumerate}
-  \item Formowanie danych wejściowych do postaci $N$ wektorów $n$ -- wymiarowych (etap wstępny). 
+  \item Formowanie danych wejściowych do postaci $K$ wektorów $n$ -- wymiarowych (etap wstępny). 
   \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki 
-    kodowej (słownika) zawierającej $K$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
+    kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
     tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru 
     treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
   \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. 
