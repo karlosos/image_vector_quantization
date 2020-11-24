@@ -166,3 +166,4 @@ img/output/
 
 .vscode/
 docs/*.pdf
+.idea/
