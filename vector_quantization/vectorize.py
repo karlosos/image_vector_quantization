@@ -3,7 +3,7 @@ import numpy as np
 
 def vectorize(img, window_size):
     """
-    Slice image into windows of size window_size and flatten them.
+    Slice image into blocks of size window_size and flatten them.
 
     Check this diagram: https://i.imgur.com/wycSwR3.png
 

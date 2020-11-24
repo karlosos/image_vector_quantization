@@ -11,11 +11,23 @@ import numpy as np
 from scipy.cluster.vq import vq
 
 
+def mean_removal_quantize(image, window_size, codebook_fun, codebook_size, verbose=False):
+    quantized_img = image.copy()
+    vectors = vectorize(quantized_img, window_size=window_size)
+    means = np.mean(vectors, axis=1, keepdims=True)
+    residual_vectors = vectors - means
+    initial_codebook = codebook_fun(residual_vectors, length=codebook_size)
+    codebook, distortions = lbg(residual_vectors, initial_codebook, 50, 0.01)
+    quantized_vectors, (codes, _) = mean_removal_quantize_from_codebook(residual_vectors, means, codebook), img.copy()
+    quantized_img = image_from_vectors(quantized_vectors)
+    return quantized_img, (codes, means)
+
+
 def mean_removal_quantize_from_codebook(vectors, means, codebook):
     quantized_vectors = np.zeros_like(vectors)
     codes, _ = vq(vectors, codebook)
     for idx, vector in enumerate(vectors):
-        quantized_vectors[idx, :] = codebook[codes[idx], :] + means[idx]  # todo cos nie tak bo usuwam czy dodaje?
+        quantized_vectors[idx, :] = codebook[codes[idx], :] + means[idx]
     return quantized_vectors, (codes, means)
 
 
@@ -26,10 +38,8 @@ if __name__ == "__main__":
     residual_vectors = vectors - means
     initial_codebook = random_codebook(residual_vectors, length=32)
     codebook, distortions = lbg(residual_vectors, initial_codebook, 50, 0.01)
-    quantized_img_lbg = image_from_vectors(
-        mean_removal_quantize_from_codebook(residual_vectors, means, codebook), img.copy()
-    )
-    Image.fromarray(quantized_img_lbg).show()
+    quantized_vectors, (codes, _) = mean_removal_quantize_from_codebook(residual_vectors, means, codebook)
+    quantized_img_lbg = image_from_vectors(quantized_vectors, img.copy())
 
-    print(codebook)
-    print(distortions)
+    print("PSNR:", PSNR(img, quantized_img_lbg))
+    Image.fromarray(quantized_img_lbg).show()

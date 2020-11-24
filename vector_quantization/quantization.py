@@ -32,4 +32,5 @@ if __name__ == "__main__":
 
     img = load_image("balloon.bmp")
     quantized_img = quantize(img, window_size=4, codebook_fun=random_codebook, codebook_size=32)
+    print("PSNR:", PSNR(img, quantized_img))
     Image.fromarray(quantized_img).show()
