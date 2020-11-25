@@ -22,6 +22,12 @@
 \usepackage{lmodern}
 \graphicspath{./images/}
 
+\usepackage{multirow}
+\usepackage{booktabs}
+
+\usepackage{caption} 
+\captionsetup[table]{skip=10pt}
+
 %\fancyhf{} % sets both header and footer to nothing
 \renewcommand{\headrulewidth}{0pt}
 % your new footer definitions here
@@ -554,6 +560,23 @@ Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;sk
 \end{equation}
 
 Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1.\cite{compression_ratio}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{cclclcl} 
+\toprule
+\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{6}{c}{\begin{tabular}[c]{@{}c@{}}\textbf{Jaki procent stanowi dana rozdzielczość }\\\textbf{obrazu względem wielkości zdefiniowanego słownika?}\end{tabular}}                                                                                                         \\
+                                                                                  & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}r. słownika:~$2^8$\\\end{tabular}}          & \multicolumn{2}{c}{~r.słownika:~$2^9$ }                                                   & \multicolumn{2}{c}{r. słownika:~$2^{10}$}                                                  \\
+                                                                                  & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}} & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}} & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}}  \\
+256 x 256 px                                                                      & 39.06\%  &                                                                                & 78.13\%  &                                                                                & 156.25\% &                                                                                 \\
+512 x 512 px                                                                      & 9.77\%   &                                                                                & 19.53\%  &                                                                                & 39.06\%  &                                                                                 \\
+720 x 576 px                                                                      & 6.17\%   &                                                                                & 12.35\%  &                                                                                & 24.69\%  &                                                                                 \\
+1920 x 1080 px                                                                    & 1.23\%   &                                                                                & 2.47\%   &                                                                                & 4.94\%   &                                                                                 \\
+3840 x 2160 px                                                                    & 0.31\%   &                                                                                & 0.62\%   &                                                                                & 1.23\%   &                                                                                 \\
+\bottomrule
+\end{tabular}
+\caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
+\end{table}
 
 \subsubsection{RMSE}
 
