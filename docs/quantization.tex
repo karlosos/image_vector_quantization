@@ -407,7 +407,14 @@ Każdy blok przechowujący indeks ma rozmiar:
 	\label{eq:mrev_indeks_size}
 \end{equation}
 
-Łącząc wzór na wielkość słownika w bitach (\ref{eq:lgb_dict_size}) oraz wzór na reprezentację pojedynczego wektora w bitach (\ref{eq:mrev_indeks_size}) otrzymujemy:
+W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy brać pod uwagę przechowywanie liczb ujemnych. Z tego względu pojedynczy element wektora resztkowego zapisywany jest na 9 bitach względem 8 bitów w podejściu klasycznym. Zdefiniujmy nowy wzór na rozmiar słownika:
+
+\begin{equation}
+	\textrm{dict\_size} = K \cdot v \cdot 9 \quad \textrm{[bitów]}.
+	\label{eq:mrvq_dict_size}
+\end{equation}
+
+Łącząc wzór na wielkość słownika w bitach (\ref{eq:mrvq_dict_size}) oraz wzór na reprezentację pojedynczego wektora w bitach (\ref{eq:mrev_indeks_size}) otrzymujemy:
 
 \begin{equation}
 	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
