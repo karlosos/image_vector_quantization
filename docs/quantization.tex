@@ -367,28 +367,34 @@ Dla obrazie o wielkości $m \times n$ otrzymujemy $\frac{mn}{v}$ bloków. Cały 
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
 
-Kwantyzacja wektorowa z usuniętą średnią (MRVQ) jest zmodyfikowaną wersją schematu VQ. 
-Celem MRVQ jest zapewnienie lepszej jakości obrazu niż VQ. 
-Aby osiągnąć ten cel, do kodowania każdego bloku obrazu w MRVQ wykorzystuje się wartość średnią bloku oraz indeks wektora resztkowego. 
-Schemat MRVQ składa się z trzech procedur: generowania książki kodów resztkowych, kodowania obrazu i dekodowania obrazu.
-Aby wygenerować resztkową książkę kodową RCB z N resztkowych słów kodowych dla MRVQ, zastosowano algorytm LBG. 
-Zamiast obrazów szkoleniowych używanych do projektowania książki kodowej VQ, do projektowania książki kodowej MRVQ wykorzystuje się wektory resztkowe. 
-Po pierwsze, bloki obrazów treningowych są generowane przez podzielenie obrazów treningowych na nienakładające się 
-na siebie bloki obrazów o $4 \times 4$ pikseli. 
-Każdy blok obrazów treningowych składający się z $4 \times 4$ pikseli może być postrzegany jako wektor $k$-wymiarowy, gdzie $k=4 \times 4$. 
-Każdy wektor treningu jest przekształcany na jeden wektor reprezentowany poprzez odjęcie jego średniej wartości bloku od wartości każdego piksela. 
-Następnie algorytm LBG opisany w sekcji 2.5.1 jest wykorzystywany do projektowania książki 
-kodów resztkowych RCB = ($rcw_{0}$, $rcw_{1}$, \dots, $rcw_{N-1}$) przy użyciu wektorów resztkowych.
+Kwantyzacja wektorowa z usuniętą średnią (ang. \emph{mean-removed vector quantization} (MRVQ)) jest zmodyfikowaną wersją schematu kwantyzacji wektorowej \cite{meanremovedVQ}.
 
-Wartość średnia bloku $bm$ dla każdego bloku obrazu $x$ jest obliczana za pomocą wyrażenia: 
+Celem MRVQ jest zapewnienie lepszej jakości obrazu od klasycznej kwantyzacji. Jest to osiągane za pomocą dodatkowej informacji jaką jest wartość średnia piksela dla każdego bloku. Ceną takiego podejścia jest spadek stopnia kompresji ze względu na konieczność przechowywania dodatkowych 8 bitów przechowujących wartość średnią dla każdego bloku.
+
+Schemat kwantyzacji wektorowej z usuniętą średnią jest analogiczny do klasycznej kwantyzacji wektorowej. Algorytm kodowania składa się z następujących kroków:
+
+\begin{enumerate}
+\item Stworzenie bloków (wektorów) z obrazu wejściowego.
+\item Wyliczenie wartości średniej każdego bloku.
+\item Stworzenie bloków resztkowych poprzez usunięcie średniej od każdej wartości bloku.
+\item Budowa książki kodów resztkowych (ang. \emph{residual codebook} (RCB)) -- na przykład korzystając z algorytmu LBG.
+\item Skojarzenie z każdym blokiem resztkowym pary -- indeksu najbliższego wektora resztkowego z książki kodowej oraz średniej danego bloku.
+\end{enumerate}
+
+Wartość średnia bloku $bm$ dla każdego bloku obrazu $x$ i wektorów o długości $k$ jest obliczana za pomocą wyrażenia: 
 
 \begin{equation}
-bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i}
-\end{equation}
+bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i},
+\end{equation} 
 
-Następnie generowany jest pozostały wektor $rv$ poprzez odjęcie wartości $bm$ od każdej wartości piksela w $x$.
-Przeszukiwane jest najbliższe pozostałe słowo kodowe w $RCB$ dla pozostałego wektora $rv$ i zapisywany jest indeks
-najbliższego pozostałego słowa kodowego \cite{meanremovedVQ}. 
+Źródło: \cite{meanremovedVQ}
+
+Algorytm dekodowania składa się z następujących kroków:
+
+\begin{enumerate}
+\item Przyporządkowanie każdemu blokowi obrazu opisanego przez parę (indeks, średnia) odpowiedniego bloku resztkowego przechowywanego w książce kodów resztkowych.
+\item Dodanie do każdego elementu odczytanego bloku przechowywaną wartość średnią.
+\end{enumerate}
 
 \paragraph{Sparametryzowany wzór na długość pliku wynikowego}
 
