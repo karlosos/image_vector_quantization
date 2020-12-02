@@ -594,6 +594,22 @@ obrazu względem wielkości zdefiniowanego słownika?}
 \caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
 \end{table}
 
+Oznaczenia wykorzystane w tabeli:
+\begin{itemize}[label=]
+    \item $C_S$ - codebook size - rozmiar książki kodowej w bitach
+    \item $I_S$ - image size - rozmiar obrazu oryginalnego
+    \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków)
+\end{itemize}
+
+W celu obliczenia procentowej ilości jaką stanowi rozdzielczość obrazu względem wielkości zdefiniowanego słownika należało skorzystać ze wzorów:
+
+\begin{itemize}[label=]
+    \item $C_S$ - skorzystano ze wzoru \ref{eq:lgb_dict_size} w tym dokumencie
+    \item $Q_S$ - skorzystano ze wzoru \ref{eq:lgb_image_size} w tym dokumencie
+\end{itemize}
+
+Tabela została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
+
 \subsubsection{RMSE}
 
 Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy średnią wielkość błędu. Jest to pierwiastek kwadratowy każdej różnicy między prognozowaną a odpowiadającą jej wartościom, podniesiona do kwadratu, a następnie uśredniona w próbie. Ponieważ błędy są podnoszone do kwadratu, zanim zostaną uśrednione, sprawia to, że RMSE nadaje stosunkowo dużą wagę dużym błędom. Oznacza to, że RMSE jest najbardziej przydatny, gdy duże błędy są szczególnie niepożądane.
