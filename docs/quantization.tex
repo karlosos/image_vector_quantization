@@ -574,18 +574,21 @@ Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;sk
 
 Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1.\cite{compression_ratio}
 
+\subsubsection{Jaki procent stanowi dana rozdzielczość 
+obrazu względem wielkości zdefiniowanego słownika?}
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{cclclcl} 
 \toprule
-\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{6}{c}{\begin{tabular}[c]{@{}c@{}}\textbf{Jaki procent stanowi dana rozdzielczość }\\\textbf{obrazu względem wielkości zdefiniowanego słownika?}\end{tabular}}                                                                                                         \\
-                                                                                  & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}r. słownika:~$2^8$\\\end{tabular}}          & \multicolumn{2}{c}{~r.słownika:~$2^9$ }                                                   & \multicolumn{2}{c}{r. słownika:~$2^{10}$}                                                  \\
-                                                                                  & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}} & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}} & oryginał & \multicolumn{1}{c}{\begin{tabular}[c]{@{}c@{}}obraz \\zakodowany\end{tabular}}  \\
-256 x 256 px                                                                      & 39.06\%  &                                                                                & 78.13\%  &                                                                                & 156.25\% &                                                                                 \\
-512 x 512 px                                                                      & 9.77\%   &                                                                                & 19.53\%  &                                                                                & 39.06\%  &                                                                                 \\
-720 x 576 px                                                                      & 6.17\%   &                                                                                & 12.35\%  &                                                                                & 24.69\%  &                                                                                 \\
-1920 x 1080 px                                                                    & 1.23\%   &                                                                                & 2.47\%   &                                                                                & 4.94\%   &                                                                                 \\
-3840 x 2160 px                                                                    & 0.31\%   &                                                                                & 0.62\%   &                                                                                & 1.23\%   &                                                                                 \\
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
+                                                                                  & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$}  \\ 
+\bottomrule \\
+256 x 256 px                                                                      & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                                \\
+512 x 512 px                                                                      & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                                \\
+720 x 576 px                                                                      & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                                \\
+1920 x 1080 px                                                                    & 0.20\%            & 3.06\%                                & 0.40\%            & 5.32\%                                & 0.79\%            & 9.18\%                                 \\
+3840 x 2160 px                                                                    & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                 \\
 \bottomrule
 \end{tabular}
 \caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
