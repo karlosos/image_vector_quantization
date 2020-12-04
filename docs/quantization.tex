@@ -418,7 +418,7 @@ W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy
 
 \begin{equation}
 	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
-	\label{eq:lgb_image_size}
+	\label{eq:mrvq_image_size}
 \end{equation}
 
 dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
@@ -566,13 +566,13 @@ gdzie:
 
 \subsubsection{CR}
 
-Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji , jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji :
+Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
 
 \begin{equation}
 Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
 \end{equation}
 
-Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1.\cite{compression_ratio}
+Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
 
 \subsubsection{Jaki procent stanowi dana rozdzielczość 
 obrazu względem wielkości zdefiniowanego słownika?}
@@ -583,7 +583,7 @@ obrazu względem wielkości zdefiniowanego słownika?}
 \toprule
 \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
                                                                                   & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$}  \\ 
-\bottomrule \\
+\midrule \\
 256 x 256 px                                                                      & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                                \\
 512 x 512 px                                                                      & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                                \\
 720 x 576 px                                                                      & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                                \\
@@ -596,16 +596,9 @@ obrazu względem wielkości zdefiniowanego słownika?}
 
 Oznaczenia wykorzystane w tabeli:
 \begin{itemize}[label=]
-    \item $C_S$ - codebook size - rozmiar książki kodowej w bitach
-    \item $I_S$ - image size - rozmiar obrazu oryginalnego
-    \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków)
-\end{itemize}
-
-W celu obliczenia procentowej ilości jaką stanowi rozdzielczość obrazu względem wielkości zdefiniowanego słownika należało skorzystać ze wzorów:
-
-\begin{itemize}[label=]
-    \item $C_S$ - skorzystano ze wzoru \ref{eq:lgb_dict_size} w tym dokumencie
-    \item $Q_S$ - skorzystano ze wzoru \ref{eq:lgb_image_size} w tym dokumencie
+	\item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
+    \item $I_S$ - image size - rozmiar obrazu oryginalnego.
+		\item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
 \end{itemize}
 
 Tabela została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
