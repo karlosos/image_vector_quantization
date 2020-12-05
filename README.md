@@ -9,6 +9,8 @@
 1. Create virtual environment with `virtualenv .venv`.
 2. Activate venv with `source .venv/bin/activate`.
 3. Install packages with `pip install -r requirements.txt`.
+4. Activate git hooks with `pre-commit install`.
+5. Install `vector_quantization` as a package with `pip install -e .`. This will allow doing imports like `from vector_quantization import .`.
 4. Go to `vector_quantization` subfolder.
 5. Launch application with `python main.py`.
 
