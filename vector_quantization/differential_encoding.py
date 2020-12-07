@@ -2,21 +2,22 @@ import numpy as np
 
 
 def differential_encoding(image):
+    image = image.astype("float64")
     height, width = image.shape
-    encoded = np.zeros(image.shape)
+    encoded = np.zeros(image.shape, dtype="float64")
     # rewrite first element
     encoded[0, 0] = image[0, 0]
     # calculate first row
     print(image.shape)
     for i in range(1, width):
-        encoded[0, i] = image[0, i] - encoded[0, i - 1]
+        encoded[0, i] = image[0, i] - image[0, i - 1]
     # calculate first column
     for i in range(1, height):
-        encoded[i, 0] = image[i, 0] - encoded[i - 1, 0]
+        encoded[i, 0] = image[i, 0] - image[i - 1, 0]
     # calculate other values
     for i in range(1, height):
         for j in range(1, width):
-            encoded[i, j] = image[i, j] - encoded[i, j - 1]
+            encoded[i, j] = image[i, j] - image[i, j - 1]
     return encoded
 
 
