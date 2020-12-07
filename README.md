@@ -1,8 +1,18 @@
-<h1 align="center">Quantization - team project</h1>
+<p align="center">
+    <img src="https://i.imgur.com/OrYlqOu.png" width="600px" alt="logo"/>
+</p>
+
+***
+
+<div align="center">
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ![Run Tests](https://github.com/karlosos/image_vector_quantization/workflows/Run%20Tests/badge.svg)
 ![Lint](https://github.com/karlosos/image_vector_quantization/workflows/Lint/badge.svg)
+[![GitHub contributors](https://img.shields.io/github/contributors/karlosos/image_vector_quantization.svg)](https://github.com/karlosos/image_vector_quantization/graphs/contributors/)
+</div>
+
+Team project where we implemented and experimented with image compression algorithms. Lossless and lossy compression with vector quantization, mean-removal vector quantization, differential encoding and Golomb coding.
 
 ## Development
 
