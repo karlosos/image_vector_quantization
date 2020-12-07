@@ -40,24 +40,41 @@ def differential_decoding(codes):
 
 
 def differential_median_encoding(image):
+    image = image.astype("float64")
     height, width = image.shape
-    encoded = np.zeros(image.shape)
+    encoded = np.zeros(image.shape, dtype="float64")
     # rewrite first element
     encoded[0, 0] = image[0, 0]
     # calculate first row
-    print(image.shape)
     for i in range(1, width):
-        encoded[0, i] = image[0, i] - encoded[0, i - 1]
+        encoded[0, i] = image[0, i] - image[0, i - 1]
     # calculate first column
     for i in range(1, height):
-        encoded[i, 0] = image[i, 0] - encoded[i - 1, 0]
+        encoded[i, 0] = image[i, 0] - image[i - 1, 0]
     # calculate other values
-    # TODO: median encoding
+    for i in range(1, height):
+        for j in range(1, width):
+            encoded[i, j] = image[i, j] - np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
     return encoded
 
 
 def differential_median_decoding(codes):
-    pass
+    codes = codes.astype("float64")
+    height, width = codes.shape
+    image = np.zeros(codes.shape, dtype="float64")
+    # rewrite first element
+    image[0, 0] = codes[0, 0]
+    # calculate first row
+    for i in range(1, width):
+        image[0, i] = codes[0, i] + image[0, i - 1]
+    # calculate first column
+    for i in range(1, height):
+        image[i, 0] = codes[i, 0] + image[i - 1, 0]
+    # calculate other values
+    for i in range(1, height):
+        for j in range(1, width):
+            image[i, j] = codes[i, j] + np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
+    return image
 
 
 if __name__ == "__main__":
@@ -94,8 +111,8 @@ if __name__ == "__main__":
     hist_means = hist_means / np.sum(hist_means)
     hist_encoded, bins_encoded = np.histogram(encoded.ravel(), bins=np.arange(-255, 256))
     hist_encoded = hist_encoded / np.sum(hist_encoded)
-    plt.plot(bins_means[:-1], hist_means, label="średnie")
-    plt.plot(bins_encoded[:-1], hist_encoded, label="kodowanie różnicowe")
+    plt.plot(bins_means[:-1], hist_means, label="Średnie bloków")
+    plt.plot(bins_encoded[:-1], hist_encoded, label="Kodowanie różnicowe")
     plt.legend()
     plt.show()
 
