@@ -11,6 +11,7 @@ import numpy as np
 from vector_quantization.metrics import PSNR
 from vector_quantization.image import load_image, save_image
 from vector_quantization.differential_encoding import differential_encoding
+from vector_quantization.differential_encoding import differential_decoding
 
 
 def main():
@@ -42,6 +43,14 @@ def main():
     entropy_means = entropy(hist_img, base=2)
     entropy_encoded = entropy(hist_encoded, base=2)
     print(f"Entropia średnie = {entropy_means}, entropia kodowanie różnicowe = {entropy_encoded}")
+
+    # Decode image
+    decoded_image = differential_decoding(encoded)
+    plt.imshow(decoded_image)
+    plt.show()
+
+    # PSNR
+    print("PSNR: ", PSNR(img, decoded_image))
 
 
 if __name__ == "__main__":
