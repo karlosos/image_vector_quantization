@@ -12,7 +12,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/karlosos/image_vector_quantization.svg)](https://github.com/karlosos/image_vector_quantization/graphs/contributors/)
 </div>
 
-Team project where we implemented and experimented with image compression algorithms. Lossless and lossy compression with vector quantization, mean-removal vector quantization, differential encoding and Golomb coding.
+Team project where we implemented and experimented with image compression algorithms. Lossless and lossy compression with vector quantization, mean-removal vector quantization, LBG algorithm, differential encoding and Golomb coding.
 
 ## Development
 
