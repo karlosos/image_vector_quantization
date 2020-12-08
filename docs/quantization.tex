@@ -822,6 +822,115 @@ Maksimum &  39.609384 &  0.967245 &  673.800110 &  0.388628 \\
 
 
 \FloatBarrier
+
+\subsection{Kodowanie różnicowe}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histogram_image.eps}  
+    \caption{Porównanie histogramu wartości średnich bloków $4\times4$ obrazu \emph{lennagrey} i histogramu po kodowaniu różnicowym}
+  \label{fig:de_histogram_image}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}  
+    \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
+  \label{fig:de_histograms_comparison}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}  
+  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
+  \label{fig:de_histograms_comparison_zoom}
+\end{figure}
+
+\todo{Te wykresy będzie można przenieść do teorii. Narazie zostawiam tutaj.}
+
+Przeprowadzono kodowanie wartości średnich z bloków uzyskiwanych w procesie kwantyzacji wektorowej z usuniętą średnią (MRVQ). Przeprowadzono porównanie trzech metod kodowania na podstawie pomiaru entropii. \todo{Dodać wzór do obliczania entropii w sekcji z teorią}.
+
+Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania różnicowego i adaptacyjnego predyktora medianowego.
+\todo{Dodać odnośniki do opisów metod w sekcji z teorią}.
+
+Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}).
+
+\begin{table}
+    \centering
+    \begin{tabular}{lrrrr}
+    \toprule
+        {Obraz} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
+        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    \midrule
+            Aerial.bmp &  6.799397 &  6.370003 &  6.346111 &  6.281835 \\
+          airfield.bmp &  7.600676 &  6.335829 &  6.200263 &  6.115437 \\
+          airplane.bmp &  6.725235 &  5.192151 &  5.384822 &  4.951908 \\
+         baboonTMW.bmp &  7.133698 &  6.231330 &  6.065259 &  6.049762 \\
+           balloon.bmp &  7.305988 &  4.676627 &  4.567023 &  3.750564 \\
+     balloon\_noise.bmp &  7.312372 &  4.684539 &  4.569674 &  3.760032 \\
+              BARB.bmp &  7.460040 &  6.003715 &  5.863538 &  5.321274 \\
+             BARB2.bmp &  7.389961 &  5.914602 &  5.700214 &  5.371247 \\
+           barb512.bmp &  7.551742 &  5.994919 &  5.846057 &  5.308187 \\
+             BOARD.bmp &  6.751369 &  4.478934 &  4.893147 &  3.820169 \\
+           boat512.bmp &  7.105094 &  5.628897 &  5.799380 &  5.270987 \\
+             boats.bmp &  7.039440 &  5.171864 &  5.334069 &  4.660202 \\
+            bridge.bmp &  7.612662 &  6.195047 &  6.272714 &  5.950704 \\
+         bridge256.bmp &  7.512977 &  6.214165 &  6.392970 &  5.996127 \\
+         camera256.bmp &  6.973989 &  5.151811 &  5.224229 &  4.781324 \\
+            couple.bmp &  7.337503 &  5.876122 &  5.893505 &  5.109491 \\
+         couple256.bmp &  6.343808 &  5.386308 &  5.370506 &  4.615757 \\
+          crowd512.bmp &  6.968875 &  6.200433 &  6.134625 &  5.794663 \\
+             EARTH.bmp &  5.252131 &  4.741143 &  4.695157 &  4.578020 \\
+            elaine.bmp &  7.455792 &  5.606359 &  5.410394 &  5.033493 \\
+              ELIF.bmp &  6.102673 &  4.744612 &  4.947915 &  4.425198 \\
+            finger.bmp &  7.167870 &  6.845691 &  6.611423 &  6.784109 \\
+           FROG512.BMP &  6.948923 &  5.869151 &  5.806952 &  5.749067 \\
+              GIRL.bmp &  7.211853 &  5.725185 &  5.554541 &  5.203274 \\
+              GOLD.bmp &  7.502927 &  5.421554 &  5.520399 &  4.952832 \\
+          GOLDHILL.BMP &  7.407802 &  5.566452 &  5.656368 &  5.139234 \\
+        harbour512.bmp &  6.539697 &  5.021141 &  5.401220 &  4.843480 \\
+             HOTEL.bmp &  7.492570 &  5.644325 &  5.707400 &  5.085551 \\
+            lax512.bmp &  6.638618 &  5.944674 &  5.753942 &  5.462067 \\
+           lenaTMW.bmp &  7.530290 &  5.973761 &  5.695504 &  5.131158 \\
+         lennagrey.bmp &  7.391431 &  5.813837 &  5.541977 &  4.937865 \\
+            man512.bmp &  7.248159 &  5.948017 &  5.806439 &  5.491626 \\
+       noisesquare.bmp &  4.114868 &  3.967057 &  3.874582 &  3.818463 \\
+             OMAHA.bmp &  7.438018 &  7.141744 &  6.895302 &  6.848980 \\
+        peppersTMW.bmp &  7.550972 &  5.663923 &  5.557934 &  4.959506 \\
+          SAILBOAT.bmp &  7.239532 &  5.780576 &  5.727559 &  5.380788 \\
+           seismic.bmp &  5.182019 &  3.784849 &  5.208382 &  4.175657 \\
+              SENA.bmp &  6.750098 &  4.797344 &  5.042326 &  4.371430 \\
+            SENSIN.bmp &  7.233915 &  5.917481 &  5.998098 &  5.571654 \\
+            shapes.bmp &  6.922706 &  4.406802 &  4.872293 &  3.495424 \\
+             SINAN.bmp &  7.265768 &  5.716536 &  5.684344 &  5.104367 \\
+       Tank512.bmp &  6.230584 &  5.141670 &  5.115095 &  4.908838 \\
+      Truck512.bmp &  6.475817 &  5.150306 &  5.380798 &  5.125280 \\
+        woman1.bmp &  7.109770 &  5.742285 &  5.512279 &  5.142361 \\
+        woman2.bmp &  7.263913 &  4.999391 &  4.933760 &  4.321375 \\
+         ZELDA.bmp &  7.299168 &  5.363629 &  5.193768 &  4.345018 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
+    \label{tab:differential_encoding_all}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrrr}
+    \toprule
+        {} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
+        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    \midrule
+        minimum & 4.114868 & 3.784849 &	3.874582 &	3.495424 \\
+        maksimum & 7.612662 &	7.141744 &	6.895302 &	6.848980 \\
+        średnia & 6.975929 &	5.524930 &	5.542701 &	5.071648 \\
+    \bottomrule
+    \end{tabular}
+
+        \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie entropii po kodowaniu różnicowym dla średnich uzyskanych w procesie MRVQ}
+        \label{tab:differential_encoding_summary}
+    \end{table}
+
 \section{Podsumowanie}
 
 \lipsum[1-3]
