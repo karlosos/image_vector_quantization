@@ -77,6 +77,87 @@ def differential_median_decoding(codes):
     return image
 
 
+def median_adaptive_predictor_encoding(image):
+    """
+    Using median edge detector - nonlinear predictor
+    """
+    image = image.astype("float64")
+    height, width = image.shape
+    encoded = np.zeros(image.shape, dtype="float64")
+    # rewrite first element
+    encoded[0, 0] = image[0, 0]
+    # calculate first row
+    for i in range(1, width):
+        encoded[0, i] = image[0, i] - image[0, i - 1]
+    # calculate first column
+    for i in range(1, height):
+        encoded[i, 0] = image[i, 0] - image[i - 1, 0]
+    # calculate other values
+    for i in range(1, height):
+        for j in range(1, width):
+            p1 = image[i, j - 1]
+            p2 = image[i - 1, j]
+            p3 = image[i - 1, j - 1]
+            if p1 > p2:
+                x_max = p1
+                x_min = p2
+            else:
+                x_max = p2
+                x_min = p1
+            if p3 >= x_max:
+                # context 1 as described in Entropia_2.doc
+                x_med = min(p1, p2)
+            elif p3 <= x_min:
+                # context 2
+                x_med = max(p1, p2)
+            else:
+                # context 3
+                x_med = p1 + p2 - p3
+            encoded[i, j] = image[i, j] - x_med
+    return encoded
+
+
+def median_adaptive_predictor_decoding(codes):
+    """
+    Using median edge detector - nonlinear predictor
+    """
+    codes = codes.astype("float64")
+    height, width = codes.shape
+    image = np.zeros(codes.shape, dtype="float64")
+    # rewrite first element
+    image[0, 0] = codes[0, 0]
+    # calculate first row
+    for i in range(1, width):
+        image[0, i] = codes[0, i] + image[0, i - 1]
+    # calculate first column
+    for i in range(1, height):
+        image[i, 0] = codes[i, 0] + image[i - 1, 0]
+    # calculate other values
+    for i in range(1, height):
+        for j in range(1, width):
+            # image[i, j] = codes[i, j] + np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
+            p1 = image[i, j - 1]
+            p2 = image[i - 1, j]
+            p3 = image[i - 1, j - 1]
+            if p1 > p2:
+                x_max = p1
+                x_min = p2
+            else:
+                x_max = p2
+                x_min = p1
+            if p3 >= x_max:
+                # context 1 as described in Entropia_2.doc
+                x_med = min(p1, p2)
+            elif p3 <= x_min:
+                # context 2
+                x_med = max(p1, p2)
+            else:
+                # context 3
+                x_med = p1 + p2 - p3
+            image[i, j] = codes[i, j] + x_med
+    return image
+
+
 if __name__ == "__main__":
     from PIL import Image
 
