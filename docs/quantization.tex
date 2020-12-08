@@ -570,9 +570,20 @@ Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany r�
 
 \begin{equation}
 Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
+\label{eq:cr}
 \end{equation}
 
 Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
+
+\subsubsection{BPP}
+
+\paragraph{Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP):}
+Określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, co daje nam 2 bity na piksel 
+
+\begin{equation}
+BPP = 8 / CR
+\end{equation}
+
 
 \subsubsection{Jaki procent stanowi dana rozdzielczość 
 obrazu względem wielkości zdefiniowanego słownika?}
