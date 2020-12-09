@@ -418,7 +418,7 @@ W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy
 
 \begin{equation}
 	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
-	\label{eq:mrvq_image_size}
+	\label{eq:lgb_image_size}
 \end{equation}
 
 dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
@@ -448,7 +448,7 @@ gdzie:
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
 \begin{equation}
-PSNR = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
+PSNR = 10 \cdot \log_10 \frac{[max(f(i,j))]^2}{MSE}
 \end{equation}
 
 gdzie:
@@ -470,7 +470,7 @@ zwłaszcza gdy są znajdują się blisko siebie w przestrzenni. Zależności te 
 Algorytm SSIM:
 
 \begin{equation}
-SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) \cdot (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) \cdot (\delta_{x}^2 + \delta_{x}^2 + c_2)}
+SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) (\delta_{x}^2 + \delta_{x}^2 + c_2)}
 \end{equation}
 
 gdzie:
@@ -495,7 +495,7 @@ Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P
 można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu \cite{pc}:
 
 \begin{equation}
-PC(x) = \frac{|E(x)|}{(\varepsilon + \sum\limits{_{n}} A_n(x))}
+PC(x) = E(x) / (\varepsilon + \sum\limits{_{n}} A_n(x))
 \end{equation}
 
 \paragraph{Wielkość gradientu  (ang. \emph{Gradient Magnitude}) (GM):}
@@ -566,34 +566,41 @@ gdzie:
 
 \subsubsection{CR}
 
-Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
+Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji , jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji :
 
 \begin{equation}
 Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
-\label{eq:cr}
 \end{equation}
 
-Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
-
-\subsubsection{BPP}
-
-Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP) określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, daje nam średnią bitową wynoszącą 2 bity na piksel.
-
-\begin{equation}
-BPP = 8 / CR
-\end{equation}
-
+Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1.\cite{compression_ratio}
 
 \subsubsection{Jaki procent stanowi dana rozdzielczość 
 obrazu względem wielkości zdefiniowanego słownika?}
 
+Oznaczenia wykorzystane w tabeli:
+\begin{itemize}[label=]
+    \item $C_S$ - codebook size - rozmiar książki kodowej w bitach
+    \item $I_S$ - image size - rozmiar obrazu oryginalnego
+    \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków)
+\end{itemize}
+
+W celu obliczenia procentowej ilości jaką stanowi rozdzielczość obrazu względem wielkości zdefiniowanego słownika należało skorzystać ze wzorów:
+
+\begin{itemize}[label=]
+    \item $C_S$ - skorzystano ze wzoru \ref{eq:lgb_dict_size} w tym dokumencie
+    \item $Q_S$ - skorzystano ze wzoru \ref{eq:lgb_image_size} w tym dokumencie
+\end{itemize}
+
+Tabela \ref{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
+
 \begin{table}[!h]
+\caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
 \centering
 \begin{tabular}{cclclcl} 
 \toprule
 \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
                                                                                   & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$}  \\ 
-\midrule \\
+\bottomrule \\
 256 x 256 px                                                                      & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                                \\
 512 x 512 px                                                                      & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                                \\
 720 x 576 px                                                                      & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                                \\
@@ -601,17 +608,8 @@ obrazu względem wielkości zdefiniowanego słownika?}
 3840 x 2160 px                                                                    & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                 \\
 \bottomrule
 \end{tabular}
-\caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
 \end{table}
-
-Oznaczenia wykorzystane w tabeli:
-\begin{itemize}[label=]
-	\item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
-    \item $I_S$ - image size - rozmiar obrazu oryginalnego.
-		\item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
-\end{itemize}
-
-Tabela została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
+\newpage
 
 \subsubsection{RMSE}
 
@@ -620,7 +618,7 @@ Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy śr
 Wzór RMSE:
 
 \begin{equation}
-\mathrm{FSIM}=\frac{\sum_{\mathrm{x} \in \Omega} S_{L}(\mathbf{x}) \cdot P C_{m}(\mathbf{x})}{\sum_{\mathrm{x} \in \Omega} P C_{m}(\mathbf{x})}
+RMSE = \sqrt{\frac{1}{n} \sum_{j=1}{n} (y_{j} - \hat{y_{j}} )^2}
 \end{equation}
 
 gdzie:
@@ -656,7 +654,9 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:lbg
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[ht]
+\begin{table}[!ht]
+\caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
+\label{tab:lbg_random}
 \centering
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -709,13 +709,14 @@ Obraz              & PSNR {[}dB{]} & SSIM   & MSE      & NRMSE  \\ \midrule
          ZELDA.bmp &  33.747423 &  0.828049 &   44.793265 &  0.057213 \\
 \bottomrule
 \end{tabular}
-\caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
-\label{tab:lbg_random}
 \end{table}
-
+\newpage
+\newpage
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[H]
+\begin{table}[!h]
+\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
+\label{tab:lbg_summary}
 \centering
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -725,15 +726,13 @@ Maksimum &  35.929998 &  0.923327 &  706.925873 &  0.194422 \\
 Średnia  &  31.789057 &  0.760407 &  156.117538 &  0.096147 \\
 \bottomrule
 \end{tabular}
-\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
-\label{tab:lbg_summary}
 \end{table}
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
 
 Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}. 
 
-\begin{figure}[H]
+\begin{figure}[!h]
 \centering
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
@@ -741,20 +740,23 @@ Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich
   \label{fig:lbg_iterations}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
   \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations_mean}
 \end{figure}
 
+\newpage
 \subsection{Algorytm MRVQ z losową inicjalizacją słownika}
 
 Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
 kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:mrvq_random}} i podsumowano w tablicy \mbox{\ref{tab:mrvq_summary}}.
 
 
-\begin{table}[ht]
+\begin{table}[!ht]
+\caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
+\label{tab:mrvq_random}
 \centering
 \begin{tabular}{@{}lrrrr@{}}
 
@@ -810,13 +812,13 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:mrv
 \bottomrule
 
 \end{tabular}
-\caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
-\label{tab:mrvq_random}
 \end{table}
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[H]
+\begin{table}[!h]
+\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
+\label{tab:mrvq_summary}
 \centering
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -826,121 +828,10 @@ Maksimum &  39.609384 &  0.967245 &  673.800110 &  0.388628 \\
 Średnia  &  33.664910 &  0.859542 &  142.266146 &  0.090000 \\
 \bottomrule
 \end{tabular}
-\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
-\label{tab:mrvq_summary}
 \end{table}
 
 
 \FloatBarrier
-
-\subsection{Kodowanie różnicowe}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histogram_image.eps}  
-    \caption{Porównanie histogramu wartości średnich bloków $4\times4$ obrazu \emph{lennagrey} i histogramu po kodowaniu różnicowym}
-  \label{fig:de_histogram_image}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}  
-    \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
-  \label{fig:de_histograms_comparison}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}  
-  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
-  \label{fig:de_histograms_comparison_zoom}
-\end{figure}
-
-\todo{Te wykresy będzie można przenieść do teorii. Narazie zostawiam tutaj.}
-
-Przeprowadzono kodowanie wartości średnich z bloków uzyskiwanych w procesie kwantyzacji wektorowej z usuniętą średnią (MRVQ). Przeprowadzono porównanie trzech metod kodowania na podstawie pomiaru entropii. \todo{Dodać wzór do obliczania entropii w sekcji z teorią}.
-
-Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania różnicowego i adaptacyjnego predyktora medianowego.
-\todo{Dodać odnośniki do opisów metod w sekcji z teorią}.
-
-Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}).
-
-\begin{table}
-    \centering
-    \begin{tabular}{lrrrr}
-    \toprule
-        {Obraz} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
-    \midrule
-            Aerial.bmp &  6.799397 &  6.370003 &  6.346111 &  6.281835 \\
-          airfield.bmp &  7.600676 &  6.335829 &  6.200263 &  6.115437 \\
-          airplane.bmp &  6.725235 &  5.192151 &  5.384822 &  4.951908 \\
-         baboonTMW.bmp &  7.133698 &  6.231330 &  6.065259 &  6.049762 \\
-           balloon.bmp &  7.305988 &  4.676627 &  4.567023 &  3.750564 \\
-     balloon\_noise.bmp &  7.312372 &  4.684539 &  4.569674 &  3.760032 \\
-              BARB.bmp &  7.460040 &  6.003715 &  5.863538 &  5.321274 \\
-             BARB2.bmp &  7.389961 &  5.914602 &  5.700214 &  5.371247 \\
-           barb512.bmp &  7.551742 &  5.994919 &  5.846057 &  5.308187 \\
-             BOARD.bmp &  6.751369 &  4.478934 &  4.893147 &  3.820169 \\
-           boat512.bmp &  7.105094 &  5.628897 &  5.799380 &  5.270987 \\
-             boats.bmp &  7.039440 &  5.171864 &  5.334069 &  4.660202 \\
-            bridge.bmp &  7.612662 &  6.195047 &  6.272714 &  5.950704 \\
-         bridge256.bmp &  7.512977 &  6.214165 &  6.392970 &  5.996127 \\
-         camera256.bmp &  6.973989 &  5.151811 &  5.224229 &  4.781324 \\
-            couple.bmp &  7.337503 &  5.876122 &  5.893505 &  5.109491 \\
-         couple256.bmp &  6.343808 &  5.386308 &  5.370506 &  4.615757 \\
-          crowd512.bmp &  6.968875 &  6.200433 &  6.134625 &  5.794663 \\
-             EARTH.bmp &  5.252131 &  4.741143 &  4.695157 &  4.578020 \\
-            elaine.bmp &  7.455792 &  5.606359 &  5.410394 &  5.033493 \\
-              ELIF.bmp &  6.102673 &  4.744612 &  4.947915 &  4.425198 \\
-            finger.bmp &  7.167870 &  6.845691 &  6.611423 &  6.784109 \\
-           FROG512.BMP &  6.948923 &  5.869151 &  5.806952 &  5.749067 \\
-              GIRL.bmp &  7.211853 &  5.725185 &  5.554541 &  5.203274 \\
-              GOLD.bmp &  7.502927 &  5.421554 &  5.520399 &  4.952832 \\
-          GOLDHILL.BMP &  7.407802 &  5.566452 &  5.656368 &  5.139234 \\
-        harbour512.bmp &  6.539697 &  5.021141 &  5.401220 &  4.843480 \\
-             HOTEL.bmp &  7.492570 &  5.644325 &  5.707400 &  5.085551 \\
-            lax512.bmp &  6.638618 &  5.944674 &  5.753942 &  5.462067 \\
-           lenaTMW.bmp &  7.530290 &  5.973761 &  5.695504 &  5.131158 \\
-         lennagrey.bmp &  7.391431 &  5.813837 &  5.541977 &  4.937865 \\
-            man512.bmp &  7.248159 &  5.948017 &  5.806439 &  5.491626 \\
-       noisesquare.bmp &  4.114868 &  3.967057 &  3.874582 &  3.818463 \\
-             OMAHA.bmp &  7.438018 &  7.141744 &  6.895302 &  6.848980 \\
-        peppersTMW.bmp &  7.550972 &  5.663923 &  5.557934 &  4.959506 \\
-          SAILBOAT.bmp &  7.239532 &  5.780576 &  5.727559 &  5.380788 \\
-           seismic.bmp &  5.182019 &  3.784849 &  5.208382 &  4.175657 \\
-              SENA.bmp &  6.750098 &  4.797344 &  5.042326 &  4.371430 \\
-            SENSIN.bmp &  7.233915 &  5.917481 &  5.998098 &  5.571654 \\
-            shapes.bmp &  6.922706 &  4.406802 &  4.872293 &  3.495424 \\
-             SINAN.bmp &  7.265768 &  5.716536 &  5.684344 &  5.104367 \\
-       Tank512.bmp &  6.230584 &  5.141670 &  5.115095 &  4.908838 \\
-      Truck512.bmp &  6.475817 &  5.150306 &  5.380798 &  5.125280 \\
-        woman1.bmp &  7.109770 &  5.742285 &  5.512279 &  5.142361 \\
-        woman2.bmp &  7.263913 &  4.999391 &  4.933760 &  4.321375 \\
-         ZELDA.bmp &  7.299168 &  5.363629 &  5.193768 &  4.345018 \\
-    \bottomrule
-    \end{tabular}
-    \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
-    \label{tab:differential_encoding_all}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{lrrrr}
-    \toprule
-        {} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
-    \midrule
-        minimum & 4.114868 & 3.784849 &	3.874582 &	3.495424 \\
-        maksimum & 7.612662 &	7.141744 &	6.895302 &	6.848980 \\
-        średnia & 6.975929 &	5.524930 &	5.542701 &	5.071648 \\
-    \bottomrule
-    \end{tabular}
-
-        \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie entropii po kodowaniu różnicowym dla średnich uzyskanych w procesie MRVQ}
-        \label{tab:differential_encoding_summary}
-    \end{table}
-
 \section{Podsumowanie}
 
 \lipsum[1-3]
