@@ -612,7 +612,6 @@ Oznaczenia wykorzystane w tabeli:
 \end{itemize}
 
 Tabela \ref{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
-\newpage
 
 \subsubsection{RMSE}
 
@@ -653,7 +652,7 @@ gdzie:
 \subsection{Algorytm LBG z losową inicjalizacją słownika}
 
 Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
-kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:lbg_random}} i podsumowano w tablicy \mbox{\ref{tab:lbg_summary}}.
+kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_random}} i podsumowano w tabeli \mbox{\ref{tab:lbg_summary}}.
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
@@ -713,11 +712,10 @@ Obraz              & PSNR {[}dB{]} & SSIM   & MSE      & NRMSE  \\ \midrule
 \bottomrule
 \end{tabular}
 \end{table}
-\newpage
-\newpage
+
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[!h]
+\begin{table}[H]
 \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
 \label{tab:lbg_summary}
 \centering
@@ -735,7 +733,7 @@ Maksimum &  35.929998 &  0.923327 &  706.925873 &  0.194422 \\
 
 Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}. 
 
-\begin{figure}[!h]
+\begin{figure}[H]
 \centering
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
@@ -743,21 +741,19 @@ Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich
   \label{fig:lbg_iterations}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
   \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations_mean}
 \end{figure}
 
-\newpage
 \subsection{Algorytm MRVQ z losową inicjalizacją słownika}
 
 Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
-kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:mrvq_random}} i podsumowano w tablicy \mbox{\ref{tab:mrvq_summary}}.
+kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq_random}} i podsumowano w tabeli \mbox{\ref{tab:mrvq_summary}}.
 
-
-\begin{table}[!ht]
+\begin{table}[H]
 \caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
 \label{tab:mrvq_random}
 \centering
@@ -819,7 +815,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tablicy \ref{tab:mrv
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[!h]
+\begin{table}[H]
 \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
 \label{tab:mrvq_summary}
 \centering
@@ -832,7 +828,6 @@ Maksimum &  39.609384 &  0.967245 &  673.800110 &  0.388628 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
 
 \FloatBarrier
 
@@ -868,7 +863,7 @@ Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania
 
 Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}).
 
-\begin{table}[!h]
+\begin{table}[H]
     \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
     \label{tab:differential_encoding_all}
     \centering
@@ -926,9 +921,8 @@ Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) ora
     \bottomrule
     \end{tabular}
 \end{table}
-\newpage
 
-\begin{table}[!h]
+\begin{table}[H]
 	\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie entropii po kodowaniu różnicowym dla średnich uzyskanych w procesie MRVQ}
 	\label{tab:differential_encoding_summary}
     \centering
@@ -943,7 +937,6 @@ Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) ora
     \bottomrule
     \end{tabular}
     \end{table}
-\newpage
 
 \section{Podsumowanie}
 
