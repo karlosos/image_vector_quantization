@@ -63,7 +63,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-\lipsum[1-2]
+  \lipsum[1-2]
 \end{abstract}
 
 \newpage
@@ -110,40 +110,40 @@ Dla każdego obszaru detekcyjnego przyporządkowuje się indeks wyznaczonego naj
 Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej (procesu jego budowy i długości).
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
-    \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}.}
-    \label{fig:kwantyzacja_wektorowa}
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
+  \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}.}
+  \label{fig:kwantyzacja_wektorowa}
 \end{figure}
 
 \subsection{Ogólny przebieg etapów pracy kwantyzatora wektorowego}
 
 \begin{enumerate}
-  \item Formowanie danych wejściowych do postaci $K$ wektorów $n$ -- wymiarowych (etap wstępny). 
-  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki 
-    kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
-    tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru 
-    treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
-  \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. 
+  \item Formowanie danych wejściowych do postaci $K$ wektorów $n$ -- wymiarowych (etap wstępny).
+  \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki
+        kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
+        tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru 
+        treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
+  \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika.
 \end{enumerate}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/schemat_kwantyzatora.png}
-    \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}.}
-    \label{fig:schemat_kwantyzatora}
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/schemat_kwantyzatora.png}
+  \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}.}
+  \label{fig:schemat_kwantyzatora}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/wektory_danych.png}
-    \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}.}
-    \label{fig:wektory_danych}
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/wektory_danych.png}
+  \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}.}
+  \label{fig:wektory_danych}
 \end{figure}
 
 Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
 \begin{enumerate}
-  \item Wybór odpowiedniej funkcji odległości w przestrzeni wektorowej.  
+  \item Wybór odpowiedniej funkcji odległości w przestrzeni wektorowej.
   \item Struktura książki kodowej (prosta struktura w postaci tablicy jest nieefektywna do przeglądania).
 \end{enumerate}
 
@@ -176,53 +176,53 @@ Algorytm metody PNN:
 \todo{Poprawić opis metody PNN}
 
 \begin{enumerate}
- \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej. 
-   Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację 
-   średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
-
-\begin{equation}
-D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
-\end{equation}
-
-\item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$. 
-  Dla danego kodeksu $C$. 
-  Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
-
-\begin{equation}
-||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
-\end{equation}
-
-\item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$. 
-  Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone. 
-  Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
-
-\begin{equation}
-d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
-\end{equation}
-
-\item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$, 
-  a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
-
-\begin{equation}
-C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
-\end{equation}
-
-\item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu. 
-  Proces łączenia jest powtarzany do momentu aż książka kodowa osiągnie rozmiar $M$. 
-
+  \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej.
+        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację 
+        średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
+        
+        \begin{equation}
+          D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
+        \end{equation}
+        
+  \item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$.
+        Dla danego kodeksu $C$. 
+        Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
+        
+        \begin{equation}
+          ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
+        \end{equation}
+        
+  \item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$.
+        Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone. 
+        Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
+        
+        \begin{equation}
+          d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
+        \end{equation}
+        
+  \item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$,
+        a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
+        
+        \begin{equation}
+          C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
+        \end{equation}
+        
+  \item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu.
+        Proces łączenia jest powtarzany do momentu aż książka kodowa osiągnie rozmiar $M$. 
+        
 \end{enumerate}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $T$ - Zestaw $N$ wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
-    \item $C$ - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
-    \item $M$ - Rozmiar książki kodowej
-    \item $K$ - Wymiar wektorów
-    \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
-    \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
-    \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
-    \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
-    \cite{tkaukoranta} 
+  \item $T$ - Zestaw $N$ wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
+  \item $C$ - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
+  \item $M$ - Rozmiar książki kodowej
+  \item $K$ - Wymiar wektorów
+  \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
+  \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
+  \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
+  \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
+        \cite{tkaukoranta}
 \end{itemize}
 
 Ostatnia wymieniona metoda jaką jest metoda rozdzielania polega na szukaniu optymalnej książki.
@@ -231,19 +231,19 @@ W $i$-tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdeg
 Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
-    \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych 
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
+  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
     (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
-    \label{fig:rozdzielania_1}
+  \label{fig:rozdzielania_1}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
-    \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych 
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
+  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
     (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
-    \label{fig:rozdzielania_2}
+  \label{fig:rozdzielania_2}
 \end{figure}
 
 \subsection{Algorytmy inicjalizowania słownika}
@@ -253,21 +253,21 @@ Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymaliz
 Algorytm popularności jest prostym algorytmem generacji książki kodowej, który charakteryzuje się:
 
 \begin{itemize}
-  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących 
-    w obrazie (konieczne jest ustalenie progu liczby wystąpień),
+  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących
+        w obrazie (konieczne jest ustalenie progu liczby wystąpień),
   \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji,
-  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących). 
-    Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i 
-    wprowadzenie kolejnych wektorów pod względem liczby wystąpień.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
-    \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności.
-      Efekt kwantyzacji wektorowej z książkami kodowymi rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}.}
-    \label{fig:motyle_2}
-\end{figure}
- 
+  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących).
+        Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i 
+        wprowadzenie kolejnych wektorów pod względem liczby wystąpień.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
+          \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności.
+            Efekt kwantyzacji wektorowej z książkami kodowymi rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}.}
+          \label{fig:motyle_2}
+        \end{figure}
+        
 \end{itemize}
 
 \subsubsection{Wektorowa kwantyzacja blokowa (BTC)}
@@ -275,20 +275,20 @@ Algorytm popularności jest prostym algorytmem generacji książki kodowej, któ
 Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 
 \begin{itemize} 
-\item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień 
-  bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
-     \begin{itemize}
-        \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
-        \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych, 
-     \end{itemize}
-\item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest 
-  kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
-\item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku. 
-  Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. 
-  Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
-\item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji. 
-  Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących 
-  elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
+  \item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień
+        bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
+        \begin{itemize}
+          \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
+          \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych,
+        \end{itemize}
+  \item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest
+        kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
+  \item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku.
+        Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. 
+        Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
+  \item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji.
+        Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących 
+        elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
 \end{itemize}
 
 \subsection{Algorytmy budowy słownika}
@@ -298,46 +298,46 @@ Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
 Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
 
 \begin{itemize} 
-\item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych 
-  wybierz losowo $K$ wektorów stanowiących wstępną wersję słownika,
-\item korzystając z metryki euklidesowej, $d(X,Y)$, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
-     \begin{itemize}
-        \item bierzemy każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do 
-        naszego kwadratu. Każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie.
+  \item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych
+        wybierz losowo $K$ wektorów stanowiących wstępną wersję słownika,
+  \item korzystając z metryki euklidesowej, $d(X,Y)$, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
+        \begin{itemize}
+          \item bierzemy każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do
+                naszego kwadratu. Każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie.
+                
+                \begin{equation}
+                  d(B_{m}, C_{i}) < d(B_{m}, C_{j})
+                \end{equation}
+                
+                gdzie:
+                \begin{itemize}[label=]
+                  \item $B_{m}$ - blok obrazu,
+                  \item $C_{i}$ - słowo kodowe ze słownika
+                  \item $C_{j}$ - kolejne słowo kodowe ze słownika
+                \end{itemize}
+                
+          \item następnie sumujemy różnicę 16 kwadratów
+          \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
+          \item przypisujemy wybrany kwadrat do reprezentanta słownika
+        \end{itemize}
+  \item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich
+        znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
         
-		\begin{equation}
-		d(B_{m}, C_{i}) < d(B_{m}, C_{j})
-		\end{equation}
-		
-		gdzie:
-		\begin{itemize}[label=]
-    		\item $B_{m}$ - blok obrazu,
-    		\item $C_{i}$ - słowo kodowe ze słownika
-    		\item $C_{j}$ - kolejne słowo kodowe ze słownika
-		\end{itemize}	        
+        \begin{equation}
+          \label{eq:lbg_error}
+          e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
+        \end{equation}
         
-        \item następnie sumujemy różnicę 16 kwadratów
-        \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
-        \item przypisujemy wybrany kwadrat do reprezentanta słownika
-     \end{itemize}
-\item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich 
-  znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
- 
-\begin{equation}
-\label{eq:lbg_error}
-e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
-\end{equation}
-
-\item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm 
-  (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
-\item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2. 
+  \item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm
+        (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
+  \item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2.
 \end{itemize}
- 
+
 Problemy tego algorytmu:
 
 \begin{itemize}
-	\item wrażliwość na inicjalną postać książki kodowej 
-	\item problem pustych przedziałów 
+  \item wrażliwość na inicjalną postać książki kodowej
+  \item problem pustych przedziałów
 \end{itemize}
 
 \paragraph{Sparametryzowany wzór pliku wynikowego}
@@ -350,22 +350,22 @@ Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bi
 Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
 
 \begin{equation}
-	\textrm{dict\_size} = K \cdot v \cdot 8 \quad \textrm{[bitów]}.
-	\label{eq:lgb_dict_size}
+  \textrm{dict\_size} = K \cdot v \cdot 8 \quad \textrm{[bitów]}.
+  \label{eq:lgb_dict_size}
 \end{equation}
 
 Każdy blok przechowujący indeks ma rozmiar:
 
 \begin{equation}
-	\textrm{block\_size} = log_2(K)  \quad  \textrm{[bitów]}.
-	\label{eq:lgb_indeks_size}
+  \textrm{block\_size} = log_2(K)  \quad  \textrm{[bitów]}.
+  \label{eq:lgb_indeks_size}
 \end{equation}
 
 Dla obrazie o wielkości $m \times n$ otrzymujemy $\frac{mn}{v}$ bloków. Cały obraz zapisany na: 
 
 \begin{equation}
-	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]}.
-	\label{eq:lgb_image_size}
+  \textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]}.
+  \label{eq:lgb_image_size}
 \end{equation}
 
 \subsubsection{Kwantyzacja wektorowa z usuniętą średnią}
@@ -377,26 +377,26 @@ Celem MRVQ jest zapewnienie lepszej jakości obrazu od klasycznej kwantyzacji. J
 Schemat kwantyzacji wektorowej z usuniętą średnią jest analogiczny do klasycznej kwantyzacji wektorowej. Algorytm kodowania składa się z następujących kroków:
 
 \begin{enumerate}
-\item Stworzenie bloków (wektorów) z obrazu wejściowego.
-\item Wyliczenie wartości średniej każdego bloku.
-\item Stworzenie bloków resztkowych poprzez usunięcie średniej od każdej wartości bloku.
-\item Budowa książki kodów resztkowych (ang. \emph{residual codebook} (RCB)) -- na przykład korzystając z algorytmu LBG.
-\item Skojarzenie z każdym blokiem resztkowym pary -- indeksu najbliższego wektora resztkowego z książki kodowej oraz średniej danego bloku.
+  \item Stworzenie bloków (wektorów) z obrazu wejściowego.
+  \item Wyliczenie wartości średniej każdego bloku.
+  \item Stworzenie bloków resztkowych poprzez usunięcie średniej od każdej wartości bloku.
+  \item Budowa książki kodów resztkowych (ang. \emph{residual codebook} (RCB)) -- na przykład korzystając z algorytmu LBG.
+  \item Skojarzenie z każdym blokiem resztkowym pary -- indeksu najbliższego wektora resztkowego z książki kodowej oraz średniej danego bloku.
 \end{enumerate}
 
 Wartość średnia bloku $bm$ dla każdego bloku obrazu $x$ i wektorów o długości $k$ jest obliczana za pomocą wyrażenia: 
 
 \begin{equation}
-bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i},
-\end{equation} 
+  bm = \frac{1}{k} \sum_{i=0}^{k-1} x_{i},
+\end{equation}
 
 Źródło: \cite{meanremovedVQ}
 
 Algorytm dekodowania składa się z następujących kroków:
 
 \begin{enumerate}
-\item Przyporządkowanie każdemu blokowi obrazu opisanego przez parę (indeks, średnia) odpowiedniego bloku resztkowego przechowywanego w książce kodów resztkowych.
-\item Dodanie do każdego elementu odczytanego bloku przechowywaną wartość średnią.
+  \item Przyporządkowanie każdemu blokowi obrazu opisanego przez parę (indeks, średnia) odpowiedniego bloku resztkowego przechowywanego w książce kodów resztkowych.
+  \item Dodanie do każdego elementu odczytanego bloku przechowywaną wartość średnią.
 \end{enumerate}
 
 \paragraph{Sparametryzowany wzór na długość pliku wynikowego}
@@ -406,22 +406,22 @@ Plik wynikowy budowany jest analogicznie do pliku wynikowego przedstawionego w s
 Każdy blok przechowujący indeks ma rozmiar:
 
 \begin{equation}
-	\textrm{block\_size} = log_2(K) + 8 \quad  \textrm{[bitów]}.
-	\label{eq:mrev_indeks_size}
+  \textrm{block\_size} = log_2(K) + 8 \quad  \textrm{[bitów]}.
+  \label{eq:mrev_indeks_size}
 \end{equation}
 
 W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy brać pod uwagę przechowywanie liczb ujemnych. Z tego względu pojedynczy element wektora resztkowego zapisywany jest na 9 bitach względem 8 bitów w podejściu klasycznym. Zdefiniujmy nowy wzór na rozmiar słownika:
 
 \begin{equation}
-	\textrm{dict\_size} = K \cdot v \cdot 9 \quad \textrm{[bitów]}.
-	\label{eq:mrvq_dict_size}
+  \textrm{dict\_size} = K \cdot v \cdot 9 \quad \textrm{[bitów]}.
+  \label{eq:mrvq_dict_size}
 \end{equation}
 
 Łącząc wzór na wielkość słownika w bitach (\ref{eq:mrvq_dict_size}) oraz wzór na reprezentację pojedynczego wektora w bitach (\ref{eq:mrev_indeks_size}) otrzymujemy:
 
 \begin{equation}
-	\textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
-	\label{eq:mrvq_image_size}
+  \textrm{file\_size} = \textrm{dict\_size} + \frac{mn}{v} \cdot \textrm{block\_size}  \quad  \textrm{[bitów]},
+  \label{eq:mrvq_image_size}
 \end{equation}
 
 dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
@@ -438,26 +438,26 @@ W takim przypadku sygnałem są nieskompresowane dane źródłowe, a szumem – 
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
 \begin{equation}
-MSE = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
+  MSE = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $N, M$ - wymiary obrazu w pikselach,
-    \item $f(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu oryginalnego
-    \item $f^{'}(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu skompresowanego
+  \item $N, M$ - wymiary obrazu w pikselach,
+  \item $f(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu oryginalnego
+  \item $f^{'}(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu skompresowanego
 \end{itemize}
 
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
 \begin{equation}
-PSNR = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
+  PSNR = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała,
-      np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
+  \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała,
+        np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
 \end{itemize}
 
 \subsubsection{SSIM}
@@ -473,16 +473,16 @@ zwłaszcza gdy są znajdują się blisko siebie w przestrzenni. Zależności te 
 Algorytm SSIM:
 
 \begin{equation}
-SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) \cdot (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) \cdot (\delta_{x}^2 + \delta_{x}^2 + c_2)}
+  SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) \cdot (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) \cdot (\delta_{x}^2 + \delta_{x}^2 + c_2)}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $\mu_{x}$ - średnia x
-    \item $\mu_{y}$ - średnia y
-    \item $\delta_{x}^2$ - odchylenie od x
-    \item $\delta_{y}^2$ - odchylenie od y
-    \item $\delta_{xy}$ - kowariancja x i y
+  \item $\mu_{x}$ - średnia x
+  \item $\mu_{y}$ - średnia y
+  \item $\delta_{x}^2$ - odchylenie od x
+  \item $\delta_{y}^2$ - odchylenie od y
+  \item $\delta_{xy}$ - kowariancja x i y
 \end{itemize}
 
 \subsubsection{FSIM}
@@ -498,7 +498,7 @@ Jest to wartość niezmienna dla kontrastu. Na podstawie metody opisanej przez P
 można wyznaczyć wzór na obliczanie mapy zgodności fazowej dla obrazu \cite{pc}:
 
 \begin{equation}
-PC(x) = \frac{|E(x)|}{(\varepsilon + \sum\limits{_{n}} A_n(x))}
+  PC(x) = \frac{|E(x)|}{(\varepsilon + \sum\limits{_{n}} A_n(x))}
 \end{equation}
 
 \paragraph{Wielkość gradientu  (ang. \emph{Gradient Magnitude}) (GM):}
@@ -508,7 +508,7 @@ Jeśli $f(x)$ jest obrazem, a $Gx$ oraz $Gy$ to odpowiednio jego gradient poziom
 Wtedy wielkośc gradientu $f(x)$ można zdefiniować następująco \cite{gm}:
 
 \begin{equation}
-\sqrt{G^2_x+G^2_y}
+  \sqrt{G^2_x+G^2_y}
 \end{equation}
 
 \paragraph{Algorytm FSIM \cite{fsim_alg}:}
@@ -518,34 +518,34 @@ Wyliczany jest następnie oddzielny pomiar podobieństwa cech pomiędzy $f_1(x)$
 składowe na pomiar dla PC lub GM. Najpierw, miara podobieństwa dla $PC_1 (x)$ i $PC_2(x)$ jest zdefiniowana jako:
 
 \begin{equation}
-S_{PC}(x) = \frac{2PC_1(x) \cdot PC_2(x) + T_1}{PC^2_1(x) + PC^2_2(x) + T_1}
+  S_{PC}(x) = \frac{2PC_1(x) \cdot PC_2(x) + T_1}{PC^2_1(x) + PC^2_2(x) + T_1}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $T_1$ - dodatnia stała zwiększająca stabilność $S_PC$
+  \item $T_1$ - dodatnia stała zwiększająca stabilność $S_PC$
 \end{itemize}
 
 Podobnie porównuje się wartości GM $G_1(x)$ i $G_2(x)$, a miarę podobieństwa definiuje się jako:
 
 \begin{equation}
-S_G(x) = \frac{2G_1(x) \cdot G_2(x) + T_2}{G^2_1(x) + G^2_2(x) + T_2}
+  S_G(x) = \frac{2G_1(x) \cdot G_2(x) + T_2}{G^2_1(x) + G^2_2(x) + T_2}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $T_2$ - dodatnia stała zależna od dynamicznego zakresu wartości $GM$
+  \item $T_2$ - dodatnia stała zależna od dynamicznego zakresu wartości $GM$
 \end{itemize}
 
 Następnie $S_{PC}(x)$ i $S_G(x)$ są łączone, aby uzyskać podobieństwo $S_L(x)$ z $f_1(x)$ i $f_2(x)$. $S_L(x)$ jest definiowane jako:
 
 \begin{equation}
-S_L(x) = [S_{PC}(x)]^\alpha \cdot [S_G(x)]^\beta
+  S_L(x) = [S_{PC}(x)]^\alpha \cdot [S_G(x)]^\beta
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $\alpha$, $\beta$ - parametry używane do dostosowania względnego znaczenia cech PC i GM
+  \item $\alpha$, $\beta$ - parametry używane do dostosowania względnego znaczenia cech PC i GM
 \end{itemize}
 
 Po uzyskaniu podobieństwa $S_L(x)$ w każdym miejscu $x$ można obliczyć całkowite podobieństwo między $f_1$ i $f_2$. 
@@ -559,12 +559,12 @@ Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, a
 ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks FSIM między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
 
 \begin{equation}
-{FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
+  {FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $\Omega$ - dziedzina przestrzeni obrazu
+  \item $\Omega$ - dziedzina przestrzeni obrazu
 \end{itemize}
 
 \subsubsection{CR}
@@ -572,8 +572,8 @@ gdzie:
 Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
 
 \begin{equation}
-Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
-\label{eq:cr}
+  Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
+  \label{eq:cr}
 \end{equation}
 
 Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
@@ -583,35 +583,35 @@ Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczy
 Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP) określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, daje nam średnią bitową wynoszącą 2 bity na piksel.
 
 \begin{equation}
-BPP = 8 / CR
+  BPP = 8 / CR
 \end{equation}
 
 
-\subsubsection{Jaki procent stanowi dana rozdzielczość 
-obrazu względem wielkości zdefiniowanego słownika?}
+\subsubsection{Jaki procent stanowi dana rozdzielczość
+  obrazu względem wielkości zdefiniowanego słownika?}
 
 \begin{table}[!h]
-\caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
-\centering
-\begin{tabular}{cclclcl} 
-\toprule
-\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
-                                                                                  & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$}  \\ 
-\midrule \\
-256 x 256 px                                                                      & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                                \\
-512 x 512 px                                                                      & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                                \\
-720 x 576 px                                                                      & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                                \\
-1920 x 1080 px                                                                    & 0.20\%            & 3.06\%                                & 0.40\%            & 5.32\%                                & 0.79\%            & 9.18\%                                 \\
-3840 x 2160 px                                                                    & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                 \\
-\bottomrule
-\end{tabular}
+  \caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
+  \centering
+  \begin{tabular}{cclclcl}
+    \toprule
+    \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
+                   & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} \\ 
+    \midrule \\
+    256 x 256 px   & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                               \\
+    512 x 512 px   & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                               \\
+    720 x 576 px   & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                               \\
+    1920 x 1080 px & 0.20\%            & 3.06\%                                & 0.40\%            & 5.32\%                                & 0.79\%            & 9.18\%                                \\
+    3840 x 2160 px & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 Oznaczenia wykorzystane w tabeli:
 \begin{itemize}[label=]
-	\item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
-	\item $I_S$ - image size - rozmiar obrazu oryginalnego.
-	\item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
+  \item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
+  \item $I_S$ - image size - rozmiar obrazu oryginalnego.
+  \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
 \end{itemize}
 
 Tabela \ref{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
@@ -623,14 +623,14 @@ Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy śr
 Wzór RMSE:
 
 \begin{equation}
-\mathrm{FSIM}=\frac{\sum_{\mathrm{x} \in \Omega} S_{L}(\mathbf{x}) \cdot P C_{m}(\mathbf{x})}{\sum_{\mathrm{x} \in \Omega} P C_{m}(\mathbf{x})}
+  \mathrm{FSIM}=\frac{\sum_{\mathrm{x} \in \Omega} S_{L}(\mathbf{x}) \cdot P C_{m}(\mathbf{x})}{\sum_{\mathrm{x} \in \Omega} P C_{m}(\mathbf{x})}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $n$ - średnia próby,
-    \item $y_{j}$ - prognozowana wartość błędu,
-    \item $\hat{y_{j}}$ - rzeczywista wartość błędu \cite{rmse}.
+  \item $n$ - średnia próby,
+  \item $y_{j}$ - prognozowana wartość błędu,
+  \item $\hat{y_{j}}$ - rzeczywista wartość błędu \cite{rmse}.
 \end{itemize}
 
 \subsubsection{NRMSE}
@@ -640,14 +640,14 @@ Znormalizowany błąd średniokwadratowy (NRMSE) - ułatwiający porównywanie z
 Wzór NRMSE:
 
 \begin{equation}
-NRMSE = \frac{RMSE}{y_{max} - y_{min}}
+  NRMSE = \frac{RMSE}{y_{max} - y_{min}}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-    \item $RMSE$ - Podstawowy błąd średniokwadratowy
-    \item $y_{max}$ - wartość maksymalna
-    \item $y_{min}$ - wartość minimalna
+  \item $RMSE$ - Podstawowy błąd średniokwadratowy
+  \item $y_{max}$ - wartość maksymalna
+  \item $y_{min}$ - wartość minimalna
 \end{itemize}
 
 \section{Badania}
@@ -660,76 +660,76 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
 \begin{table}[!ht]
-\caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
-\label{tab:lbg_random}
-\centering
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Obraz              & PSNR {[}dB{]} & SSIM   & MSE      & NRMSE  \\ \midrule
-        Aerial.bmp &  30.308975 &  0.738150 &  269.074234 &  0.088749 \\
-      airfield.bmp &  29.847609 &  0.621790 &  305.594254 &  0.112432 \\
-      airplane.bmp &  32.766159 &  0.835739 &  112.650368 &  0.057495 \\
-     baboonTMW.bmp &  29.225130 &  0.619144 &  388.316032 &  0.145004 \\
-       balloon.bmp &  35.504876 &  0.879501 &   31.181279 &  0.050065 \\
- balloon\_noise.bmp &  35.510646 &  0.879980 &   31.957593 &  0.050894 \\
-          BARB.bmp &  30.544723 &  0.719523 &  220.033929 &  0.123536 \\
-         BARB2.bmp &  30.739427 &  0.753790 &  199.587676 &  0.112621 \\
-       barb512.bmp &  30.336805 &  0.699047 &  237.749905 &  0.119092 \\
-         BOARD.bmp &  33.838988 &  0.850642 &   74.120845 &  0.073532 \\
-       boat512.bmp &  31.022867 &  0.725675 &  150.630928 &  0.089032 \\
-         boats.bmp &  32.266624 &  0.809828 &   99.350383 &  0.076842 \\
-        bridge.bmp &  29.309403 &  0.638427 &  294.446346 &  0.135884 \\
-     bridge256.bmp &  29.204719 &  0.638050 &  320.350159 &  0.142547 \\
-     camera256.bmp &  32.096795 &  0.775423 &  238.143219 &  0.115080 \\
-        couple.bmp &  30.728604 &  0.709376 &  164.932125 &  0.099725 \\
-     couple256.bmp &  32.855874 &  0.824001 &   78.755783 &  0.194422 \\
-      crowd512.bmp &  31.652136 &  0.815185 &  144.212181 &  0.121814 \\
-         EARTH.bmp &  31.889207 &  0.813266 &  180.529541 &  0.139229 \\
-        elaine.bmp &  31.524373 &  0.705601 &   79.712097 &  0.062034 \\
-          ELIF.bmp &  34.798653 &  0.888926 &   47.819733 &  0.092001 \\
-        finger.bmp &  28.976954 &  0.782924 &  287.981743 &  0.136837 \\
-       FROG512.BMP &  29.215023 &  0.528005 &  277.108448 &  0.129976 \\
-          GIRL.bmp &  32.154535 &  0.801970 &   75.534510 &  0.061551 \\
-          GOLD.bmp &  31.309143 &  0.729300 &  101.270226 &  0.088009 \\
-      GOLDHILL.BMP &  31.057375 &  0.728247 &  108.036793 &  0.084831 \\
-    harbour512.bmp &  31.093608 &  0.714235 &  240.901379 &  0.117528 \\
-         HOTEL.bmp &  31.435559 &  0.783956 &  165.572328 &  0.118273 \\
-        lax512.bmp &  30.189473 &  0.618931 &  270.259842 &  0.184256 \\
-       lenaTMW.bmp &  31.481890 &  0.747129 &  118.296848 &  0.096867 \\
-     lennagrey.bmp &  32.377624 &  0.794924 &   91.050716 &  0.071973 \\
-        man512.bmp &  31.392019 &  0.740788 &  131.757545 &  0.094573 \\
-   noisesquare.bmp &  30.757530 &  0.629793 &   65.570068 &  0.042190 \\
-         OMAHA.bmp &  28.794700 &  0.652411 &  706.925873 &  0.153396 \\
-    peppersTMW.bmp &  31.985593 &  0.760791 &   98.846947 &  0.075693 \\
-      SAILBOAT.bmp &  31.483250 &  0.767148 &  134.057770 &  0.085355 \\
-       seismic.bmp &  35.929998 &  0.923327 &   19.705395 &  0.034543 \\
-          SENA.bmp &  33.949226 &  0.857894 &   52.210876 &  0.080610 \\
-        SENSIN.bmp &  31.768706 &  0.832904 &   82.924622 &  0.084624 \\
-        shapes.bmp &  34.324357 &  0.861644 &   71.168495 &  0.095598 \\
-         SINAN.bmp &  32.519610 &  0.829939 &   66.397598 &  0.062148 \\
-       Tank512.bmp &  32.088375 &  0.738335 &   66.664444 &  0.060426 \\
-      Truck512.bmp &  32.243722 &  0.779603 &   65.496967 &  0.073253 \\
-        woman1.bmp &  31.658150 &  0.741796 &  130.824505 &  0.080795 \\
-        woman2.bmp &  34.390173 &  0.863615 &   38.900913 &  0.050211 \\
-         ZELDA.bmp &  33.747423 &  0.828049 &   44.793265 &  0.057213 \\
-\bottomrule
-\end{tabular}
+  \caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
+  \label{tab:lbg_random}
+  \centering
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    Obraz              & PSNR {[}dB{]} & SSIM     & MSE        & NRMSE    \\ \midrule
+    Aerial.bmp         & 30.308975     & 0.738150 & 269.074234 & 0.088749 \\
+    airfield.bmp       & 29.847609     & 0.621790 & 305.594254 & 0.112432 \\
+    airplane.bmp       & 32.766159     & 0.835739 & 112.650368 & 0.057495 \\
+    baboonTMW.bmp      & 29.225130     & 0.619144 & 388.316032 & 0.145004 \\
+    balloon.bmp        & 35.504876     & 0.879501 & 31.181279  & 0.050065 \\
+    balloon\_noise.bmp & 35.510646     & 0.879980 & 31.957593  & 0.050894 \\
+    BARB.bmp           & 30.544723     & 0.719523 & 220.033929 & 0.123536 \\
+    BARB2.bmp          & 30.739427     & 0.753790 & 199.587676 & 0.112621 \\
+    barb512.bmp        & 30.336805     & 0.699047 & 237.749905 & 0.119092 \\
+    BOARD.bmp          & 33.838988     & 0.850642 & 74.120845  & 0.073532 \\
+    boat512.bmp        & 31.022867     & 0.725675 & 150.630928 & 0.089032 \\
+    boats.bmp          & 32.266624     & 0.809828 & 99.350383  & 0.076842 \\
+    bridge.bmp         & 29.309403     & 0.638427 & 294.446346 & 0.135884 \\
+    bridge256.bmp      & 29.204719     & 0.638050 & 320.350159 & 0.142547 \\
+    camera256.bmp      & 32.096795     & 0.775423 & 238.143219 & 0.115080 \\
+    couple.bmp         & 30.728604     & 0.709376 & 164.932125 & 0.099725 \\
+    couple256.bmp      & 32.855874     & 0.824001 & 78.755783  & 0.194422 \\
+    crowd512.bmp       & 31.652136     & 0.815185 & 144.212181 & 0.121814 \\
+    EARTH.bmp          & 31.889207     & 0.813266 & 180.529541 & 0.139229 \\
+    elaine.bmp         & 31.524373     & 0.705601 & 79.712097  & 0.062034 \\
+    ELIF.bmp           & 34.798653     & 0.888926 & 47.819733  & 0.092001 \\
+    finger.bmp         & 28.976954     & 0.782924 & 287.981743 & 0.136837 \\
+    FROG512.BMP        & 29.215023     & 0.528005 & 277.108448 & 0.129976 \\
+    GIRL.bmp           & 32.154535     & 0.801970 & 75.534510  & 0.061551 \\
+    GOLD.bmp           & 31.309143     & 0.729300 & 101.270226 & 0.088009 \\
+    GOLDHILL.BMP       & 31.057375     & 0.728247 & 108.036793 & 0.084831 \\
+    harbour512.bmp     & 31.093608     & 0.714235 & 240.901379 & 0.117528 \\
+    HOTEL.bmp          & 31.435559     & 0.783956 & 165.572328 & 0.118273 \\
+    lax512.bmp         & 30.189473     & 0.618931 & 270.259842 & 0.184256 \\
+    lenaTMW.bmp        & 31.481890     & 0.747129 & 118.296848 & 0.096867 \\
+    lennagrey.bmp      & 32.377624     & 0.794924 & 91.050716  & 0.071973 \\
+    man512.bmp         & 31.392019     & 0.740788 & 131.757545 & 0.094573 \\
+    noisesquare.bmp    & 30.757530     & 0.629793 & 65.570068  & 0.042190 \\
+    OMAHA.bmp          & 28.794700     & 0.652411 & 706.925873 & 0.153396 \\
+    peppersTMW.bmp     & 31.985593     & 0.760791 & 98.846947  & 0.075693 \\
+    SAILBOAT.bmp       & 31.483250     & 0.767148 & 134.057770 & 0.085355 \\
+    seismic.bmp        & 35.929998     & 0.923327 & 19.705395  & 0.034543 \\
+    SENA.bmp           & 33.949226     & 0.857894 & 52.210876  & 0.080610 \\
+    SENSIN.bmp         & 31.768706     & 0.832904 & 82.924622  & 0.084624 \\
+    shapes.bmp         & 34.324357     & 0.861644 & 71.168495  & 0.095598 \\
+    SINAN.bmp          & 32.519610     & 0.829939 & 66.397598  & 0.062148 \\
+    Tank512.bmp        & 32.088375     & 0.738335 & 66.664444  & 0.060426 \\
+    Truck512.bmp       & 32.243722     & 0.779603 & 65.496967  & 0.073253 \\
+    woman1.bmp         & 31.658150     & 0.741796 & 130.824505 & 0.080795 \\
+    woman2.bmp         & 34.390173     & 0.863615 & 38.900913  & 0.050211 \\
+    ZELDA.bmp          & 33.747423     & 0.828049 & 44.793265  & 0.057213 \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
 \begin{table}[H]
-\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
-\label{tab:lbg_summary}
-\centering
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-         & PSNR {[}dB{]} & SSIM  & MSE     & NRMSE \\ \midrule
-Minimum  &  28.794700 &  0.528005 &   19.705395 &  0.034543 \\
-Maksimum &  35.929998 &  0.923327 &  706.925873 &  0.194422 \\
-Średnia  &  31.789057 &  0.760407 &  156.117538 &  0.096147 \\
-\bottomrule
-\end{tabular}
+  \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
+  \label{tab:lbg_summary}
+  \centering
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+             & PSNR {[}dB{]} & SSIM     & MSE        & NRMSE    \\ \midrule
+    Minimum  & 28.794700     & 0.528005 & 19.705395  & 0.034543 \\
+    Maksimum & 35.929998     & 0.923327 & 706.925873 & 0.194422 \\
+    Średnia  & 31.789057     & 0.760407 & 156.117538 & 0.096147 \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
@@ -737,16 +737,16 @@ Maksimum &  35.929998 &  0.923327 &  706.925873 &  0.194422 \\
 Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}. 
 
 \begin{figure}[H]
-\centering
   \centering
-  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}  
+  \centering
+  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}
   \caption{Błędy w poszczególnych iteracjach algorytmu LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}  
+  \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}
   \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
   \label{fig:lbg_iterations_mean}
 \end{figure}
@@ -757,79 +757,79 @@ Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyza
 kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq_random}} i podsumowano w tabeli \mbox{\ref{tab:mrvq_summary}}.
 
 \begin{table}[H]
-\caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
-\label{tab:mrvq_random}
-\centering
-\begin{tabular}{@{}lrrrr@{}}
-
-\toprule
-             Obraz &  PSNR [dB] &      SSIM &         MSE &     NRMSE \\
-\midrule
-        Aerial.bmp &  31.325414 &  0.838639 &  206.558186 &  0.077759 \\
-      airfield.bmp &  30.840608 &  0.733311 &  616.739300 &  0.159723 \\
-      airplane.bmp &  34.493424 &  0.916806 &   59.944592 &  0.041941 \\
-     baboonTMW.bmp &  29.837549 &  0.740805 &  302.010212 &  0.127878 \\
-       balloon.bmp &  39.502431 &  0.959524 &   31.986904 &  0.050708 \\
- balloon\_noise.bmp &  39.609384 &  0.958425 &   12.200263 &  0.031446 \\
-          BARB.bmp &  31.996066 &  0.858178 &  123.859623 &  0.092686 \\
-         BARB2.bmp &  31.954561 &  0.864515 &  120.047174 &  0.087343 \\
-       barb512.bmp &  31.859472 &  0.850585 &  129.981781 &  0.088057 \\
-         BOARD.bmp &  36.170801 &  0.920150 &   83.243762 &  0.077926 \\
-       boat512.bmp &  32.681597 &  0.848437 &   88.513115 &  0.068249 \\
-         boats.bmp &  34.282138 &  0.907079 &   53.116669 &  0.056186 \\
-        bridge.bmp &  30.424395 &  0.780987 &  289.719372 &  0.134789 \\
-     bridge256.bmp &  30.044354 &  0.773070 &  352.649445 &  0.149561 \\
-     camera256.bmp &  33.169167 &  0.841805 &  302.633728 &  0.129730 \\
-        couple.bmp &  32.546104 &  0.854006 &  116.577576 &  0.083842 \\
-     couple256.bmp &  34.703286 &  0.845815 &  314.672928 &  0.388628 \\
-      crowd512.bmp &  33.385017 &  0.899106 &  136.984058 &  0.118722 \\
-         EARTH.bmp &  32.826552 &  0.864470 &  296.390259 &  0.178397 \\
-        elaine.bmp &  33.287508 &  0.833254 &   45.968887 &  0.047108 \\
-          ELIF.bmp &  37.148792 &  0.949756 &   21.990341 &  0.062389 \\
-        finger.bmp &  29.726525 &  0.878141 &  157.704418 &  0.101261 \\
-       FROG512.BMP &  29.711200 &  0.661741 &  412.729481 &  0.158624 \\
-          GIRL.bmp &  35.259907 &  0.916269 &   32.797847 &  0.040559 \\
-          GOLD.bmp &  33.433986 &  0.864741 &   51.049732 &  0.062486 \\
-      GOLDHILL.BMP &  32.902191 &  0.854297 &   59.053673 &  0.062718 \\
-    harbour512.bmp &  32.128791 &  0.829542 &  158.326237 &  0.095280 \\
-         HOTEL.bmp &  33.205348 &  0.884421 &  103.708697 &  0.093605 \\
-        lax512.bmp &  30.733882 &  0.720240 &  199.029411 &  0.158121 \\
-       lenaTMW.bmp &  33.640265 &  0.860569 &   86.785583 &  0.082969 \\
-     lennagrey.bmp &  34.630062 &  0.898839 &   46.313889 &  0.051331 \\
-        man512.bmp &  33.057586 &  0.863485 &   75.862572 &  0.071762 \\
-   noisesquare.bmp &  31.067677 &  0.671197 &   58.469727 &  0.039840 \\
-         OMAHA.bmp &  29.379325 &  0.723564 &  673.800110 &  0.149759 \\
-    peppersTMW.bmp &  34.265375 &  0.867596 &   93.769455 &  0.073723 \\
-      SAILBOAT.bmp &  32.748110 &  0.858763 &  106.028950 &  0.075909 \\
-       seismic.bmp &  39.325434 &  0.967245 &    8.685005 &  0.022933 \\
-          SENA.bmp &  36.786062 &  0.941536 &   27.621506 &  0.058632 \\
-        SENSIN.bmp &  34.983614 &  0.941753 &   32.745911 &  0.053178 \\
-        shapes.bmp &  37.768621 &  0.936599 &   81.161709 &  0.102089 \\
-         SINAN.bmp &  36.004230 &  0.943409 &   30.180923 &  0.041901 \\
-       Tank512.bmp &  33.414859 &  0.832489 &   41.127480 &  0.047462 \\
-      Truck512.bmp &  33.791077 &  0.870388 &   37.876549 &  0.055706 \\
-        woman1.bmp &  33.235523 &  0.839538 &  212.144783 &  0.102886 \\
-        woman2.bmp &  38.422679 &  0.948926 &   22.523846 &  0.038207 \\
-         ZELDA.bmp &  36.874902 &  0.924915 &   28.957053 &  0.046001 \\
-\bottomrule
-
-\end{tabular}
+  \caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
+  \label{tab:mrvq_random}
+  \centering
+  \begin{tabular}{@{}lrrrr@{}}
+    
+    \toprule
+    Obraz              & PSNR [dB] & SSIM     & MSE        & NRMSE    \\
+    \midrule
+    Aerial.bmp         & 31.325414 & 0.838639 & 206.558186 & 0.077759 \\
+    airfield.bmp       & 30.840608 & 0.733311 & 616.739300 & 0.159723 \\
+    airplane.bmp       & 34.493424 & 0.916806 & 59.944592  & 0.041941 \\
+    baboonTMW.bmp      & 29.837549 & 0.740805 & 302.010212 & 0.127878 \\
+    balloon.bmp        & 39.502431 & 0.959524 & 31.986904  & 0.050708 \\
+    balloon\_noise.bmp & 39.609384 & 0.958425 & 12.200263  & 0.031446 \\
+    BARB.bmp           & 31.996066 & 0.858178 & 123.859623 & 0.092686 \\
+    BARB2.bmp          & 31.954561 & 0.864515 & 120.047174 & 0.087343 \\
+    barb512.bmp        & 31.859472 & 0.850585 & 129.981781 & 0.088057 \\
+    BOARD.bmp          & 36.170801 & 0.920150 & 83.243762  & 0.077926 \\
+    boat512.bmp        & 32.681597 & 0.848437 & 88.513115  & 0.068249 \\
+    boats.bmp          & 34.282138 & 0.907079 & 53.116669  & 0.056186 \\
+    bridge.bmp         & 30.424395 & 0.780987 & 289.719372 & 0.134789 \\
+    bridge256.bmp      & 30.044354 & 0.773070 & 352.649445 & 0.149561 \\
+    camera256.bmp      & 33.169167 & 0.841805 & 302.633728 & 0.129730 \\
+    couple.bmp         & 32.546104 & 0.854006 & 116.577576 & 0.083842 \\
+    couple256.bmp      & 34.703286 & 0.845815 & 314.672928 & 0.388628 \\
+    crowd512.bmp       & 33.385017 & 0.899106 & 136.984058 & 0.118722 \\
+    EARTH.bmp          & 32.826552 & 0.864470 & 296.390259 & 0.178397 \\
+    elaine.bmp         & 33.287508 & 0.833254 & 45.968887  & 0.047108 \\
+    ELIF.bmp           & 37.148792 & 0.949756 & 21.990341  & 0.062389 \\
+    finger.bmp         & 29.726525 & 0.878141 & 157.704418 & 0.101261 \\
+    FROG512.BMP        & 29.711200 & 0.661741 & 412.729481 & 0.158624 \\
+    GIRL.bmp           & 35.259907 & 0.916269 & 32.797847  & 0.040559 \\
+    GOLD.bmp           & 33.433986 & 0.864741 & 51.049732  & 0.062486 \\
+    GOLDHILL.BMP       & 32.902191 & 0.854297 & 59.053673  & 0.062718 \\
+    harbour512.bmp     & 32.128791 & 0.829542 & 158.326237 & 0.095280 \\
+    HOTEL.bmp          & 33.205348 & 0.884421 & 103.708697 & 0.093605 \\
+    lax512.bmp         & 30.733882 & 0.720240 & 199.029411 & 0.158121 \\
+    lenaTMW.bmp        & 33.640265 & 0.860569 & 86.785583  & 0.082969 \\
+    lennagrey.bmp      & 34.630062 & 0.898839 & 46.313889  & 0.051331 \\
+    man512.bmp         & 33.057586 & 0.863485 & 75.862572  & 0.071762 \\
+    noisesquare.bmp    & 31.067677 & 0.671197 & 58.469727  & 0.039840 \\
+    OMAHA.bmp          & 29.379325 & 0.723564 & 673.800110 & 0.149759 \\
+    peppersTMW.bmp     & 34.265375 & 0.867596 & 93.769455  & 0.073723 \\
+    SAILBOAT.bmp       & 32.748110 & 0.858763 & 106.028950 & 0.075909 \\
+    seismic.bmp        & 39.325434 & 0.967245 & 8.685005   & 0.022933 \\
+    SENA.bmp           & 36.786062 & 0.941536 & 27.621506  & 0.058632 \\
+    SENSIN.bmp         & 34.983614 & 0.941753 & 32.745911  & 0.053178 \\
+    shapes.bmp         & 37.768621 & 0.936599 & 81.161709  & 0.102089 \\
+    SINAN.bmp          & 36.004230 & 0.943409 & 30.180923  & 0.041901 \\
+    Tank512.bmp        & 33.414859 & 0.832489 & 41.127480  & 0.047462 \\
+    Truck512.bmp       & 33.791077 & 0.870388 & 37.876549  & 0.055706 \\
+    woman1.bmp         & 33.235523 & 0.839538 & 212.144783 & 0.102886 \\
+    woman2.bmp         & 38.422679 & 0.948926 & 22.523846  & 0.038207 \\
+    ZELDA.bmp          & 36.874902 & 0.924915 & 28.957053  & 0.046001 \\
+    \bottomrule
+    
+  \end{tabular}
 \end{table}
 
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
 \begin{table}[H]
-\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
-\label{tab:mrvq_summary}
-\centering
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-         & PSNR {[}dB{]} & SSIM  & MSE     & NRMSE \\ \midrule
-Minimum  &  29.379325 &  0.661741 &    8.685005 &  0.022933 \\
-Maksimum &  39.609384 &  0.967245 &  673.800110 &  0.388628 \\
-Średnia  &  33.664910 &  0.859542 &  142.266146 &  0.090000 \\
-\bottomrule
-\end{tabular}
+  \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
+  \label{tab:mrvq_summary}
+  \centering
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+             & PSNR {[}dB{]} & SSIM     & MSE        & NRMSE    \\ \midrule
+    Minimum  & 29.379325     & 0.661741 & 8.685005   & 0.022933 \\
+    Maksimum & 39.609384     & 0.967245 & 673.800110 & 0.388628 \\
+    Średnia  & 33.664910     & 0.859542 & 142.266146 & 0.090000 \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 \FloatBarrier
@@ -838,21 +838,21 @@ Maksimum &  39.609384 &  0.967245 &  673.800110 &  0.388628 \\
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histogram_image.eps}  
-    \caption{Porównanie histogramu wartości średnich bloków $4\times4$ obrazu \emph{lennagrey} i histogramu po kodowaniu różnicowym}
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histogram_image.eps}
+  \caption{Porównanie histogramu wartości średnich bloków $4\times4$ obrazu \emph{lennagrey} i histogramu po kodowaniu różnicowym}
   \label{fig:de_histogram_image}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}  
-    \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}
+  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}  
+  \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}
   \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison_zoom}
 \end{figure}
@@ -867,85 +867,85 @@ Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania
 Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}).
 
 \begin{table}[H]
-    \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
-    \label{tab:differential_encoding_all}
-    \centering
-    \begin{tabular}{lrrrr}
+  \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
+  \label{tab:differential_encoding_all}
+  \centering
+  \begin{tabular}{lrrrr}
     \toprule
-        {Obraz} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    {Obraz}            & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego}  & \multicolumn{1}{c}{entropia adaptacyjnego} \\
+    {}                 & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
     \midrule
-            Aerial.bmp &  6.799397 &  6.370003 &  6.346111 &  6.281835 \\
-          airfield.bmp &  7.600676 &  6.335829 &  6.200263 &  6.115437 \\
-          airplane.bmp &  6.725235 &  5.192151 &  5.384822 &  4.951908 \\
-         baboonTMW.bmp &  7.133698 &  6.231330 &  6.065259 &  6.049762 \\
-           balloon.bmp &  7.305988 &  4.676627 &  4.567023 &  3.750564 \\
-     balloon\_noise.bmp &  7.312372 &  4.684539 &  4.569674 &  3.760032 \\
-              BARB.bmp &  7.460040 &  6.003715 &  5.863538 &  5.321274 \\
-             BARB2.bmp &  7.389961 &  5.914602 &  5.700214 &  5.371247 \\
-           barb512.bmp &  7.551742 &  5.994919 &  5.846057 &  5.308187 \\
-             BOARD.bmp &  6.751369 &  4.478934 &  4.893147 &  3.820169 \\
-           boat512.bmp &  7.105094 &  5.628897 &  5.799380 &  5.270987 \\
-             boats.bmp &  7.039440 &  5.171864 &  5.334069 &  4.660202 \\
-            bridge.bmp &  7.612662 &  6.195047 &  6.272714 &  5.950704 \\
-         bridge256.bmp &  7.512977 &  6.214165 &  6.392970 &  5.996127 \\
-         camera256.bmp &  6.973989 &  5.151811 &  5.224229 &  4.781324 \\
-            couple.bmp &  7.337503 &  5.876122 &  5.893505 &  5.109491 \\
-         couple256.bmp &  6.343808 &  5.386308 &  5.370506 &  4.615757 \\
-          crowd512.bmp &  6.968875 &  6.200433 &  6.134625 &  5.794663 \\
-             EARTH.bmp &  5.252131 &  4.741143 &  4.695157 &  4.578020 \\
-            elaine.bmp &  7.455792 &  5.606359 &  5.410394 &  5.033493 \\
-              ELIF.bmp &  6.102673 &  4.744612 &  4.947915 &  4.425198 \\
-            finger.bmp &  7.167870 &  6.845691 &  6.611423 &  6.784109 \\
-           FROG512.BMP &  6.948923 &  5.869151 &  5.806952 &  5.749067 \\
-              GIRL.bmp &  7.211853 &  5.725185 &  5.554541 &  5.203274 \\
-              GOLD.bmp &  7.502927 &  5.421554 &  5.520399 &  4.952832 \\
-          GOLDHILL.BMP &  7.407802 &  5.566452 &  5.656368 &  5.139234 \\
-        harbour512.bmp &  6.539697 &  5.021141 &  5.401220 &  4.843480 \\
-             HOTEL.bmp &  7.492570 &  5.644325 &  5.707400 &  5.085551 \\
-            lax512.bmp &  6.638618 &  5.944674 &  5.753942 &  5.462067 \\
-           lenaTMW.bmp &  7.530290 &  5.973761 &  5.695504 &  5.131158 \\
-         lennagrey.bmp &  7.391431 &  5.813837 &  5.541977 &  4.937865 \\
-            man512.bmp &  7.248159 &  5.948017 &  5.806439 &  5.491626 \\
-       noisesquare.bmp &  4.114868 &  3.967057 &  3.874582 &  3.818463 \\
-             OMAHA.bmp &  7.438018 &  7.141744 &  6.895302 &  6.848980 \\
-        peppersTMW.bmp &  7.550972 &  5.663923 &  5.557934 &  4.959506 \\
-          SAILBOAT.bmp &  7.239532 &  5.780576 &  5.727559 &  5.380788 \\
-           seismic.bmp &  5.182019 &  3.784849 &  5.208382 &  4.175657 \\
-              SENA.bmp &  6.750098 &  4.797344 &  5.042326 &  4.371430 \\
-            SENSIN.bmp &  7.233915 &  5.917481 &  5.998098 &  5.571654 \\
-            shapes.bmp &  6.922706 &  4.406802 &  4.872293 &  3.495424 \\
-             SINAN.bmp &  7.265768 &  5.716536 &  5.684344 &  5.104367 \\
-       Tank512.bmp &  6.230584 &  5.141670 &  5.115095 &  4.908838 \\
-      Truck512.bmp &  6.475817 &  5.150306 &  5.380798 &  5.125280 \\
-        woman1.bmp &  7.109770 &  5.742285 &  5.512279 &  5.142361 \\
-        woman2.bmp &  7.263913 &  4.999391 &  4.933760 &  4.321375 \\
-         ZELDA.bmp &  7.299168 &  5.363629 &  5.193768 &  4.345018 \\
+    Aerial.bmp         & 6.799397                     & 6.370003                               & 6.346111                                  & 6.281835                                   \\
+    airfield.bmp       & 7.600676                     & 6.335829                               & 6.200263                                  & 6.115437                                   \\
+    airplane.bmp       & 6.725235                     & 5.192151                               & 5.384822                                  & 4.951908                                   \\
+    baboonTMW.bmp      & 7.133698                     & 6.231330                               & 6.065259                                  & 6.049762                                   \\
+    balloon.bmp        & 7.305988                     & 4.676627                               & 4.567023                                  & 3.750564                                   \\
+    balloon\_noise.bmp & 7.312372                     & 4.684539                               & 4.569674                                  & 3.760032                                   \\
+    BARB.bmp           & 7.460040                     & 6.003715                               & 5.863538                                  & 5.321274                                   \\
+    BARB2.bmp          & 7.389961                     & 5.914602                               & 5.700214                                  & 5.371247                                   \\
+    barb512.bmp        & 7.551742                     & 5.994919                               & 5.846057                                  & 5.308187                                   \\
+    BOARD.bmp          & 6.751369                     & 4.478934                               & 4.893147                                  & 3.820169                                   \\
+    boat512.bmp        & 7.105094                     & 5.628897                               & 5.799380                                  & 5.270987                                   \\
+    boats.bmp          & 7.039440                     & 5.171864                               & 5.334069                                  & 4.660202                                   \\
+    bridge.bmp         & 7.612662                     & 6.195047                               & 6.272714                                  & 5.950704                                   \\
+    bridge256.bmp      & 7.512977                     & 6.214165                               & 6.392970                                  & 5.996127                                   \\
+    camera256.bmp      & 6.973989                     & 5.151811                               & 5.224229                                  & 4.781324                                   \\
+    couple.bmp         & 7.337503                     & 5.876122                               & 5.893505                                  & 5.109491                                   \\
+    couple256.bmp      & 6.343808                     & 5.386308                               & 5.370506                                  & 4.615757                                   \\
+    crowd512.bmp       & 6.968875                     & 6.200433                               & 6.134625                                  & 5.794663                                   \\
+    EARTH.bmp          & 5.252131                     & 4.741143                               & 4.695157                                  & 4.578020                                   \\
+    elaine.bmp         & 7.455792                     & 5.606359                               & 5.410394                                  & 5.033493                                   \\
+    ELIF.bmp           & 6.102673                     & 4.744612                               & 4.947915                                  & 4.425198                                   \\
+    finger.bmp         & 7.167870                     & 6.845691                               & 6.611423                                  & 6.784109                                   \\
+    FROG512.BMP        & 6.948923                     & 5.869151                               & 5.806952                                  & 5.749067                                   \\
+    GIRL.bmp           & 7.211853                     & 5.725185                               & 5.554541                                  & 5.203274                                   \\
+    GOLD.bmp           & 7.502927                     & 5.421554                               & 5.520399                                  & 4.952832                                   \\
+    GOLDHILL.BMP       & 7.407802                     & 5.566452                               & 5.656368                                  & 5.139234                                   \\
+    harbour512.bmp     & 6.539697                     & 5.021141                               & 5.401220                                  & 4.843480                                   \\
+    HOTEL.bmp          & 7.492570                     & 5.644325                               & 5.707400                                  & 5.085551                                   \\
+    lax512.bmp         & 6.638618                     & 5.944674                               & 5.753942                                  & 5.462067                                   \\
+    lenaTMW.bmp        & 7.530290                     & 5.973761                               & 5.695504                                  & 5.131158                                   \\
+    lennagrey.bmp      & 7.391431                     & 5.813837                               & 5.541977                                  & 4.937865                                   \\
+    man512.bmp         & 7.248159                     & 5.948017                               & 5.806439                                  & 5.491626                                   \\
+    noisesquare.bmp    & 4.114868                     & 3.967057                               & 3.874582                                  & 3.818463                                   \\
+    OMAHA.bmp          & 7.438018                     & 7.141744                               & 6.895302                                  & 6.848980                                   \\
+    peppersTMW.bmp     & 7.550972                     & 5.663923                               & 5.557934                                  & 4.959506                                   \\
+    SAILBOAT.bmp       & 7.239532                     & 5.780576                               & 5.727559                                  & 5.380788                                   \\
+    seismic.bmp        & 5.182019                     & 3.784849                               & 5.208382                                  & 4.175657                                   \\
+    SENA.bmp           & 6.750098                     & 4.797344                               & 5.042326                                  & 4.371430                                   \\
+    SENSIN.bmp         & 7.233915                     & 5.917481                               & 5.998098                                  & 5.571654                                   \\
+    shapes.bmp         & 6.922706                     & 4.406802                               & 4.872293                                  & 3.495424                                   \\
+    SINAN.bmp          & 7.265768                     & 5.716536                               & 5.684344                                  & 5.104367                                   \\
+    Tank512.bmp        & 6.230584                     & 5.141670                               & 5.115095                                  & 4.908838                                   \\
+    Truck512.bmp       & 6.475817                     & 5.150306                               & 5.380798                                  & 5.125280                                   \\
+    woman1.bmp         & 7.109770                     & 5.742285                               & 5.512279                                  & 5.142361                                   \\
+    woman2.bmp         & 7.263913                     & 4.999391                               & 4.933760                                  & 4.321375                                   \\
+    ZELDA.bmp          & 7.299168                     & 5.363629                               & 5.193768                                  & 4.345018                                   \\
     \bottomrule
-    \end{tabular}
+  \end{tabular}
 \end{table}
 
 \begin{table}[H]
-	\caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie entropii po kodowaniu różnicowym dla średnich uzyskanych w procesie MRVQ}
-	\label{tab:differential_encoding_summary}
-    \centering
-    \begin{tabular}{lrrrr}
+  \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie entropii po kodowaniu różnicowym dla średnich uzyskanych w procesie MRVQ}
+  \label{tab:differential_encoding_summary}
+  \centering
+  \begin{tabular}{lrrrr}
     \toprule
-        {} & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego} & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-        {} & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    {}       & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego}  & \multicolumn{1}{c}{entropia adaptacyjnego} \\
+    {}       & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
     \midrule
-        minimum & 4.114868 & 3.784849 &	3.874582 &	3.495424 \\
-        maksimum & 7.612662 &	7.141744 &	6.895302 &	6.848980 \\
-        średnia & 6.975929 &	5.524930 &	5.542701 &	5.071648 \\
+    minimum  & 4.114868                     & 3.784849                               & 3.874582                                  & 3.495424                                   \\
+    maksimum & 7.612662                     & 7.141744                               & 6.895302                                  & 6.848980                                   \\
+    średnia  & 6.975929                     & 5.524930                               & 5.542701                                  & 5.071648                                   \\
     \bottomrule
-    \end{tabular}
-    \end{table}
+  \end{tabular}
+\end{table}
 
 \section{Podsumowanie}
 
 \lipsum[1-3]
 
-\bibliographystyle{unsrt}  
+\bibliographystyle{unsrt}
 \bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
 %% and comment out the ``thebibliography'' section.
 
