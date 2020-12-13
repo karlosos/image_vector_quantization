@@ -54,33 +54,39 @@ def value_coder(e, S):
         p = (S - 1) / S
     m = math.ceil(-(np.log10(1 + p) / np.log10(p)))
     u_g = int(e / m)
-    v_g = int(e - u_g * m)
 
     # u_g to binary code
     u_g_code = "0" * u_g + "1"
 
-    # v_g to binary code
-    k = math.ceil(np.log2(m))
-    l_ = 2 ** k - m
-    if v_g < l_:
-        v_g_code = f"{v_g:08b}"
-        v_g_code = v_g_code[-k + 1 :]
-    else:
-        v_g_code = f"{v_g+l_:08b}"
-        v_g_code = v_g_code[-k:]
+    if m != 1:
+        v_g = int(e - u_g * m)
 
-    code = u_g_code + v_g_code
+        # v_g to binary code
+        k = math.ceil(np.log2(m))
+        l_ = 2 ** k - m
+        if v_g < l_:
+            v_g_code = f"{v_g:08b}"
+            v_g_code = v_g_code[-k + 1 :]
+        else:
+            v_g_code = f"{v_g+l_:08b}"
+            v_g_code = v_g_code[-k:]
+
+        code = u_g_code + v_g_code
+    else:
+        code = u_g_code
     return code, m
 
 
-def golomb_decoder(binary_code, m_values):
+def golomb_decoder(first_value, binary_code, m_values, size):
     """
     Golomb decoder from binary code and m values
 
     :param binary_code: binary code coded by golomb coder
     :param m_values: list of m values, associated with each coded value
     """
-    pass
+    print(binary_code)
+    values = decode_string(binary_code, m_values)
+    print(values)
 
 
 def step(e):
@@ -156,33 +162,33 @@ def decode_string(code, m_values):
             if bit == "1":
                 break
             u_g += 1
-        print("u_g", u_g)
 
-        # Decpde v_g
-
+        # Decode v_g
         m = m_values[num_index]
-        k = math.ceil(np.log2(m))
-        l_ = 2 ** k - m
+        if m != 1:
+            k = math.ceil(np.log2(m))
+            l_ = 2 ** k - m
 
-        v_g_code_tmp = code[ptr : ptr + k - 1]
-        ptr = ptr + k - 1
+            v_g_code_tmp = code[ptr : ptr + k - 1]
+            ptr = ptr + k - 1
 
-        v_g = int(v_g_code_tmp, 2)
-        if v_g >= l_:
-            g = int(code[ptr : ptr + 1])
-            v_g = 2 * v_g + g - l_
-            ptr = ptr + 1
-
-        print("v_g", v_g)
-
-        # print("decode:", u_g, v_g)
-        e = u_g * m + v_g
+            # There's a problem when m = 2, because k = 1
+            # How to read next k - 1 bits, when it's 0?
+            # TODO: something wrong with coding?
+            v_g = int(v_g_code_tmp, 2)
+            if v_g >= l_:
+                g = int(code[ptr : ptr + 1])
+                v_g = 2 * v_g + g - l_
+                ptr = ptr + 1
+            e = u_g * m + v_g
+        else:
+            e = u_g
+        print(e, m)
         values.append(e)
         num_index += 1
 
         if num_index >= len(m_values):
             break
-    print(values)
     return values
 
 
@@ -249,4 +255,5 @@ if __name__ == "__main__":
     # test_decoding()
     img = np.array([[1, 2, 3, 9], [3, 2, 5, 3], [5, 3, 2, 1], [5, 3, 7, 99]])
     print(img)
-    golomb_coder(img)
+    first_value, binary_code, m_values = golomb_coder(img)
+    golomb_decoder(first_value, binary_code, m_values, img.shape)
