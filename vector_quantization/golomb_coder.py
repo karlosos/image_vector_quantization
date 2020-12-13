@@ -35,6 +35,33 @@ def step(e):
         v_g_code = v_g_code[-k:]
 
     print(f"{e} \t {u_g_unary}:{v_g_code}")
+    return u_g_unary, v_g_code, m
+
+
+def decode(u_g_unary, v_g_code, m):
+    # Decode u_g_unary
+    u_g = 0
+    for bit in u_g_unary:
+        if bit == "1":
+            break
+        u_g += 1
+
+    # Decode v_g_code
+    import math
+
+    k = math.ceil(np.log2(m))
+    l_ = 2 ** k - m
+
+    # TODO: this is bad. This should be decoding from
+    v_g_code_tmp = v_g_code[: k - 1]
+    v_g = int(v_g_code_tmp, 2)
+    if v_g >= l_:
+        g = int(v_g_code[k - 1])
+        v_g = 2 * v_g + g - l_
+
+    # print("decode:", u_g, v_g)
+    e = u_g * m + v_g
+    print("decode:", e)
 
 
 def main():
@@ -82,5 +109,8 @@ def main():
 if __name__ == "__main__":
     # main()
 
-    for i in range(32):
-        step(i)
+    numbers = [10, 30, 1, 9, 12, 42]
+    # numbers = range(32)
+    for i in numbers:
+        u_g_unary, v_g_code, m = step(i)
+        decode(u_g_unary, v_g_code, m)
