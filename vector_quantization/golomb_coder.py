@@ -34,7 +34,8 @@ def step(e):
         v_g_code = f"{v_g+l_:08b}"
         v_g_code = v_g_code[-k:]
 
-    print(f"{e} \t {u_g_unary}:{v_g_code}")
+    # print(f"{e} \t {u_g_unary}:{v_g_code}")
+    print(u_g, v_g)
     return u_g_unary, v_g_code, m
 
 
@@ -62,6 +63,53 @@ def decode(u_g_unary, v_g_code, m):
     # print("decode:", u_g, v_g)
     e = u_g * m + v_g
     print("decode:", e)
+
+
+def decode_string(code, m_values):
+    import math
+
+    ptr = 0
+
+    values = []
+    num_index = 0
+
+    while True:
+        # Decode u_g
+        u_g = 0
+        while True:
+            bit = code[ptr]
+            ptr += 1
+            if bit == "1":
+                break
+            u_g += 1
+        print("u_g", u_g)
+
+        # Decpde v_g
+
+        m = m_values[num_index]
+        k = math.ceil(np.log2(m))
+        l_ = 2 ** k - m
+
+        v_g_code_tmp = code[ptr : ptr + k - 1]
+        ptr = ptr + k - 1
+
+        v_g = int(v_g_code_tmp, 2)
+        if v_g >= l_:
+            g = int(code[ptr : ptr + 1])
+            v_g = 2 * v_g + g - l_
+            ptr = ptr + 1
+
+        print("v_g", v_g)
+
+        # print("decode:", u_g, v_g)
+        e = u_g * m + v_g
+        values.append(e)
+        num_index += 1
+
+        if num_index >= len(m_values):
+            break
+    print(values)
+    return values
 
 
 def main():
@@ -111,6 +159,14 @@ if __name__ == "__main__":
 
     numbers = [10, 30, 1, 9, 12, 42]
     # numbers = range(32)
+    code = ""
+    m_values = []
     for i in numbers:
         u_g_unary, v_g_code, m = step(i)
-        decode(u_g_unary, v_g_code, m)
+        code += u_g_unary + v_g_code
+        m_values.append(m)
+        # decode(u_g_unary, v_g_code, m)
+    print(code)
+    print(m_values)
+    print("Decoding:.......")
+    decode_string(code, m_values)
