@@ -1,10 +1,84 @@
 import numpy as np
 import bitarray
+import math
 
 
 def golomb_coder(image):
     """
-    Parameter image is encoded using differentian encoding
+    Golomb coder of image
+
+    :param img: image to compress. Only unsigned values.
+    :return string with binary code and list of m values
+    """
+    height, width = image.shape
+    codes = np.empty(image.shape, dtype=object)
+
+    # rewrite first element
+    codes[0, 0] = image[0, 0]
+    # calculate first row
+    for i in range(1, width):
+        e = image[0, i]
+        S = image[0, i - 1]
+        codes[0, i] = value_coder(e, S)
+    # calculate first column
+    for i in range(1, height):
+        e = image[i, 0]
+        S = image[i - 1, 0]
+        codes[i, 0] = value_coder(e, S)
+    # calculate other values
+    for i in range(1, height):
+        for j in range(1, width):
+            e = image[i, j]
+            S = np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
+            codes[i, j] = value_coder(e, S)
+
+    print(codes)
+    first_element = image[0, 0]
+    binary_code = ""
+    m_values = []
+    for i in range(1, codes.size):
+        binary_code += codes.flat[i][0]
+        m_values.append(codes.flat[i][1])
+
+    print(first_element)
+    print(binary_code)
+    print(m_values)
+
+    return first_element, binary_code, m_values
+
+
+def value_coder(e, S):
+    if S < 2:
+        p = 0.5
+    else:
+        p = (S - 1) / S
+    m = math.ceil(-(np.log10(1 + p) / np.log10(p)))
+    u_g = int(e / m)
+    v_g = int(e - u_g * m)
+
+    # u_g to binary code
+    u_g_code = "0" * u_g + "1"
+
+    # v_g to binary code
+    k = math.ceil(np.log2(m))
+    l_ = 2 ** k - m
+    if v_g < l_:
+        v_g_code = f"{v_g:08b}"
+        v_g_code = v_g_code[-k + 1 :]
+    else:
+        v_g_code = f"{v_g+l_:08b}"
+        v_g_code = v_g_code[-k:]
+
+    code = u_g_code + v_g_code
+    return code, m
+
+
+def golomb_decoder(binary_code, m_values):
+    """
+    Golomb decoder from binary code and m values
+
+    :param binary_code: binary code coded by golomb coder
+    :param m_values: list of m values, associated with each coded value
     """
     pass
 
@@ -154,9 +228,7 @@ def main():
     # pass
 
 
-if __name__ == "__main__":
-    # main()
-
+def test_decoding():
     numbers = [10, 30, 1, 9, 12, 42]
     # numbers = range(32)
     code = ""
@@ -170,3 +242,11 @@ if __name__ == "__main__":
     print(m_values)
     print("Decoding:.......")
     decode_string(code, m_values)
+
+
+if __name__ == "__main__":
+    # main()
+    # test_decoding()
+    img = np.array([[1, 2, 3, 9], [3, 2, 5, 3], [5, 3, 2, 1], [5, 3, 7, 99]])
+    print(img)
+    golomb_coder(img)
