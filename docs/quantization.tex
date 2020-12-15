@@ -650,6 +650,54 @@ gdzie:
   \item $y_{min}$ - wartość minimalna
 \end{itemize}
 
+\subsection{Kodowanie rożnicowe}
+
+Kodowanie różnicowe (ang. \emph{differential coding}) polega na porównaniu każdej ramki z ramką
+poprzednią oraz kodowaniu tylko tych pikseli, których wartość zmienia się. W wyniku
+zmniejszenia wartości, otrzymujemy mniej informacji do zakodowania. Jeśli kompresja ma
+być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm
+może stać się wtedy nieefektywny pod względem czasu przetwarzania, jak również objętość
+sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja. Zaś
+w przypadku zastosowania kompresji stratne, nie każda zmiana wartości piksela jest brana
+pod uwagę. Do kodowania brane są tylko te piksele, dla których zmiany wartości są znaczne.
+Biorąc pod uwagę postawiony problem badawczy, zakres bajtów wynosi od 0 do 255 znaków.
+Oto przykładowy ciąg :\newline
+150, 152, 149, 150, 151, 156, 153, 151, 152 ...
+\newline
+Powyższy ciąg zawiera podobne wartości, ale zamiast kodować każda wartość osobno, koduje
+się różnice pomiędzy poprzednią a obecną wartością. Oczywiście sekwencja musi gdzieś się
+zaczynać, więc pierwsza wartość pozostaje bez zmian, a już kolejne wartości są kodowane
+jako różnice w stosunku do poprzedniej : \newline
+150, +2, -3, +1, +1, +5, -3, -2, +1 ...
+\cite{differential_coding}
+
+Kodowanie sygnału :
+
+\begin{equation}
+  d_n = x_1 - x_{n}
+\end{equation}
+
+gdzie:
+\begin{itemize}[label=]
+  \item $d_n$ - różnica pomiędzy pierwszą a badaną wartością
+  \item $x_{1}$ - początkowa wartość sygnału
+  \item $x_{n}$ - wartość sygnału
+\end{itemize}
+
+Dekodowanie sygnału :
+
+\begin{equation}
+  y_n = x_n + d_{n}
+\end{equation}
+
+gdzie:
+\begin{itemize}[label=]
+  \item $y_n$ - zrekonstruowana wartość
+  \item $x_{n}$ - wartość sygnału
+  \item $d_{n}$ - różnica pomiędzy pierwszą a badaną wartością
+\end{itemize}
+
+
 \section{Badania}
 
 \subsection{Algorytm LBG z losową inicjalizacją słownika}
