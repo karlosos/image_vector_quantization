@@ -1,5 +1,5 @@
 import numpy as np
-import bitarray
+from bitarray import bitarray
 import math
 
 
@@ -31,7 +31,6 @@ def golomb_coder(image):
         for j in range(1, width):
             e = image[i, j]
             S = np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
-            # print(S)
             codes[i, j] = value_coder(e, S)
 
     first_element = image[0, 0]
@@ -63,13 +62,10 @@ def value_coder(e, S):
 
     if m != 1:
         v_g = int(e - u_g * m)
-        print("v_g", v_g)
 
         # v_g to binary code
         k = math.ceil(np.log2(m))
         l_ = 2 ** k - m
-        print("k", k)
-        print("l", l_)
         if v_g < l_:
             v_g_code = f"{v_g:08b}"
             v_g_code = v_g_code[-k + 1 :]
@@ -120,7 +116,6 @@ def decode_string(code, m_values):
             if bit == "1":
                 break
             u_g += 1
-        print("u_g", u_g)
 
         # Decode v_g
         m = m_values[num_index]
@@ -154,6 +149,53 @@ def decode_string(code, m_values):
     return values
 
 
+def to_binary(first_element, binary_code, m_values, size):
+    res = bitarray()
+    # Creating binary object
+    # Store first element
+    first_byte = f"{int(first_element):08b}"
+    res += bitarray(first_byte)
+
+    # Store size
+    size_h = f"{size[0]:08b}"
+    res += bitarray(size_h)
+    size_w = f"{size[1]:08b}"
+    res += bitarray(size_w)
+
+    print(f"Len: {size[0]*size[1]} == {len(m_values)}")
+    # Store m_values
+    for m in m_values:
+        res += bitarray(f"{m:08b}")
+
+    # Store binary_code
+    res += bitarray(binary_code)
+    return res
+
+
+def from_binary(code):
+    # Load first element
+    first_element_code = code[0:8]
+    first_element = int(first_element_code.to01(), 2)
+
+    # Load size
+    size_h_code = code[8:16]
+    size_w_code = code[16:24]
+
+    size = [int(size_h_code.to01(), 2), int(size_w_code.to01(), 2)]
+
+    # Load m_values
+    m_values_count = size[0] * size[1] - 1
+    m_values_code = code[24 : 24 + m_values_count * 8]
+    m_values = []
+    for i in range(m_values_count):
+        m_values.append(int(m_values_code[i * 8 : (i + 1) * 8].to01(), 2))
+
+    # Load binary code (u_g, v_g)
+    binary_code = code[24 + m_values_count * 8 :].to01()
+
+    return first_element, binary_code, m_values, size
+
+
 def main():
     from PIL import Image
 
@@ -164,7 +206,10 @@ def main():
     from vector_quantization.lbg import lbg
     from vector_quantization.mean_removal_quantization import mean_removal_quantize
     from vector_quantization.mean_removal_quantization import mean_removal_quantize_from_codebook
-    from vector_quantization.differential_encoding import median_adaptive_predictor_encoding
+    from vector_quantization.differential_encoding import (
+        median_adaptive_predictor_encoding,
+        median_adaptive_predictor_decoding,
+    )
 
     import matplotlib.pyplot as plt
 
@@ -179,22 +224,29 @@ def main():
 
     # Differential encoding means from MRVQ
     encoded = median_adaptive_predictor_encoding(means_reshaped)
-    first_byte = f"{int(encoded[0, 0]):08b}"
-    print(first_byte)
+    encoded = encoded.astype(int)
 
     # Transform other values to absolute values (remove sign)
     abs_encoded = np.abs(encoded)
     signs = np.sign(encoded)
 
-    print(abs_encoded, signs)
+    first_element, binary_code, m_values = golomb_coder(abs_encoded)
 
-    # Separating values to u_G and v_G
-    # TODO: encode with Golomb coder
-    # - store first element (first_byte), binary code of image, m_values, image shape
+    size = abs_encoded.shape
+    bit_code = to_binary(first_element, binary_code, m_values, size)
+    first_element, binary_code, m_values, size = from_binary(bit_code)
 
-    # Creating binary object
-    out = bitarray.bitarray(first_byte)
-    print(out)
+    # import numpy.testing as npt
+    # npt.assert_almost_equal(m_values, m_values_1)
+
+    # print(binary_code[0:16])
+    # print(binary_code_1[0:16])
+
+    values_decoded = golomb_decoder(first_value=first_element, binary_code=binary_code, m_values=m_values, size=size)
+    decoded_means = values_decoded * signs
+    decoded_image = median_adaptive_predictor_decoding(decoded_means)
+    plt.imshow(decoded_image)
+    plt.show()
 
 
 if __name__ == "__main__":
