@@ -29,3 +29,16 @@ class TestGolombCoder(unittest.TestCase):
             first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
         )
         npt.assert_almost_equal(values_decoded, values)
+
+    def test_random_encoding_decoding(self):
+        """
+        Encode random (noise) images with size 10x10
+        """
+        for i in range(10):
+            values = np.random.rand(20, 20) * 255
+            values = values.astype(int)
+            first_element, binary_code, m_values = golomb_coder(values)
+            values_decoded = golomb_decoder(
+                first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
+            )
+            npt.assert_almost_equal(values_decoded, values)

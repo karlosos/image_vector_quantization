@@ -8,25 +8,23 @@ def golomb_coder(image):
     Golomb coder of image
 
     :param img: image to compress. Only unsigned values.
-    :return string with binary code and list of m values
+    :return first_element as number, string with binary code and list of m values
     """
     height, width = image.shape
     codes = np.empty(image.shape, dtype=object)
 
     # rewrite first element
     codes[0, 0] = image[0, 0]
-    # print("S values")
+
     # calculate first row
     for i in range(1, width):
         e = image[0, i]
         S = image[0, i - 1]
-        # print(S)
         codes[0, i] = value_coder(e, S)
     # calculate first column
     for i in range(1, height):
         e = image[i, 0]
         S = image[i - 1, 0]
-        # print(S)
         codes[i, 0] = value_coder(e, S)
     # calculate other values
     for i in range(1, height):
@@ -36,7 +34,6 @@ def golomb_coder(image):
             # print(S)
             codes[i, j] = value_coder(e, S)
 
-    # print(codes)
     first_element = image[0, 0]
     binary_code = ""
     m_values = []
@@ -44,25 +41,22 @@ def golomb_coder(image):
         binary_code += codes.flat[i][0]
         m_values.append(codes.flat[i][1])
 
-    # print(first_element)
-    # print(binary_code)
-    # print(m_values)
-
     return first_element, binary_code, m_values
 
 
 def value_coder(e, S):
+    """
+    Code single values e with given S
+    :param e: error (input value)
+    :param S: calculated based on neighbors (mean value of three neighbors)
+    :returns: binary code as string and m value
+    """
     if S < 2:
         p = 0.5
     else:
         p = (S - 1) / S
     m = math.ceil(-(np.log10(1 + p) / np.log10(p)))
-    # if m == 8:
-    #     breakpoint()
     u_g = int(e / m)
-    print("u_g", u_g)
-    # print("p, m", p, m)
-    print("m", m)
 
     # u_g to binary code
     u_g_code = "0" * u_g + "1"
@@ -82,16 +76,11 @@ def value_coder(e, S):
         else:
             v_g_code = f"{v_g+l_:08b}"
             v_g_code = v_g_code[-k:]
-        # if k==3:
-        #     breakpoint()
 
         code = u_g_code + v_g_code
-        # debug:
-        # if k == 2:
-        #     breakpoint()
     else:
         code = u_g_code
-    print()
+
     return code, m
 
 
@@ -99,8 +88,10 @@ def golomb_decoder(first_value, binary_code, m_values, size):
     """
     Golomb decoder from binary code and m values
 
+    :param first_value:
     :param binary_code: binary code coded by golomb coder
     :param m_values: list of m values, associated with each coded value
+    :param size: image size as a tuple
     """
     values = decode_string(binary_code, m_values)
     values = [first_value] + values
@@ -108,65 +99,13 @@ def golomb_decoder(first_value, binary_code, m_values, size):
     return decoded_img
 
 
-def step(e):
-    # p = 0.95
-    m = 14
-    import math
-
-    # print(m, "=", math.ceil(-np.log10(1 + p) / np.log10(p)))
-    k = 4
-    l_ = 2
-
-    u_g = int(e / m)
-    v_g = e - u_g * m
-    # print(u_g, v_g)
-    u_g_unary = "0" * u_g + "1"
-
-    # print(k, "=", math.ceil(np.log2(m)))
-    # print(l, "=", 2 ** k - 1)
-
-    v_g = int(v_g)
-    if v_g < l_:
-        v_g_code = f"{v_g:08b}"
-        v_g_code = v_g_code[-k + 1 :]
-    else:
-        v_g_code = f"{v_g+l_:08b}"
-        v_g_code = v_g_code[-k:]
-
-    # print(f"{e} \t {u_g_unary}:{v_g_code}")
-    # print(u_g, v_g)
-    return u_g_unary, v_g_code, m
-
-
-def decode(u_g_unary, v_g_code, m):
-    # Decode u_g_unary
-    u_g = 0
-    for bit in u_g_unary:
-        if bit == "1":
-            break
-        u_g += 1
-
-    # Decode v_g_code
-    import math
-
-    k = math.ceil(np.log2(m))
-    l_ = 2 ** k - m
-
-    # TODO: this is bad. This should be decoding from
-    v_g_code_tmp = v_g_code[: k - 1]
-    v_g = int(v_g_code_tmp, 2)
-    if v_g >= l_:
-        g = int(v_g_code[k - 1])
-        v_g = 2 * v_g + g - l_
-
-    # print("decode:", u_g, v_g)
-    e = u_g * m + v_g
-    print("decode:", e)
-
-
 def decode_string(code, m_values):
-    import math
-
+    """
+    Decode string with binary code with given m_values to output values (e)
+    :param code: binary code as a string
+    :param m_values: m values for every element
+    :returns:
+    """
     ptr = 0
 
     values = []
@@ -189,7 +128,7 @@ def decode_string(code, m_values):
             k = math.ceil(np.log2(m))
             l_ = 2 ** k - m
 
-            # There's a problem when m = 2, because k = 1
+            # There was a problem when m = 2, because k = 1
             v_g_code_tmp = code[ptr : ptr + k - 1]
             ptr = ptr + k - 1
 
@@ -197,25 +136,21 @@ def decode_string(code, m_values):
                 v_g = 0
             else:
                 v_g = int(v_g_code_tmp, 2)
-            print("l_", l_)
-            print("v_g_before", v_g)
+
             if v_g >= l_:
-                # breakpoint()
                 g = int(code[ptr : ptr + 1])
                 v_g = 2 * v_g + g - l_
                 ptr = ptr + 1
-                # breakpoint()
-            print("v_g:", v_g)
             e = u_g * m + v_g
         else:
             e = u_g
-        # print(e, m)
-        print()
+
         values.append(e)
         num_index += 1
 
         if num_index >= len(m_values):
             break
+
     return values
 
 
@@ -254,59 +189,13 @@ def main():
     print(abs_encoded, signs)
 
     # Separating values to u_G and v_G
+    # TODO: encode with Golomb coder
+    # - store first element (first_byte), binary code of image, m_values, image shape
 
     # Creating binary object
     out = bitarray.bitarray(first_byte)
     print(out)
 
 
-def test_decoding():
-    numbers = [10, 30, 1, 9, 12, 42]
-    # numbers = range(32)
-    code = ""
-    m_values = []
-    for i in numbers:
-        u_g_unary, v_g_code, m = step(i)
-        code += u_g_unary + v_g_code
-        m_values.append(m)
-        # decode(u_g_unary, v_g_code, m)
-    # print(code)
-    # print(m_values)
-    # print("Decoding:.......")
-    decode_string(code, m_values)
-
-
-def test_1():
-    img = np.array([[1, 2, 1], [3, 9, 2]])
-    print("input:")
-    print(img)
-    first_value, binary_code, m_values = golomb_coder(img)
-    print("decoded:")
-    decoded = golomb_decoder(first_value, binary_code, m_values, img.shape)
-    print(decoded)
-
-
-def test_2():
-    values = np.array([[1, 130, 1, 3], [3, 9, 2, 3]])
-    first_element, binary_code, m_values = golomb_coder(values)
-    print(binary_code)
-    values_decoded = golomb_decoder(
-        first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
-    )
-    print(values_decoded)
-
-
-def test_3():
-    values = np.array([[1, 30, 1, 3], [3, 9, 2, 3]])
-    first_element, binary_code, m_values = golomb_coder(values)
-    print(binary_code)
-    values_decoded = golomb_decoder(
-        first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
-    )
-    print(values_decoded)
-
-
 if __name__ == "__main__":
-    # main()
-    # test_decoding()
-    test_1()
+    main()
