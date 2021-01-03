@@ -57,30 +57,41 @@ def value_coder(e, S):
     else:
         p = (S - 1) / S
     m = math.ceil(-(np.log10(1 + p) / np.log10(p)))
+    # if m == 8:
+    #     breakpoint()
     u_g = int(e / m)
+    print("u_g", u_g)
+    # print("p, m", p, m)
+    print("m", m)
 
     # u_g to binary code
     u_g_code = "0" * u_g + "1"
 
     if m != 1:
         v_g = int(e - u_g * m)
+        print("v_g", v_g)
 
         # v_g to binary code
         k = math.ceil(np.log2(m))
         l_ = 2 ** k - m
+        print("k", k)
+        print("l", l_)
         if v_g < l_:
             v_g_code = f"{v_g:08b}"
             v_g_code = v_g_code[-k + 1 :]
         else:
             v_g_code = f"{v_g+l_:08b}"
             v_g_code = v_g_code[-k:]
+        # if k==3:
+        #     breakpoint()
 
         code = u_g_code + v_g_code
         # debug:
-        if k == 2:
-            breakpoint()
+        # if k == 2:
+        #     breakpoint()
     else:
         code = u_g_code
+    print()
     return code, m
 
 
@@ -170,6 +181,7 @@ def decode_string(code, m_values):
             if bit == "1":
                 break
             u_g += 1
+        print("u_g", u_g)
 
         # Decode v_g
         m = m_values[num_index]
@@ -177,24 +189,28 @@ def decode_string(code, m_values):
             k = math.ceil(np.log2(m))
             l_ = 2 ** k - m
 
-            # TODO: changed from k - 1 to k in following two lines
-            v_g_code_tmp = code[ptr : ptr + k]
-            ptr = ptr + k
-
             # There's a problem when m = 2, because k = 1
-            # How to read next k - 1 bits, when it's 0?
-            # TODO: something wrong with coding?
-            # print("break:", v_g_code_tmp)
-            v_g = int(v_g_code_tmp, 2)
-            # print("v_g:", v_g)
-            if v_g > l_:
+            v_g_code_tmp = code[ptr : ptr + k - 1]
+            ptr = ptr + k - 1
+
+            if v_g_code_tmp == "":
+                v_g = 0
+            else:
+                v_g = int(v_g_code_tmp, 2)
+            print("l_", l_)
+            print("v_g_before", v_g)
+            if v_g >= l_:
+                # breakpoint()
                 g = int(code[ptr : ptr + 1])
                 v_g = 2 * v_g + g - l_
                 ptr = ptr + 1
+                # breakpoint()
+            print("v_g:", v_g)
             e = u_g * m + v_g
         else:
             e = u_g
         # print(e, m)
+        print()
         values.append(e)
         num_index += 1
 
@@ -260,9 +276,7 @@ def test_decoding():
     decode_string(code, m_values)
 
 
-if __name__ == "__main__":
-    # main()
-    # test_decoding()
+def test_1():
     img = np.array([[1, 2, 1], [3, 9, 2]])
     print("input:")
     print(img)
@@ -270,3 +284,29 @@ if __name__ == "__main__":
     print("decoded:")
     decoded = golomb_decoder(first_value, binary_code, m_values, img.shape)
     print(decoded)
+
+
+def test_2():
+    values = np.array([[1, 130, 1, 3], [3, 9, 2, 3]])
+    first_element, binary_code, m_values = golomb_coder(values)
+    print(binary_code)
+    values_decoded = golomb_decoder(
+        first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
+    )
+    print(values_decoded)
+
+
+def test_3():
+    values = np.array([[1, 30, 1, 3], [3, 9, 2, 3]])
+    first_element, binary_code, m_values = golomb_coder(values)
+    print(binary_code)
+    values_decoded = golomb_decoder(
+        first_value=first_element, binary_code=binary_code, m_values=m_values, size=values.shape
+    )
+    print(values_decoded)
+
+
+if __name__ == "__main__":
+    # main()
+    # test_decoding()
+    test_1()
