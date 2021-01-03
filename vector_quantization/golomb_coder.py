@@ -15,24 +15,28 @@ def golomb_coder(image):
 
     # rewrite first element
     codes[0, 0] = image[0, 0]
+    # print("S values")
     # calculate first row
     for i in range(1, width):
         e = image[0, i]
         S = image[0, i - 1]
+        # print(S)
         codes[0, i] = value_coder(e, S)
     # calculate first column
     for i in range(1, height):
         e = image[i, 0]
         S = image[i - 1, 0]
+        # print(S)
         codes[i, 0] = value_coder(e, S)
     # calculate other values
     for i in range(1, height):
         for j in range(1, width):
             e = image[i, j]
             S = np.mean([image[i, j - 1], image[i - 1, j], image[i - 1, j - 1]])
+            # print(S)
             codes[i, j] = value_coder(e, S)
 
-    print(codes)
+    # print(codes)
     first_element = image[0, 0]
     binary_code = ""
     m_values = []
@@ -40,9 +44,9 @@ def golomb_coder(image):
         binary_code += codes.flat[i][0]
         m_values.append(codes.flat[i][1])
 
-    print(first_element)
-    print(binary_code)
-    print(m_values)
+    # print(first_element)
+    # print(binary_code)
+    # print(m_values)
 
     return first_element, binary_code, m_values
 
@@ -72,6 +76,9 @@ def value_coder(e, S):
             v_g_code = v_g_code[-k:]
 
         code = u_g_code + v_g_code
+        # debug:
+        if k == 2:
+            breakpoint()
     else:
         code = u_g_code
     return code, m
@@ -84,9 +91,10 @@ def golomb_decoder(first_value, binary_code, m_values, size):
     :param binary_code: binary code coded by golomb coder
     :param m_values: list of m values, associated with each coded value
     """
-    print(binary_code)
     values = decode_string(binary_code, m_values)
-    print(values)
+    values = [first_value] + values
+    decoded_img = np.array(values).reshape(size)
+    return decoded_img
 
 
 def step(e):
@@ -115,7 +123,7 @@ def step(e):
         v_g_code = v_g_code[-k:]
 
     # print(f"{e} \t {u_g_unary}:{v_g_code}")
-    print(u_g, v_g)
+    # print(u_g, v_g)
     return u_g_unary, v_g_code, m
 
 
@@ -169,21 +177,24 @@ def decode_string(code, m_values):
             k = math.ceil(np.log2(m))
             l_ = 2 ** k - m
 
-            v_g_code_tmp = code[ptr : ptr + k - 1]
-            ptr = ptr + k - 1
+            # TODO: changed from k - 1 to k in following two lines
+            v_g_code_tmp = code[ptr : ptr + k]
+            ptr = ptr + k
 
             # There's a problem when m = 2, because k = 1
             # How to read next k - 1 bits, when it's 0?
             # TODO: something wrong with coding?
+            # print("break:", v_g_code_tmp)
             v_g = int(v_g_code_tmp, 2)
-            if v_g >= l_:
+            # print("v_g:", v_g)
+            if v_g > l_:
                 g = int(code[ptr : ptr + 1])
                 v_g = 2 * v_g + g - l_
                 ptr = ptr + 1
             e = u_g * m + v_g
         else:
             e = u_g
-        print(e, m)
+        # print(e, m)
         values.append(e)
         num_index += 1
 
@@ -229,9 +240,8 @@ def main():
     # Separating values to u_G and v_G
 
     # Creating binary object
-    # out = bitarray.bitarray(first_byte)
-    # print(out)
-    # pass
+    out = bitarray.bitarray(first_byte)
+    print(out)
 
 
 def test_decoding():
@@ -244,16 +254,19 @@ def test_decoding():
         code += u_g_unary + v_g_code
         m_values.append(m)
         # decode(u_g_unary, v_g_code, m)
-    print(code)
-    print(m_values)
-    print("Decoding:.......")
+    # print(code)
+    # print(m_values)
+    # print("Decoding:.......")
     decode_string(code, m_values)
 
 
 if __name__ == "__main__":
     # main()
     # test_decoding()
-    img = np.array([[1, 2, 3, 9], [3, 2, 5, 3], [5, 3, 2, 1], [5, 3, 7, 99]])
+    img = np.array([[1, 2, 1], [3, 9, 2]])
+    print("input:")
     print(img)
     first_value, binary_code, m_values = golomb_coder(img)
-    golomb_decoder(first_value, binary_code, m_values, img.shape)
+    print("decoded:")
+    decoded = golomb_decoder(first_value, binary_code, m_values, img.shape)
+    print(decoded)
