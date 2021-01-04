@@ -130,7 +130,7 @@ def decode_string(code, m_values):
     Decode string with binary code with given m_values to output values (e)
 
     :param code: binary code of e values as a string
-    :param m_values: m values for every element
+    :param m_values: m values for every element TODO: should calculate this in placehaving previously encoded values
     :returns: encoded values (e)
     """
     ptr = 0
@@ -204,8 +204,6 @@ def to_binary(first_element, binary_code, signs, m_values, size):
     size_w = f"{size[1]:08b}"
     res += bitarray(size_w)
 
-    print(f"Len: {size[0]*size[1]} == {len(m_values)}")
-
     # Store m_values
     for m in m_values:
         res += bitarray(f"{m:08b}")
@@ -222,6 +220,13 @@ def to_binary(first_element, binary_code, signs, m_values, size):
 
     # Store binary_code
     res += bitarray(binary_code)
+
+    # How much bits each section
+    print("m_values", m_values)
+    print("Coded values:", len(binary_code))
+    print("m values:", len(m_values) * 8)
+    print("signs:", len(signs))
+
     return res
 
 
@@ -292,6 +297,7 @@ def main():
     means = np.mean(vectors, axis=1, keepdims=True)  # mean should be in shape like smaller image.
     height, width = img.shape
     means_reshaped = means.reshape((height // window_size, width // window_size))
+    means_reshaped = means_reshaped.astype(int)
 
     # Differential encoding means from MRVQ
     encoded_means = median_adaptive_predictor_encoding(means_reshaped)
@@ -299,6 +305,11 @@ def main():
 
     # Compress encoded means with Golomb Coder
     bit_code = golomb_compress(encoded_means)
+
+    # TODO: wow, we have a problem. This compression is SHIT! Not compression at all.
+    print("bit_code length", len(bit_code))
+    print("without compression", encoded_means.size * 9)
+    print("CR", len(bit_code) / (encoded_means.size * 9))
 
     # Decompress encoded means with Golomb Coder
     decoded_means = golomb_decompress(bit_code)
