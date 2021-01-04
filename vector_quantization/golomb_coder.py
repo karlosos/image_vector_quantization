@@ -13,10 +13,10 @@ def golomb_compress(img):
     img_abs = np.abs(img)
     signs = np.sign(img)
 
-    first_element, binary_code, m_values = golomb_coder(img_abs)
+    first_element, binary_code = golomb_coder(img_abs)
 
     size = img_abs.shape
-    bit_code = to_binary(first_element, binary_code, signs, m_values, size)
+    bit_code = to_binary(first_element, binary_code, signs, size)
     return bit_code
 
 
@@ -27,8 +27,8 @@ def golomb_decompress(bit_code):
     :param bit_code: binary code compressed with golomb compression
     :returns: signed matrix
     """
-    first_element, binary_code, signs, m_values, size = from_binary(bit_code)
-    values_decoded = golomb_decoder(first_value=first_element, binary_code=binary_code, m_values=m_values, size=size)
+    first_element, binary_code, signs, size = from_binary(bit_code)
+    values_decoded = golomb_decoder(first_value=first_element, binary_code=binary_code, size=size)
     img = values_decoded * signs
     return img
 
@@ -38,7 +38,7 @@ def golomb_coder(image):
     Golomb coder of image
 
     :param img: image to compress. Only unsigned values.
-    :return first_element as number, string with binary code and list of m values
+    :return first_element as number, string with binary code
     """
     height, width = image.shape
     codes = np.empty(image.shape, dtype=object)
@@ -65,12 +65,10 @@ def golomb_coder(image):
 
     first_element = image[0, 0]
     binary_code = ""
-    m_values = []
     for i in range(1, codes.size):
         binary_code += codes.flat[i][0]
-        m_values.append(codes.flat[i][1])
 
-    return first_element, binary_code, m_values
+    return first_element, binary_code
 
 
 def value_coder(e, S):
@@ -110,33 +108,32 @@ def value_coder(e, S):
     return code, m
 
 
-def golomb_decoder(first_value, binary_code, m_values, size):
+def golomb_decoder(first_value, binary_code, size):
     """
     Golomb decoder from binary code and m values
 
     :param first_value:
     :param binary_code: binary code coded by golomb coder
-    :param m_values: list of m values, associated with each coded value
     :param size: image size as a tuple
     """
-    values = decode_string(binary_code, m_values)
-    values = [first_value] + values
-    decoded_img = np.array(values).reshape(size)
+    decoded_img_tmp = np.zeros(size)
+    decoded_img_tmp[0, 0] = first_value
+    decoded_img = decode_string(binary_code, decoded_img_tmp)
     return decoded_img
 
 
-def decode_string(code, m_values):
+def decode_string(code, decoded_img_tmp):
     """
-    Decode string with binary code with given m_values to output values (e)
+    Decode string with binary code with given temporary matrix to output values (e)
 
     :param code: binary code of e values as a string
-    :param m_values: m values for every element TODO: should calculate this in placehaving previously encoded values
-    :returns: encoded values (e)
+    :param decoded_img_tmp: temporaty matrix with first element with correct shape
+    :returns: decoded_img
     """
-    ptr = 0
+    decoded_img = decoded_img_tmp.copy()
 
-    values = []
-    num_index = 0
+    idx = 1
+    ptr = 0
 
     while True:
         # Decode u_g
@@ -149,7 +146,7 @@ def decode_string(code, m_values):
             u_g += 1
 
         # Decode v_g
-        m = m_values[num_index]
+        m = calculate_m(decoded_img, idx)
         if m != 1:
             k = math.ceil(np.log2(m))
             l_ = 2 ** k - m
@@ -171,16 +168,43 @@ def decode_string(code, m_values):
         else:
             e = u_g
 
-        values.append(e)
-        num_index += 1
+        decoded_img.flat[idx] = e
+        idx += 1
 
-        if num_index >= len(m_values):
+        if idx >= decoded_img.size:
             break
 
-    return values
+    return decoded_img
 
 
-def to_binary(first_element, binary_code, signs, m_values, size):
+def calculate_m(decoded_img, idx):
+    """
+    Calculate m in decoding (decompression) process for given index
+
+    As we decode elements sequentialy, we know previous values to calculate S and m
+    :param decoded_img: matrix with decoded values (all values are correct till the idx)
+    :param idx: index of current element to calculate m value
+    :returns: m value for given index
+    """
+    i, j = np.unravel_index(idx, decoded_img.shape)
+
+    if i == 0:
+        S = decoded_img[0, j - 1]
+    elif j == 0:
+        S = decoded_img[i - 1, 0]
+    else:
+        S = np.mean([decoded_img[i, j - 1], decoded_img[i - 1, j], decoded_img[i - 1, j - 1]])
+
+    if S < 2:
+        p = 0.5
+    else:
+        p = (S - 1) / S
+
+    m = math.ceil(-(np.log10(1 + p) / np.log10(p)))
+    return m
+
+
+def to_binary(first_element, binary_code, signs, size):
     """
     Code matrix data to binary string.
     This will be stored in file.
@@ -188,7 +212,6 @@ def to_binary(first_element, binary_code, signs, m_values, size):
     :param first_element: first element of a matrix (image/means)
     :param binary_code: bit code with coded e values
     :param signs: matrix with signs of coded matrix
-    :param m_values:
     :param size: size of an coded matrix
     :returns: bit code
     """
@@ -204,10 +227,6 @@ def to_binary(first_element, binary_code, signs, m_values, size):
     size_w = f"{size[1]:08b}"
     res += bitarray(size_w)
 
-    # Store m_values
-    for m in m_values:
-        res += bitarray(f"{m:08b}")
-
     # Store signs
     # 1 -> positive
     # 0 -> negative
@@ -222,9 +241,7 @@ def to_binary(first_element, binary_code, signs, m_values, size):
     res += bitarray(binary_code)
 
     # How much bits each section
-    print("m_values", m_values)
     print("Coded values:", len(binary_code))
-    print("m values:", len(m_values) * 8)
     print("signs:", len(signs))
 
     return res
@@ -247,16 +264,9 @@ def from_binary(code):
 
     size = [int(size_h_code.to01(), 2), int(size_w_code.to01(), 2)]
 
-    # Load m_values
-    m_values_count = size[0] * size[1] - 1
-    m_values_code = code[24 : 24 + m_values_count * 8]
-    m_values = []
-    for i in range(m_values_count):
-        m_values.append(int(m_values_code[i * 8 : (i + 1) * 8].to01(), 2))
-
     # Load signs
     signs_count = size[0] * size[1]
-    ptr = 24 + m_values_count * 8
+    ptr = 24
     signs_code = code[ptr : ptr + signs_count]
     signs = []
     for i in range(signs_count):
@@ -269,7 +279,7 @@ def from_binary(code):
     # Load binary code (u_g, v_g)
     binary_code = code[ptr:].to01()
 
-    return first_element, binary_code, signs, m_values, size
+    return first_element, binary_code, signs, size
 
 
 def main():
@@ -306,7 +316,6 @@ def main():
     # Compress encoded means with Golomb Coder
     bit_code = golomb_compress(encoded_means)
 
-    # TODO: wow, we have a problem. This compression is SHIT! Not compression at all.
     print("bit_code length", len(bit_code))
     print("without compression", encoded_means.size * 9)
     print("CR", len(bit_code) / (encoded_means.size * 9))
