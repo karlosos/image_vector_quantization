@@ -3,6 +3,36 @@ from bitarray import bitarray
 import math
 
 
+def golomb_compress(img):
+    """
+    Compress signed matrix with golomb coder
+
+    :param img: matrix with signed values (9 bit per value)
+    :returns: binary code with compressed matrix
+    """
+    img_abs = np.abs(img)
+    signs = np.sign(img)
+
+    first_element, binary_code, m_values = golomb_coder(img_abs)
+
+    size = img_abs.shape
+    bit_code = to_binary(first_element, binary_code, signs, m_values, size)
+    return bit_code
+
+
+def golomb_decompress(bit_code):
+    """
+    Decompress signed matrix from bit code with golomb decoder
+
+    :param bit_code: binary code compressed with golomb compression
+    :returns: signed matrix
+    """
+    first_element, binary_code, signs, m_values, size = from_binary(bit_code)
+    values_decoded = golomb_decoder(first_value=first_element, binary_code=binary_code, m_values=m_values, size=size)
+    img = values_decoded * signs
+    return img
+
+
 def golomb_coder(image):
     """
     Golomb coder of image
@@ -45,7 +75,7 @@ def golomb_coder(image):
 
 def value_coder(e, S):
     """
-    Code single values e with given S
+    Encode single values e with given S
     :param e: error (input value)
     :param S: calculated based on neighbors (mean value of three neighbors)
     :returns: binary code as string and m value
@@ -98,9 +128,10 @@ def golomb_decoder(first_value, binary_code, m_values, size):
 def decode_string(code, m_values):
     """
     Decode string with binary code with given m_values to output values (e)
-    :param code: binary code as a string
+
+    :param code: binary code of e values as a string
     :param m_values: m values for every element
-    :returns:
+    :returns: encoded values (e)
     """
     ptr = 0
 
@@ -150,6 +181,17 @@ def decode_string(code, m_values):
 
 
 def to_binary(first_element, binary_code, signs, m_values, size):
+    """
+    Code matrix data to binary string.
+    This will be stored in file.
+
+    :param first_element: first element of a matrix (image/means)
+    :param binary_code: bit code with coded e values
+    :param signs: matrix with signs of coded matrix
+    :param m_values:
+    :param size: size of an coded matrix
+    :returns: bit code
+    """
     res = bitarray()
     # Creating binary object
     # Store first element
@@ -184,6 +226,12 @@ def to_binary(first_element, binary_code, signs, m_values, size):
 
 
 def from_binary(code):
+    """
+    Decode matrix data from bit string.
+    This will be loaded from file.
+    :param code: bit code
+    :returns: same as inputs for `to_binary`
+    """
     # Load first element
     first_element_code = code[0:8]
     first_element = int(first_element_code.to01(), 2)
@@ -219,10 +267,6 @@ def from_binary(code):
     return first_element, binary_code, signs, m_values, size
 
 
-def decode(binary_code):
-    pass
-
-
 def main():
     from PIL import Image
 
@@ -250,30 +294,18 @@ def main():
     means_reshaped = means.reshape((height // window_size, width // window_size))
 
     # Differential encoding means from MRVQ
-    encoded = median_adaptive_predictor_encoding(means_reshaped)
-    encoded = encoded.astype(int)
+    encoded_means = median_adaptive_predictor_encoding(means_reshaped)
+    encoded_means = encoded_means.astype(int)
 
-    # Transform other values to absolute values (remove sign)
-    abs_encoded = np.abs(encoded)
-    signs = np.sign(encoded)
+    # Compress encoded means with Golomb Coder
+    bit_code = golomb_compress(encoded_means)
 
-    first_element, binary_code, m_values = golomb_coder(abs_encoded)
+    # Decompress encoded means with Golomb Coder
+    decoded_means = golomb_decompress(bit_code)
 
-    size = abs_encoded.shape
-    bit_code = to_binary(first_element, binary_code, signs, m_values, size)
-
-    # TODO: move decoding to separate function, with input only one binary sequence
-    first_element, binary_code, signs, m_values, size = from_binary(bit_code)
-
-    # import numpy.testing as npt
-    # npt.assert_almost_equal(m_values, m_values_1)
-
-    # print(binary_code[0:16])
-    # print(binary_code_1[0:16])
-
-    values_decoded = golomb_decoder(first_value=first_element, binary_code=binary_code, m_values=m_values, size=size)
-    decoded_means = values_decoded * signs
+    # Differential decoding
     decoded_image = median_adaptive_predictor_decoding(decoded_means)
+
     plt.imshow(decoded_image)
     plt.show()
 
