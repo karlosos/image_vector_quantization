@@ -149,7 +149,7 @@ def decode_string(code, m_values):
     return values
 
 
-def to_binary(first_element, binary_code, m_values, size):
+def to_binary(first_element, binary_code, signs, m_values, size):
     res = bitarray()
     # Creating binary object
     # Store first element
@@ -163,9 +163,20 @@ def to_binary(first_element, binary_code, m_values, size):
     res += bitarray(size_w)
 
     print(f"Len: {size[0]*size[1]} == {len(m_values)}")
+
     # Store m_values
     for m in m_values:
         res += bitarray(f"{m:08b}")
+
+    # Store signs
+    # 1 -> positive
+    # 0 -> negative
+    signs[signs >= 0] = 1
+    signs[signs == -1] = 0
+    signs_code = ""
+    for sign in signs.flat:
+        signs_code += str(sign)
+    res += bitarray(signs_code)
 
     # Store binary_code
     res += bitarray(binary_code)
@@ -190,10 +201,26 @@ def from_binary(code):
     for i in range(m_values_count):
         m_values.append(int(m_values_code[i * 8 : (i + 1) * 8].to01(), 2))
 
-    # Load binary code (u_g, v_g)
-    binary_code = code[24 + m_values_count * 8 :].to01()
+    # Load signs
+    signs_count = size[0] * size[1]
+    ptr = 24 + m_values_count * 8
+    signs_code = code[ptr : ptr + signs_count]
+    signs = []
+    for i in range(signs_count):
+        signs.append(int(signs_code[i]))
+    signs = np.array(signs)
+    signs = signs.reshape(size)
+    signs[signs == 0] = -1
+    ptr = ptr + signs_count
 
-    return first_element, binary_code, m_values, size
+    # Load binary code (u_g, v_g)
+    binary_code = code[ptr:].to01()
+
+    return first_element, binary_code, signs, m_values, size
+
+
+def decode(binary_code):
+    pass
 
 
 def main():
@@ -233,8 +260,10 @@ def main():
     first_element, binary_code, m_values = golomb_coder(abs_encoded)
 
     size = abs_encoded.shape
-    bit_code = to_binary(first_element, binary_code, m_values, size)
-    first_element, binary_code, m_values, size = from_binary(bit_code)
+    bit_code = to_binary(first_element, binary_code, signs, m_values, size)
+
+    # TODO: move decoding to separate function, with input only one binary sequence
+    first_element, binary_code, signs, m_values, size = from_binary(bit_code)
 
     # import numpy.testing as npt
     # npt.assert_almost_equal(m_values, m_values_1)
