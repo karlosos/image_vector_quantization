@@ -25,7 +25,7 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
-\usepackage{caption} 
+\usepackage{caption}
 \captionsetup[table]{skip=10pt}
 
 %\fancyhf{} % sets both header and footer to nothing
@@ -81,15 +81,15 @@
 Kwantyzacja polega na przyporządkowaniu wartościom sygnału ciągłego wartości dyskretnych należących do skończonego zbioru.
 Przedział wartości sygnału dzielony jest na zbiór przedziałów.
 Zazwyczaj przedziały mają taką samą wielkość (kwantyzacja liniowa).
-Stosuje się też kwantyzację nieliniową, gdzie przedziały nie są równomiernie podzielone. 
+Stosuje się też kwantyzację nieliniową, gdzie przedziały nie są równomiernie podzielone.
 
-Z każdym przedziałem powiązany jest określony poziom kwantyzacji. 
+Z każdym przedziałem powiązany jest określony poziom kwantyzacji.
 Gdy wartość sygnału wejściowego należy do danego przedziału przyporządkowuje mu się odpowiednią wartość kwantyzacji.
 
-Podczas procesu kwantyzacji powstają błędy kwantyzacji wynikające z różnicy rzeczywistej wartości od wartości kwantyzacji. 
-Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji. 
-Im większe przedziały kwantyzacji tym mniejsza jej dokładność i tym większy jest szum kwantyzacji. 
-W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez liczbę bitów wykorzystywanych do zapisu skwantyzowanej wartości. 
+Podczas procesu kwantyzacji powstają błędy kwantyzacji wynikające z różnicy rzeczywistej wartości od wartości kwantyzacji.
+Błędy te objawiają się w postaci tak zwanego szumu kwantyzacji.
+Im większe przedziały kwantyzacji tym mniejsza jej dokładność i tym większy jest szum kwantyzacji.
+W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest określona przez liczbę bitów wykorzystywanych do zapisu skwantyzowanej wartości.
 Zwiększenie liczby bitów prowadzi do zwiększenia liczby przedziałów, co w rezultacie prowadzi do dokładniejszego odwzorowania \mbox{sygnału \cite{drozdek2007wprowadzenie}.}
 
 \section{Opis projektu}
@@ -121,8 +121,8 @@ Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej 
 \begin{enumerate}
   \item Formowanie danych wejściowych do postaci $K$ wektorów $n$ -- wymiarowych (etap wstępny).
   \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki
-        kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych, 
-        tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru 
+        kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych,
+        tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru
         treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
   \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika.
 \end{enumerate}
@@ -161,14 +161,14 @@ Podstawowymi metodami inicjalizacji książki kodowej są:
   \item metoda rozdzielania (ang. splitting).
 \end{enumerate}
 
-Metoda losowa polega na wylosowaniu $N$ wektorów, gdzie $N$ jest liczba całkowitą. 
+Metoda losowa polega na wylosowaniu $N$ wektorów, gdzie $N$ jest liczba całkowitą.
 Rozwiązanie jest wykorzystywane gdy posiada się mało informacji na temat danych wektorowych lub liczy się
-szybkość inicjalizaci. 
+szybkość inicjalizaci.
 
-Druga metoda tworzenie słownika, czyli metoda grupowania najbliższych sąsiadów pozwala osiągnąć lepsze wyniki niż metoda losowa, 
-ale za to jest dużo bardziej czasochłonna. 
-Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji. 
-W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup. 
+Druga metoda tworzenie słownika, czyli metoda grupowania najbliższych sąsiadów pozwala osiągnąć lepsze wyniki niż metoda losowa,
+ale za to jest dużo bardziej czasochłonna.
+Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji.
+W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup.
 Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
 
 Algorytm metody PNN:
@@ -177,32 +177,32 @@ Algorytm metody PNN:
 
 \begin{enumerate}
   \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej.
-        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację 
+        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację
         średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
-        
+
         \begin{equation}
           D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
         \end{equation}
-        
+
   \item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$.
-        Dla danego kodeksu $C$. 
+        Dla danego kodeksu $C$.
         Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
-        
+
         \begin{equation}
           ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
         \end{equation}
-        
+
   \item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$.
-        Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone. 
+        Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone.
         Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
-        
+
         \begin{equation}
           d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
         \end{equation}
-        
+
   \item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$,
         a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
-        
+
         \begin{equation}
           C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
         \end{equation}
@@ -658,20 +658,23 @@ zmniejszenia wartości, otrzymujemy mniej informacji do zakodowania. Jeśli komp
 być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm
 może stać się wtedy nieefektywny pod względem czasu przetwarzania, jak również objętość
 sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja. Zaś
-w przypadku zastosowania kompresji stratne, nie każda zmiana wartości piksela jest brana
+w przypadku zastosowania kompresji stratnej, nie każda zmiana wartości piksela jest brana
 pod uwagę. Do kodowania brane są tylko te piksele, dla których zmiany wartości są znaczne.
+
+\todo{Nie rozumiem zdania "oraz kodowaniu tylko tych pikseli, których wartość zmienia się". Kodowanie różnicowe łopatologicznie polega na kodowaniu różnic pomiędzy elementami. Ma to taką zaletę, że sygnał rzadko zmienia się gwałtownie, więc różnice pomiędzy sąsiednimi elementami są małe. My robimy tylko podejście bezstratne. Generalnie powyższy akapit według mnie mało pasuje do tego co robiliśmy. Może zdarzyć się tak, że będzie większa objętość pliku po kodowaniu różnicowym ale naszego problemu raczej to niedotyczy.}
+
 Biorąc pod uwagę postawiony problem badawczy, zakres bajtów wynosi od 0 do 255 znaków.
-Oto przykładowy ciąg :\newline
+Oto przykładowy ciąg:\newline
 150, 152, 149, 150, 151, 156, 153, 151, 152 ...
 \newline
 Powyższy ciąg zawiera podobne wartości, ale zamiast kodować każda wartość osobno, koduje
 się różnice pomiędzy poprzednią a obecną wartością. Oczywiście sekwencja musi gdzieś się
 zaczynać, więc pierwsza wartość pozostaje bez zmian, a już kolejne wartości są kodowane
-jako różnice w stosunku do poprzedniej : \newline
+jako różnice w stosunku do poprzedniej: \newline
 150, +2, -3, +1, +1, +5, -3, -2, +1 ...
 \cite{differential_coding}
 
-Kodowanie sygnału :
+Kodowanie sygnału:
 
 \begin{equation}
   d_n = x_1 - x_{n}
@@ -679,12 +682,12 @@ Kodowanie sygnału :
 
 gdzie:
 \begin{itemize}[label=]
-  \item $d_n$ - różnica pomiędzy pierwszą a badaną wartością
-  \item $x_{1}$ - początkowa wartość sygnału
-  \item $x_{n}$ - wartość sygnału
+  \item $d_n$ -- różnica pomiędzy pierwszą a badaną wartością
+  \item $x_{1}$ -- początkowa wartość sygnału
+  \item $x_{n}$ -- wartość sygnału
 \end{itemize}
 
-Dekodowanie sygnału :
+Dekodowanie sygnału:
 
 \begin{equation}
   y_n = x_n + d_{n}
@@ -692,10 +695,12 @@ Dekodowanie sygnału :
 
 gdzie:
 \begin{itemize}[label=]
-  \item $y_n$ - zrekonstruowana wartość
-  \item $x_{n}$ - wartość sygnału
-  \item $d_{n}$ - różnica pomiędzy pierwszą a badaną wartością
+  \item $y_n$ -- zrekonstruowana wartość
+  \item $x_{n}$ -- wartość sygnału
+  \item $d_{n}$ -- różnica pomiędzy pierwszą a badaną wartością
 \end{itemize}
+
+\todo{W dokumencie ,,entropia'' na podstawie którego robiłem implementację jest inaczej. Tam różnice oblicza się nie względem pierwszej wartości, tylko w różnicy występuje element sąsiedni.}
 
 
 \section{Badania}
@@ -782,7 +787,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
 
-Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}. 
+Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich $50$ iteracji. Dla każdej iteracji raportowano błąd obliczany zgodnie ze wzorem (\ref{eq:lbg_error}). Wyniki zbiorcze przedstawiono na rysunku \ref{fig:lbg_iterations}. Średni błąd dla każdej iteracji przedstawiono na rysunku \ref{fig:lbg_iterations_mean}.
 
 \begin{figure}[H]
   \centering
@@ -809,7 +814,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq
   \label{tab:mrvq_random}
   \centering
   \begin{tabular}{@{}lrrrr@{}}
-    
+
     \toprule
     Obraz              & PSNR [dB] & SSIM     & MSE        & NRMSE    \\
     \midrule
@@ -860,7 +865,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq
     woman2.bmp         & 38.422679 & 0.948926 & 22.523846  & 0.038207 \\
     ZELDA.bmp          & 36.874902 & 0.924915 & 28.957053  & 0.046001 \\
     \bottomrule
-    
+
   \end{tabular}
 \end{table}
 
