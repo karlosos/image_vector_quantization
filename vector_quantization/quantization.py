@@ -17,11 +17,22 @@ def quantize(image, window_size, codebook_fun, codebook_size, verbose=False):
 
 
 def quantize_from_codebook(vectors, codebook):
+    # TODO: maybe add return codes?
     quantized_vectors = np.zeros_like(vectors)
     codes, _ = vq(vectors, codebook)
     for idx, vector in enumerate(vectors):
         quantized_vectors[idx, :] = codebook[codes[idx], :]
     return quantized_vectors
+
+
+def codes_from_vectors(vectors, codebook):
+    codes, _ = vq(vectors, codebook)
+    return codes
+
+
+def vectors_from_codes(codes, codebook):
+    vectors = [codebook[code] for code in codes]
+    return np.array(vectors)
 
 
 if __name__ == "__main__":

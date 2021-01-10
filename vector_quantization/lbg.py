@@ -30,7 +30,16 @@ def lbg(vectors, initial_codebook, iterations, error=None):
 
 
 if __name__ == "__main__":
+    from vector_quantization.quantization import codes_from_vectors, vectors_from_codes
+
+    # Create codebook and codes
     vectors = np.array([[1, 1], [2, 2], [1, 1], [3, 3], [4, 4], [1, 1]])
     initial_codebook = np.array([[1, 1], [2, 2]])
-    codebook, distortion = lbg(vectors, initial_codebook, iterations=50, error=0.0)
+    codebook, _ = lbg(vectors, initial_codebook, iterations=50, error=0.0)
+    codes = codes_from_vectors(vectors, codebook)
+
+    # From codebook and codes create vectors and then image
+    quantized_vectors = vectors_from_codes(codes, codebook)
+
+    print(quantized_vectors)
     print(codebook)
