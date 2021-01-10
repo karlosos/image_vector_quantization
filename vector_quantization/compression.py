@@ -156,7 +156,34 @@ def means_decompression(means_bitcode, window_size):
     return means
 
 
+def to_file(img, file_path):
+    bitcode = compression(img)
+    f = open(file_path, "wb")
+    bitcode.tofile(f)
+    f.close()
+
+
+def from_file(file_path):
+    f = open(file_path, "rb")
+    bitcode = bitarray()
+    bitcode.fromfile(f)
+    f.close()
+
+    img = decompression(bitcode)
+    return img
+
+
 if __name__ == "__main__":
+    # with file
+    img = load_image("balloon.bmp")
+    file_path = "./img/output/balloon.vc"
+    to_file(img, file_path)
+    out_img = from_file(file_path)
+
+    print("PSNR:", PSNR(img, out_img))
+    Image.fromarray(out_img).show()
+
+    # without file
     img = load_image("balloon.bmp")
     bitcode = compression(img)
     out_img = decompression(bitcode)
