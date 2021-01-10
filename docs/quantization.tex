@@ -2,7 +2,7 @@
 
 
 \usepackage{arxiv}
-
+\usepackage{mathptmx}
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
@@ -655,52 +655,52 @@ gdzie:
 Kodowanie różnicowe (ang. \emph{differential coding}) polega na porównaniu każdej ramki z ramką
 poprzednią oraz kodowaniu tylko tych pikseli, których wartość zmienia się. W wyniku
 zmniejszenia wartości, otrzymujemy mniej informacji do zakodowania. Jeśli kompresja ma
-być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm
-może stać się wtedy nieefektywny pod względem czasu przetwarzania, jak również objętość
-sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja. Zaś
-w przypadku zastosowania kompresji stratnej, nie każda zmiana wartości piksela jest brana
-pod uwagę. Do kodowania brane są tylko te piksele, dla których zmiany wartości są znaczne.
-
-\todo{Nie rozumiem zdania "oraz kodowaniu tylko tych pikseli, których wartość zmienia się". Kodowanie różnicowe łopatologicznie polega na kodowaniu różnic pomiędzy elementami. Ma to taką zaletę, że sygnał rzadko zmienia się gwałtownie, więc różnice pomiędzy sąsiednimi elementami są małe. My robimy tylko podejście bezstratne. Generalnie powyższy akapit według mnie mało pasuje do tego co robiliśmy. Może zdarzyć się tak, że będzie większa objętość pliku po kodowaniu różnicowym ale naszego problemu raczej to niedotyczy.}
-
-Biorąc pod uwagę postawiony problem badawczy, zakres bajtów wynosi od 0 do 255 znaków.
-Oto przykładowy ciąg:\newline
-150, 152, 149, 150, 151, 156, 153, 151, 152 ...
-\newline
-Powyższy ciąg zawiera podobne wartości, ale zamiast kodować każda wartość osobno, koduje
-się różnice pomiędzy poprzednią a obecną wartością. Oczywiście sekwencja musi gdzieś się
-zaczynać, więc pierwsza wartość pozostaje bez zmian, a już kolejne wartości są kodowane
-jako różnice w stosunku do poprzedniej: \newline
-150, +2, -3, +1, +1, +5, -3, -2, +1 ...
-\cite{differential_coding}
-
-Kodowanie sygnału:
+być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm może stać się wtedy nie efektywny pod względem czasu przetwarzania, jak również objętość sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja.  Weźmy pod uwagę sygnały dwuwymiarowe, którymi są obrazy, możemy zaobserwować podobieństwo między sąsiednimi pikselami. Modelowanie danych wykonuje się w takim przypadku przez usunięcie jak największej ilości informacji wzajemnej, które występują między sąsiadującymi pikselami, jest to zatem pewien proces dekompozycji danych. Po tym etapie możemy uznać, iż przekształcony sygnał cyfrowy stanowi w przybliżeniu zbiór symboli wzajemnie niezależnych. Wówczas dla danych tego typu, entropię bezwarunkową może być wyznaczona ze wzoru:
 
 \begin{equation}
-  d_n = x_1 - x_{n}
+H =-\sum_{i=\varepsilon_{\min }}^{e_{\text {emax }}} p_{i} \cdot \log _{2} p_{i}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-  \item $d_n$ -- różnica pomiędzy pierwszą a badaną wartością
-  \item $x_{1}$ -- początkowa wartość sygnału
-  \item $x_{n}$ -- wartość sygnału
+ \item $p_i$ -- prawdopodobieństwo wystąpienia symbolu z alfabetu o indeksie i
 \end{itemize}
 
-Dekodowanie sygnału:
+Wynikiem jest entropia, która daje informacje o minimalnej średniej liczbie bitów potrzebnej do zakodowania jednego symbolu przy użyciu jednej z metod statycznego kodowania entropijnego (np. kodu Huffmana lub Golomba).
+
+
+
+Algorytm kodowania różnicowego polega na kodowaniu różnic pomiędzy elementami. Ma to taką zaletę, że sygnał rzadko zmienia się gwałtownie, więc różnice pomiędzy sąsiednimi elementami są małe. Implementacja algorytmu działa w następujący sposób:
+
+\begin{enumerate}
+ \item Lewy górny piksel obrazu jest zapisywany do pliku wynikowego bez zmian, ponieważ nie posiada sąsiadów.
+ \item Pozostałe piksele w każdym wierszu kodowane są różnicowo z wy-korzystaniem lewego sąsiada e = P(0) - P(1), a pozostałe piksele w pierwszej kolumnie z wykorzystaniem górnego sąsiada e = P(0) - P(2).
+\end{enumerate}
+To bardzo prosty algorytm do realizacji sprzętowego przetwarzania danych oraz w kodowaniu audio.
+
+
+Algorytmy metod medianowych kodują różnice na podstawie średniej sąsiadów. Przebieg algorytmu możemy opisać w następujący sposób:
+\begin{enumerate}
+ \item pierwszy wiersz i pierwszą kolumnę kodujemy różnicowo
+ \item każdy piksel począwszy od drugiego wiersza i drugiej kolumny kodujemy medianowo (wymagana jest dostępność w dekoderze lewego sąsiada i dwóch sąsiednich pikseli z wiersza powyżej.\cite{differential_coding}
+\end{enumerate}
+
+
+Algorytmy metod adaptacyjnych są to zestaw trzech prostych predyktorów z przełączaniem kontekstowym. Konteksty wyznaczane są na podstawie trzech sąsiednich pikseli P(1), P(2), P(3). Wartość przewidywana obliczana jest zgodnie z następującą zasadą:
+
 
 \begin{equation}
-  y_n = x_n + d_{n}
+\hat{x}_{\mathrm{MED}}=\left\{\begin{array}{l}
+\min (P(1), P(2)) \text { dla } P(3) \geq \max (P(1), P(2)) \\
+\max (P(1), P(2)) \text { dla } P(3) \leq \min (P(1), P(2))
+\end{array}\right.
 \end{equation}
 
-gdzie:
-\begin{itemize}[label=]
-  \item $y_n$ -- zrekonstruowana wartość
-  \item $x_{n}$ -- wartość sygnału
-  \item $d_{n}$ -- różnica pomiędzy pierwszą a badaną wartością
-\end{itemize}
+oraz w pozostałych przypadkach: 
 
-\todo{W dokumencie ,,entropia'' na podstawie którego robiłem implementację jest inaczej. Tam różnice oblicza się nie względem pierwszej wartości, tylko w różnicy występuje element sąsiedni.}
+
+\begin{equation}
+\hat{x}_{\mathrm{MED}}=max (P(1) + P(2) - P(3))end{equation}
 
 
 \section{Badania}
