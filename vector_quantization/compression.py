@@ -20,12 +20,11 @@ from vector_quantization.differential_encoding import (
 from vector_quantization.golomb_coder import golomb_compress, golomb_decompress
 
 
-def compression(img):
-    window_size = 4
+def compression(img, codebook_size=2 ** 10, window_size=4):
     vectors = vectorize(img, window_size=window_size)
     means = np.mean(vectors, axis=1, keepdims=True)
     residual_vectors = vectors - means
-    initial_codebook = random_codebook(residual_vectors, length=32)
+    initial_codebook = random_codebook(residual_vectors, length=codebook_size)
     codebook, _ = lbg(residual_vectors, initial_codebook, 50, 0.01)
     _, (codes, _) = mean_removal_quantize_from_codebook(residual_vectors, means, codebook)
 
