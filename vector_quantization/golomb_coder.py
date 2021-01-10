@@ -240,10 +240,6 @@ def to_binary(first_element, binary_code, signs, size):
     # Store binary_code
     res += bitarray(binary_code)
 
-    # How much bits each section
-    print("Coded values:", len(binary_code))
-    print("signs:", len(signs))
-
     return res
 
 
