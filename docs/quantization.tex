@@ -20,6 +20,7 @@
 \usepackage{placeins}
 \usepackage{graphicx}
 \usepackage{lmodern}
+\usepackage{adjustbox}
 \graphicspath{./images/}
 
 \usepackage{multirow}
@@ -1011,6 +1012,7 @@ Uzyskane wyniki przedstawiono w tabeli \ref{tab:compression}.
   \caption{Rozmiary obrazów po kompresji z wykorzystaniem MRVQ z książką kodową z LBG z średnimi zakodowanymi adaptacyjnym predyktorem medianowym i po kompresji koderem Golomba.}
   \label{tab:compression}
   \centering
+\begin{adjustbox}{center}
     \begin{tabular}{lllrrrrrr}
     \toprule
         {} & {} & {} & \multicolumn{2}{l}{Długość słownika $256$} & \multicolumn{2}{l}{Długość słownika $512$} & \multicolumn{2}{l}{Długość słownika $1024$} \\
@@ -1064,6 +1066,7 @@ Uzyskane wyniki przedstawiono w tabeli \ref{tab:compression}.
     45 &          ZELDA.bmp &  (576, 720) &  4.092095 &  37.255800 &  3.543324 &  37.996692 &  2.921497 &  38.681272 \\
     \bottomrule
     \end{tabular}
+\end{adjustbox}
 \end{table}
 
 
