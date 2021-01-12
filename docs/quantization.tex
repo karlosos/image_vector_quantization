@@ -21,6 +21,7 @@
 \usepackage{graphicx}
 \usepackage{lmodern}
 \usepackage{adjustbox}
+\usepackage{amsmath}
 \graphicspath{./images/}
 
 \usepackage{multirow}
@@ -659,7 +660,7 @@ zmniejszenia wartości, otrzymujemy mniej informacji do zakodowania. Jeśli komp
 być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm może stać się wtedy nie efektywny pod względem czasu przetwarzania, jak również objętość sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja.  Weźmy pod uwagę sygnały dwuwymiarowe, którymi są obrazy, możemy zaobserwować podobieństwo między sąsiednimi pikselami. Modelowanie danych wykonuje się w takim przypadku przez usunięcie jak największej ilości informacji wzajemnej, które występują między sąsiadującymi pikselami, jest to zatem pewien proces dekompozycji danych. Po tym etapie możemy uznać, iż przekształcony sygnał cyfrowy stanowi w przybliżeniu zbiór symboli wzajemnie niezależnych. Wówczas dla danych tego typu, entropię bezwarunkową może być wyznaczona ze wzoru:
 
 \begin{equation}
-H =-\sum_{i=\varepsilon_{\min }}^{e_{\text {emax }}} p_{i} \cdot \log _{2} p_{i}
+    H = -\sum_{i=\varepsilon_{\textrm{min}}}^{e_{\textrm{emax}}} p_{i} \cdot \log_{2} p_{i}
 \end{equation}
 
 gdzie:
@@ -692,8 +693,8 @@ Algorytmy metod adaptacyjnych są to zestaw trzech prostych predyktorów z prze�
 
 \begin{equation}
 \hat{x}_{\mathrm{MED}}=\left\{\begin{array}{l}
-\min (P(1), P(2)) \text { dla } P(3) \geq \max (P(1), P(2)) \\
-\max (P(1), P(2)) \text { dla } P(3) \leq \min (P(1), P(2))
+\min (P(1), P(2)) \text{ dla } P(3) \geq \max(P(1), P(2)) \\
+\max (P(1), P(2)) \text{ dla } P(3) \leq \min(P(1), P(2))
 \end{array}\right.
 \end{equation}
 
@@ -701,7 +702,8 @@ oraz w pozostałych przypadkach:
 
 
 \begin{equation}
-\hat{x}_{\mathrm{MED}}=max (P(1) + P(2) - P(3))end{equation}
+\hat{x}_{\mathrm{MED}}= \max(P(1) + P(2) - P(3))
+\end{equation}
 
 
 \section{Badania}
