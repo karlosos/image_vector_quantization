@@ -705,6 +705,103 @@ oraz w pozostałych przypadkach:
 \hat{x}_{\mathrm{MED}}= \max(P(1) + P(2) - P(3))
 \end{equation}
 
+\subsection{Kodowanie Golomba}
+
+Kodowanie Golomba (ang. \emph{Golomb coding}) jest bezstratną metodą kompresji danych wykorzystująca rodzinę kodów kompresji danych wynalezionych przez Solomona W. Golomb w latach 60. Alfabety zgodne z rozkładem geometrycznym będą miały kod Golomba jako optymalny kod prefiksu, dzięki czemu kodowanie Golomba będzie wysoce odpowiednie w sytuacjach, w których wystąpienie małych wartości w strumieniu wejściowym jest znacznie bardziej prawdopodobne niż duże wartości.
+
+Przed wykorzystaniem kodera Golomba zwrócono uwagę, na fakty związane z błędami predykcji powstałymi w etapie modelowania. Po pierwsze zakres wartości błędów predykcji e(n) podwaja się w stosunku do zakresu próbek x(n) kodowanego sygnału (np. dla próbek 8-bitowych błędy predykcji przyjmują wartości z przedziału od -255 do 255). Jest ot zatem zakres 9-bitowy.
+
+Ponadto, aby można było kodować te błędy predykcji przy użyciu kodu Golomba, niezbędna jest odpowiednia transformacja wartości e(0) na liczby nieujemne.
+
+Najprostszym podejściem jest algorytm zapisu wartości absolutnej błędu e(0)=| e(0)|,a następnie zapis bitu znaku, np. 1 odpowiada liczbie nieujemnej), o ile e(0)>0, w przypadku zera nie ma potrzeby zapisywać bit znaku do pliku wynikowego (dekoder zauważy, że nie ma zer ujemnych, więc nie wczyta bitu znaku).
+
+Wynikowy zakres liczb e(0) (nazywanych dalej zmodyfikowanymi błędami predykcji) jest przedział od 0 do $2^8 - 1$ , dzięki czemu możliwe jest ich kodowanie przy użyciu kodu Golomba.
+
+
+
+\textbf{Algorytm działania kodera Golomba}
+
+W pierwszym kroku wykonujemy konwersje liczby całkowitej e(n) na parę liczb $u_G$ oraz $v_G$:
+	
+\begin{equation}
+u_{G}=\left\lfloor\frac{\bar{e}(0)}{m}\right\rfloor
+\end{equation}	
+	
+dla m > 1 :
+	
+\begin{equation}
+v_{G}=\bar{e}(0)-u_{G} \cdot m
+\end{equation}	
+	
+Dla  m = 1, wartość $v_G$ nie istnieje. Każda kodowana wartość $e(0)$ wymaga indywidualnej wartości parametru $m$, który wyliczamy ze wzoru:
+	
+\begin{equation}
+m=\left[-\frac{\log _{10}(1+p)}{\log _{10} p}\right]
+\end{equation}
+	
+gdzie:
+
+p - obliczamy wcześniej S jako średnią zrzutowanych błędów predykcji w najbliższym otoczeniu:
+	
+\begin{equation}
+S=\frac{1}{x} \sum_{j=1}^{3} \bar{e}(j)
+\end{equation}
+	
+gdzie:
+	
+x - liczba ilości sąsiednich pikseli, które możliwe jest od drugiego wiersza i drugiej kolumny. W przypadku pierwszego wiersza i pierwszej kolumny:
+
+\begin{equation}
+\begin{array}{l}
+p=\frac{S-1}{S}, \text { dla } S \geq 2 \\
+p=0,5 \text { dla } S<2
+\end{array}
+\end{equation}
+
+Dopiero mając p podstawiamy do wzoru na m. Liczba m powinna być od 1 do $2^8$.
+
+\subsection{Koder Golomba}
+
+Mając wyznaczoną wartość $e(0)$ oraz m, wyliczamy $u_G$ oraz $v_G$. Następnie wysyłamy liczbę $u_G$ w postaci kodu unarnego ($u_G$ zer zakończonych jedynką), a potem liczbę $v_G$ jako kod dwufazowy z parametrem m:
+
+Liczba $v_G$ kodowana jest za pomocą kodu dwufazowego z parametrem m (to wersja kodu Huffmana dla źródła o m równo prawdopodobnych symbolach). Przyjęcie pomocniczego parametru $k = log_2 m$ oznacza, że w każdej grupie pierwszych  $l = 2_k - m$ wartości kodowanych jest za pomocą k - 1 bitów, a pozostałych m – l jest kodowanych w postaci liczby $v + k^2 - m$ za pomocą k bitów.
+
+\textbf{Algorytm kodera liczby $v_G$}
+
+Wejście: Liczba $v_G$ (k bitów):
+
+\begin{enumerate}
+	\item Jeśli $v_G$ < 1 to wyślij liczbę $v_G$ (k -1 najmłodszych bitów) na wyjście,
+	\item W przeciwnym wypadku wysłać $v_G = v_G + 1$ (k bitów - zapis pozycyjny liczby binarnej) na wyjście,
+\end{enumerate}
+
+\textbf{Algorytm dekodera liczby $v_G$}
+
+Wejście: Wczytać k - 1 bitów do liczby $v_G$:
+
+\begin{enumerate}
+	\item Jeśli $v_G$ < 1 to liczbę $v_G$ jest już zdekodowana,
+	\item W przeciwnym wypadku wczytać z wyjścia jeden bit do liczby q, a następnie policzyć 
+	\begin{equation}
+	v_{G}:=2 \cdot v_{G}+q-l ; \text { (liczba } k \text { bitowa })
+	\end{equation}
+\end{enumerate}
+
+\textbf{Algorytm działania dekodera Golomba}
+
+\begin{enumerate}
+	\item Wczytujemy i zliczamy (jako wartość u) zera aż trafimy na jedynkę
+	\item Następnie zastosować algorytm dekodera liczby $v_G$
+	\item Odtwarzamy z pary liczb $u_G$ i $v_G$ wartość:
+	
+	\begin{equation}
+	\bar{e}(0)=u_{G} \cdot m+v_{G}
+	\end{equation}
+	
+	a po zakończonych obliczeniach jeśli $e(0) > 0$ wczytujemy jeszcze bit znaku, żeby odtworzyć pierwotną liczbę e(0).	
+	
+\end{enumerate}
+
 
 \section{Badania}
 
