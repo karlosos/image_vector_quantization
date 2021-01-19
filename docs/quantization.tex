@@ -764,7 +764,7 @@ Dopiero mając p podstawiamy do wzoru na m. Liczba m powinna być od \emph{1} do
 
 Mając wyznaczoną wartość \emph{$e(0)$} oraz m, wyliczamy \emph{$u_G$} oraz \emph{$v_G$}. Następnie wysyłamy liczbę \emph{$u_G$} w postaci kodu unarnego (\emph{$u_G$} zer zakończonych jedynką), a potem liczbę \emph{$v_G$} jako kod dwufazowy z parametrem \emph{m}:
 
-Liczba \emph{$v_G$} kodowana jest za pomocą kodu dwufazowego z parametrem \emph{m} (to wersja kodu Huffmana dla źródła o m równo prawdopodobnych symbolach). Przyjęcie pomocniczego parametru \emph{$k = log_2 m$} oznacza, że w każdej grupie pierwszych \emph{$l = 2_k - m$} wartości kodowanych jest za pomocą \emph{k - 1} bitów, a pozostałych \emph{m – l} jest kodowanych w postaci liczby \emph{$v + k^2 - m$} za pomocą k bitów.
+Liczba \emph{$v_G$} kodowana jest za pomocą kodu dwufazowego z parametrem \emph{m} (to wersja kodu Huffmana dla źródła o m równo prawdopodobnych symbolach). Przyjęcie pomocniczego parametru \emph{$k = log_2 m$} oznacza, że w każdej grupie pierwszych \emph{$l = 2_k - m$} wartości kodowanych jest za pomocą \emph{k - 1} bitów, a pozostałych \emph{m – l} jest kodowanych w postaci liczby \emph{$v + k^2 - m$} za pomocą k bitów.\cite{golomb}
 
 \textbf{Algorytm kodera liczby $v_G$}
 
