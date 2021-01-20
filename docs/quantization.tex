@@ -22,6 +22,7 @@
 \usepackage{lmodern}
 \usepackage{adjustbox}
 \usepackage{amsmath}
+
 \graphicspath{./images/}
 
 \usepackage{multirow}
@@ -80,6 +81,10 @@
 
 \section{Wstęp}
 
+Kompresja danych multimedialnych ma ogromne znaczenia w dobie internetu. Rozwój algorytmów kompresji nie jest jednak zakończony. Tymi zagadnieniami zajmują się nie tylko naukowcy ale także inżynierowie z światowych marek technologicznych z branż takich jak streaming wideo, produkcji sprzętu czy twórcy systemów operacyjnych \cite{intel}.
+
+W tej pracy zajmować się będziemy kompresją obrazów w odcieni szarości. Istnieje wiele metod kompresji, które mają ugruntowaną pozycję na rynku. Są to między innymi standard JPEG, PNG czy WebP \cite{ginesu2012objective}. Nasze podejście polegać będzie na wykorzystaniu kwantyzacji i innych pomocniczych algorytmów które będą połączone w cały proces kompresji stratnej.
+
 Kwantyzacja polega na przyporządkowaniu wartościom sygnału ciągłego wartości dyskretnych należących do skończonego zbioru.
 Przedział wartości sygnału dzielony jest na zbiór przedziałów.
 Zazwyczaj przedziały mają taką samą wielkość (kwantyzacja liniowa).
@@ -97,21 +102,31 @@ Zwiększenie liczby bitów prowadzi do zwiększenia liczby przedziałów, co w r
 \section{Opis projektu}
 
 Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej oraz przeprowadzenie badań
-zaimplementowanych metod.
+zaimplementowanych metod. 
+
+Podczas zajęć stworzono rozwiązanie end-to-end, które realizuje kompresję obrazów w skali szarości wykorzystując kwantyzację wektorową z usuniętymi średnimi \cite{meanremovedVQ}, algorytm budowy słownika LBG \cite{lbg1980} oraz kodowanie różnicowe \cite{differential_coding} i koder Golomba \cite{golomb}. Oprócz kompresji do pliku zaimplementowano etap rekonstrukcji obrazu z kodu binarnego udowadniając poprawność działania procesu kompresji.
+
+W rozdziale trzecim wyłożono teorię potrzebną do implementacji wykorzystanych metod. Rozdział czwarty przedstawia badania empiryczne na zaimplementowanych metodach i algorytmach. 
+
+Praca została wykonana na kursie \emph{Zespołowy projekt badawczy 2} w semestrze zimowym 2020/21. Kod źródłowy tego raportu oraz zaimplementowanych metod i przeprowadzonych badań dostępny jest pod adresem \url{https://github.com/karlosos/image_vector_quantization}.
+
+\section{Wstęp teoretyczny}
+
+W tym rozdziale przedstawione zostały opisy teoretyczne wykorzystanych metod w procesie kompresji. Głównym elementem naszej pracy jest kwantyzacja wektorowa.
 
 \subsection{Kwantyzacja wektorowa}
 Kwantyzacja wektorowa (ang. \emph{vector quantization}) polega na podziale wielowymiarowych przestrzeni na obszary i
 przyporządkowanie każdemu obszarowi odpowiedniego poziomu kwantyzacji.
 Obszary reprezentowanego są w formie wektorów.
-Przykładem zastosowania kwantyzacji wektorowej jest kompresja obrazów.
+Jednym z zastosowań kwantyzacji wektorowej jest kompresja obrazów.
 
 W celu kwantyzacji obraz dzielony jest na obszary o zadanym rozmiarze, np. $4 \times 4$ pikseli, co tworzy wektory o długości $16$.
 Budowana jest książka kodowa reprezentująca poziomy kwantyzacji na podstawie wyznacznych wektorów.
-Dla każdego obszaru detekcyjnego przyporządkowuje się indeks wyznaczonego najbliższego poziomu kwantyzacji.
+Dla każdego obszaru detekcyjnego przyporządkowuje się indeks wyznaczonego najbliższego poziomu kwantyzacji. Przykład podziału dwuwymiarowej przestrzeni danych na klastry przedstawiono na rysunku (\ref{fig:kwantyzacja_wektorowa}).
 
-Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej (procesu jego budowy i długości).
+Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej. Na jakość książki kodowej wpływa proces jej budowy oraz liczba elementów w książce kodowej.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{images/kwantyzacja_wektorowa.png}
   \caption{Przykład podziału dwuwymiarowej przestrzeni danych na klastry grupujące według słownika. Źródło \cite{mwilczewski}.}
@@ -121,22 +136,24 @@ Jakość kwantyzacji zależy od długości wektorów i doboru książki kodowej 
 \subsection{Ogólny przebieg etapów pracy kwantyzatora wektorowego}
 
 \begin{enumerate}
-  \item Formowanie danych wejściowych do postaci $K$ wektorów $n$ -- wymiarowych (etap wstępny).
+  \item Formowanie danych wejściowych do postaci $K$ wektorów $v$ -- wymiarowych (etap wstępny).
   \item Faza klasteryzacji: podział wszystkich wektorów wejściowych i konstrukcja książki
         kodowej (słownika) zawierającej $p$ najbardziej reprezentatywnych wektorów całego zbioru danych,
         tzw. wektorów kodowych. Konstrukcja książki kodowej może być wykonana w fazie wstępnej na podstawie zbioru
         treningowego lub dynamicznie we właściwej fazie kwantyzacji. Faza klasteryzacji jest kluczowym etapem kwantyzacji wektorowej.
-  \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika.
+  \item Faza indeksowania: przyporządkowanie każdemu wektorowi wejściowemu jednego wektora ze słownika i reprezentowanie wektora wejściowego indeksem słownika. Etap przedstawiono na rysunku (\ref{fig:wektory_danych}).
 \end{enumerate}
 
-\begin{figure}[H]
+Ogólny schemat kwantyzacji przedstawiono na rysunku (\ref{fig:schemat_kwantyzatora}).
+
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{images/schemat_kwantyzatora.png}
   \caption{Ogólny schemat pracy kwantyzatora. Źródło \cite{mwilczewski}.}
   \label{fig:schemat_kwantyzatora}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{images/wektory_danych.png}
   \caption{Porównywanie wektorów danych z wektorami ze słownika. Źródło \cite{mwilczewski}.}
@@ -149,204 +166,11 @@ Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
   \item Struktura książki kodowej (prosta struktura w postaci tablicy jest nieefektywna do przeglądania).
 \end{enumerate}
 
-\subsection{Inicjalizacja książki kodowej}
-
-W procesie kwantyzacji wektorowej ważną rolę odgrywa proces inicjalizacji książki kodowej.
-Ma to znaczenie w procesie budowy książki kodowej, gdzie efektywność zależy od początkowych wartości.
-Źle dobrane wartości inicjalizacyjne mogą przeszkadzać w zbieżności algorytmu.
-
-Podstawowymi metodami inicjalizacji książki kodowej są:
-
-\begin{enumerate}
-  \item metoda losowania,
-  \item metoda grupowania najbliższych sąsiadów (ang. PNN - pairwise nearest neighbour),
-  \item metoda rozdzielania (ang. splitting).
-\end{enumerate}
-
-Metoda losowa polega na wylosowaniu $N$ wektorów, gdzie $N$ jest liczba całkowitą.
-Rozwiązanie jest wykorzystywane gdy posiada się mało informacji na temat danych wektorowych lub liczy się
-szybkość inicjalizaci.
-
-Druga metoda tworzenie słownika, czyli metoda grupowania najbliższych sąsiadów pozwala osiągnąć lepsze wyniki niż metoda losowa,
-ale za to jest dużo bardziej czasochłonna.
-Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji.
-W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup.
-Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
-
-Algorytm metody PNN:
-
-\todo{Poprawić opis metody PNN}
-
-\begin{enumerate}
-  \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej.
-        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację
-        średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
-
-        \begin{equation}
-          D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
-        \end{equation}
-
-  \item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$.
-        Dla danego kodeksu $C$.
-        Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
-
-        \begin{equation}
-          ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
-        \end{equation}
-
-  \item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$.
-        Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone.
-        Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
-
-        \begin{equation}
-          d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
-        \end{equation}
-
-  \item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$,
-        a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
-
-        \begin{equation}
-          C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
-        \end{equation}
-        
-  \item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu.
-        Proces łączenia jest powtarzany do momentu aż książka kodowa osiągnie rozmiar $M$. 
-        
-\end{enumerate}
-
-gdzie:
-\begin{itemize}[label=]
-  \item $T$ - Zestaw $N$ wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
-  \item $C$ - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
-  \item $M$ - Rozmiar książki kodowej
-  \item $K$ - Wymiar wektorów
-  \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
-  \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
-  \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
-  \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
-        \cite{tkaukoranta}
-\end{itemize}
-
-Ostatnia wymieniona metoda jaką jest metoda rozdzielania polega na szukaniu optymalnej książki.
-Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego.
-W $i$-tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory.
-Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
-  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
-    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
-  \label{fig:rozdzielania_1}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
-  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
-    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
-  \label{fig:rozdzielania_2}
-\end{figure}
-
-\subsection{Algorytmy inicjalizowania słownika}
-
-\subsubsection{Algorytm popularności}
-
-Algorytm popularności jest prostym algorytmem generacji książki kodowej, który charakteryzuje się:
-
-\begin{itemize}
-  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących
-        w obrazie (konieczne jest ustalenie progu liczby wystąpień),
-  \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji,
-  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących).
-        Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i 
-        wprowadzenie kolejnych wektorów pod względem liczby wystąpień.
-        
-        \begin{figure}[H]
-          \centering
-          \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
-          \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności.
-            Efekt kwantyzacji wektorowej z książkami kodowymi rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}.}
-          \label{fig:motyle_2}
-        \end{figure}
-        
-\end{itemize}
-
-\subsubsection{Wektorowa kwantyzacja blokowa (BTC)}
-
-Wektorowa kwantyzacja blokowa (BTC) charakteryzuje się:
-
-\begin{itemize} 
-  \item W przypadku podstawowej wersji metody BTC każdy skwantyzowany blok obrazu reprezentowany jest jako strumień
-        bitowy przez mapę bitową zawierającą $n^{2}$ bitów oraz dwa bajty reprezentujące poziomy rekonstrukcji. W takim przypadku:
-        \begin{itemize}
-          \item liczba wszystkich możliwych map bitowych jest równa $n^{2}$ = 65536,
-          \item nie wszystkie z nich występują w każdym obrazie cyfrowym, np. ze względu na rozmiar obrazu oraz korelacje danych obrazowych,
-        \end{itemize}
-  \item jednym z możliwych sposobów wykorzystania powyższych obserwacji do kompresji obrazu jest
-        kwantyzacja wektorowa map bitowych, tzn. reprezentacja zbioru wszystkich możliwych map bitowych przez niewielki jego podzbiór (słownik),
-  \item w fazie indeksowania, każda z map bitowych stworzonych dla kolejnych bloków obrazu porównywana jest ze zbiorem map w słowniku.
-        Prostą miarą podobieństwa map jest liczba miejsc na których porównywane mapy różnią się. 
-        Mapą najbardziej podobną do zadanej jest mapą minimalizującą tak zdefiniowaną miarę,
-  \item wykorzystanie zbioru map stanowiących słownik zwiększa stopień kompresji.
-        Przykład: w przypadku bloków 4x4 oraz 32 elementowego słownika 16 bitów reprezentujących 
-        elementy oryginalnej mapy można zastąpić 5 bitowym indeksem słownika. Zwiększa to stopień kompresji z CR=4.0 do CR=6.09.
-\end{itemize}
-
-\subsection{Algorytmy budowy słownika}
-
-\subsubsection{Algorytm Lindego-Buza-Graya}
-
-Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania książki kodowej. Przebieg algorytmu przedstawia się następująco:
-
-\begin{itemize} 
-  \item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych
-        wybierz losowo $K$ wektorów stanowiących wstępną wersję słownika,
-  \item korzystając z metryki euklidesowej, $d(X,Y)$, dokonaj klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
-        \begin{itemize}
-          \item bierzemy każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzamy, któremu reprezentantowi ze słownika jest najbliżej do
-                naszego kwadratu. Każdy piksel wewnątrz tego kwadratu porównujemy ze sobą i liczymy ich różnice w kwadracie.
-                
-                \begin{equation}
-                  d(B_{m}, C_{i}) < d(B_{m}, C_{j})
-                \end{equation}
-                
-                gdzie:
-                \begin{itemize}[label=]
-                  \item $B_{m}$ - blok obrazu,
-                  \item $C_{i}$ - słowo kodowe ze słownika
-                  \item $C_{j}$ - kolejne słowo kodowe ze słownika
-                \end{itemize}
-                
-          \item następnie sumujemy różnicę 16 kwadratów
-          \item sprawdzamy kwadrat obrazu z każdym reprezentantem słownika centroid
-          \item przypisujemy wybrany kwadrat do reprezentanta słownika
-        \end{itemize}
-  \item wyznaczamy globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich
-        znalezionych odległości miedzy poszczególnymi kwadratami a centroidami 
-        
-        \begin{equation}
-          \label{eq:lbg_error}
-          e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
-        \end{equation}
-        
-  \item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm
-        (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
-  \item wyznacz centroidy każdego regionu decyzyjnego i uczyń je wektorami kodowymi kolejnej iteracji słownika. Przejdź do kroku 2.
-\end{itemize}
-
-Problemy tego algorytmu:
-
-\begin{itemize}
-  \item wrażliwość na inicjalną postać książki kodowej
-  \item problem pustych przedziałów
-\end{itemize}
-
 \paragraph{Sparametryzowany wzór pliku wynikowego}
 \label{sec:lgb_file_size}
 Plik wynikowy kwantyzacji wektorowej składa się ze słownika o określonej długości $K$ oraz wartości przyporządkowanych indeksów do każdego bloku. Każdy element słownika reprezentowany jest przez wektor o długości $v$, który zapisywany jest na $v \cdot 8$ bitach.
 
-Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bitach. Przykładowo dla słownika o $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
+Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bitach. Przykładowo dla słownika $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
 
 
 Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
@@ -428,7 +252,175 @@ W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy
 
 dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
 
-\subsection{Wykorzystywane metryki}
+\subsection{Inicjalizacja książki kodowej}
+
+W procesie kwantyzacji wektorowej ważną rolę odgrywa proces inicjalizacji książki kodowej.
+Ma to znaczenie w procesie budowy książki kodowej, gdzie efektywność zależy od początkowych wartości \cite{arthur2006k}.
+Źle dobrane wartości inicjalizacyjne mogą przeszkadzać w zbieżności algorytmu.
+
+Podstawowymi metodami inicjalizacji książki kodowej są:
+
+\begin{enumerate}
+  \item metoda losowania,
+  \item metoda grupowania najbliższych sąsiadów (ang. PNN - pairwise nearest neighbour),
+  \item metoda rozdzielania (ang. splitting).
+\end{enumerate}
+
+Metoda losowa polega na wylosowaniu $N$ wektorów, gdzie $N$ jest liczba całkowitą.
+Rozwiązanie jest wykorzystywane gdy posiada się mało informacji na temat danych wektorowych lub liczy się
+szybkość inicjalizaci.
+
+Druga metoda tworzenie słownika, czyli metoda grupowania najbliższych sąsiadów pozwala osiągnąć lepsze wyniki niż metoda losowa,
+ale za to jest dużo bardziej czasochłonna.
+Polega ona na tworzeniu coraz liczniejszych grup zaczynając od jednoelementowej, związanej z każdym wektorem sekwencji.
+W następnych iteracjach wyznaczamy najbliższe grupy, czyli liczymy odległości pomiędzy środkami poszczególnych grup.
+Następnie dwie najbliższe sobie grupy zostają połączone tak aby zmniejszać liczbę grup.
+
+Algorytm metody PNN:
+
+\begin{enumerate}
+  \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej.
+        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację
+        średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
+
+        \begin{equation}
+          D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
+        \end{equation}
+
+  \item $S=S_{1}$,...,$S_{m}$ definiuje grupowanie zestawu treningowego $T$.
+        Dla danego kodeksu $C$.
+        Optymalne grupowanie może być zbudowane poprzez przypisanie każdego wektora $T_{i}$ do klastra $j_{0}$ dla którego:
+
+        \begin{equation}
+          ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
+        \end{equation}
+
+  \item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$.
+        Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone.
+        Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
+
+        \begin{equation}
+          d(S_{a}, S_{b}) = \frac{n_{a}n_{b}}{n_{a} + n_{b}} || C_{a} - C_{b} ||^2
+        \end{equation}
+
+  \item Wybrane klastry $S_{a}$ i $S_{b}$ są następnie łączone. Wielkość połączonego klastra $S_{a}$ + $S_{b}$ wynosi $n_{a+b} = n_{a} + n_{b}$,
+        a odpowiednim wektorem kodu jest centroid wektorów szkoleniowych w klaster. Można go obliczyć jako średnią ważoną $C_{a}$ i $C_{b}$:
+
+        \begin{equation}
+          C_{a + b} = \frac{n_{a}C_{a} + n_{b}C_{b}}{n_{a} + n_{b}}
+        \end{equation}
+        
+  \item Wystarczy zatem utrzymać tylko centroidy klastra $C_{i}$ i rozmiary klastrów $n_{i}$ w realizacji algorytmu.
+        Proces łączenia jest powtarzany do momentu aż książka kodowa osiągnie rozmiar $M$. 
+        
+\end{enumerate}
+
+gdzie:
+\begin{itemize}[label=]
+  \item $T$ - Zestaw $N$ wektorów treningowych $T = {[T_{1}, T_{2}, \dots, T_{N}]}$
+  \item $C$ - Książka kodowa wektorów $C = {[C_{1}, C_{2}, \dots, C_{m}]}$
+  \item $M$ - Rozmiar książki kodowej
+  \item $K$ - Wymiar wektorów
+  \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
+  \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
+  \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
+  \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
+        \cite{tkaukoranta}
+\end{itemize}
+
+Ostatnia wymieniona metoda jaką jest metoda rozdzielania polega na szukaniu optymalnej książki.
+Konstrukcja rozpoczyna się od pojedynczego wektora – centroidu zbioru uczącego.
+W $i$-tym kroku dokonywany jest (w drodze dodawania zaburzenia) podział każdego z wektorów kodowych na dwa wektory.
+Po takim rozdzieleniu uzyskana konfiguracja regionów decyzyjnych jest optymalizowana przez algorytm LBG, po czym dokonywany jest kolejny rozdział, etc.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/rodzielania_1.png}
+  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
+    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
+  \label{fig:rozdzielania_1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/rodzielania_2.png}
+  \caption{Konstrukcja słownika metodą rozdzielania. Kolejne etapy konstrukcji wektorów kodowych
+    (zaznaczone czerwonymi punktami) na zbiorze uczącym (zaznaczony kolorem zielonym). Źródło \cite{mwilczewski}.}
+  \label{fig:rozdzielania_2}
+\end{figure}
+
+\subsection{Algorytmy budowy słownika}
+
+\subsubsection{Algorytm popularności}
+
+Algorytm popularności jest prostym algorytmem generacji książki kodowej. Opisuje się go w sposób następujący:
+
+\begin{itemize}
+  \item wektorami kodowymi staje się ustalona liczba wektorów danych najczęściej występujących
+        w obrazie (konieczne jest ustalenie progu liczby wystąpień),
+  \item algorytm wyróżnia się stosunkowo małą złożonością obliczeniową i prostotą implementacji,
+  \item wadą podstawowej wersji algorytmu popularności jest wprowadzanie do książki kodowej podobnych wartości (dominujących).
+        Redukcję rozmiaru książki uzyskać można przez usunięcie bliskich (w sensie przyjętej metryki) wektorów i 
+        wprowadzenie kolejnych wektorów pod względem liczby wystąpień.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.6\textwidth]{images/motyle_2.png}
+          \caption{Przykład kwantyzacji wektorowej przeprowadzonej z książką kodową skonstruowaną zgodnie z algorytmem popularności.
+            Efekt kwantyzacji wektorowej z książkami kodowymi rozmiaru odpowiednio: 16, 32 oraz 64. Źródło \cite{aprzelaskowski}.}
+          \label{fig:motyle_2}
+        \end{figure}
+        
+\end{itemize}
+
+\subsubsection{Algorytm Lindego-Buza-Graya}
+
+Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania książki kodowej \cite{lbg1980}. W celu wyznaczenia książki kodowej należy:
+
+\begin{itemize} 
+  \item określić wektory danych zbioru uczącego. Spośród wszystkich $N$ wektorów wejściowych
+        wybrać losowo $K$ wektorów stanowiących wstępną wersję słownika,
+  \item korzystając z metryki euklidesowej, $d(X,Y)$, dokonać klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
+        \begin{itemize}
+          \item wybrać każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzić, któremu reprezentantowi ze słownika jest najbliżej do
+                aktualnego kwadratu. Każdy piksel wewnątrz tego kwadratu należy porównać ze sobą i wyliczyć ich różnice w kwadracie.
+                
+                \begin{equation}
+                  d(B_{m}, C_{i}) < d(B_{m}, C_{j})
+                \end{equation}
+                
+                gdzie:
+                \begin{itemize}[label=]
+                  \item $B_{m}$ - blok obrazu,
+                  \item $C_{i}$ - słowo kodowe ze słownika
+                  \item $C_{j}$ - kolejne słowo kodowe ze słownika
+                \end{itemize}
+                
+          \item następnie należy obliczyć sumę różnic 16 kwadratów
+          \item sprawdzić kwadrat obrazu z każdym reprezentantem słownika
+          \item przypisać wybrany kwadrat do reprezentanta słownika
+        \end{itemize}
+  \item wyznaczyć globalny błąd kwantyzacji popełniony w bieżącej iteracji czyli wykonujemy sumowanie wszystkich
+        znalezionych odległości miedzy poszczególnymi kwadratami a centroidami z słownika
+        
+        \begin{equation}
+          \label{eq:lbg_error}
+          e = \sum_{i=1}^K \sum_{x\in\mathbb{R}} d(X, Y_{i}) 
+        \end{equation}
+        
+  \item sprawdzić czy popełniany błąd zmienił się względem poprzedniej iteracji jeśli nie ma to kończymy algorytm
+        (dla uproszczenia ustaliliśmy, że liczbę iteracji będzie podawana z ręki)
+  \item wyznaczyć centroidy każdego regionu decyzyjnego i uczynić je wektorami kodowymi kolejnej iteracji słownika. Przejść do kroku 2.
+\end{itemize}
+
+Problemy tego algorytmu:
+
+\begin{itemize}
+  \item wrażliwość na inicjalną postać książki kodowej
+  \item problem pustych przedziałów
+\end{itemize}
+
+\subsection{Miary podobieństwa obrazów}
 
 \subsubsection{PSNR}
 
@@ -569,55 +561,6 @@ gdzie:
   \item $\Omega$ - dziedzina przestrzeni obrazu
 \end{itemize}
 
-\subsubsection{CR}
-
-Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
-
-\begin{equation}
-  Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
-  \label{eq:cr}
-\end{equation}
-
-Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
-
-\subsubsection{BPP}
-
-Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP) określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, daje nam średnią bitową wynoszącą 2 bity na piksel.
-
-\begin{equation}
-  BPP = 8 / CR
-\end{equation}
-
-
-\subsubsection{Jaki procent stanowi dana rozdzielczość
-  obrazu względem wielkości zdefiniowanego słownika?}
-
-\begin{table}[!h]
-  \caption{\label{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}
-  \centering
-  \begin{tabular}{cclclcl}
-    \toprule
-    \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
-                   & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} \\ 
-    \midrule \\
-    256 x 256 px   & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                               \\
-    512 x 512 px   & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                               \\
-    720 x 576 px   & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                               \\
-    1920 x 1080 px & 0.20\%            & 3.06\%                                & 0.40\%            & 5.32\%                                & 0.79\%            & 9.18\%                                \\
-    3840 x 2160 px & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-Oznaczenia wykorzystane w tabeli:
-\begin{itemize}[label=]
-  \item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
-  \item $I_S$ - image size - rozmiar obrazu oryginalnego.
-  \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
-\end{itemize}
-
-Tabela \ref{tab:Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
-
 \subsubsection{RMSE}
 
 Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy średnią wielkość błędu. Jest to pierwiastek kwadratowy każdej różnicy między prognozowaną a odpowiadającą jej wartościom, podniesiona do kwadratu, a następnie uśredniona w próbie. Ponieważ błędy są podnoszone do kwadratu, zanim zostaną uśrednione, sprawia to, że RMSE nadaje stosunkowo dużą wagę dużym błędom. Oznacza to, że RMSE jest najbardziej przydatny, gdy duże błędy są szczególnie niepożądane.
@@ -652,7 +595,30 @@ gdzie:
   \item $y_{min}$ - wartość minimalna
 \end{itemize}
 
+\subsection{Miary kompresji}
+
+\subsubsection{CR}
+
+Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
+
+\begin{equation}
+  Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
+  \label{eq:cr}
+\end{equation}
+
+Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczynnik kompresji 10/2 = 5, często zapisywany jako wyraźny współczynnik, 5:1 \cite{compression_ratio}.
+
+\subsubsection{BPP}
+
+Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP) określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, daje nam średnią bitową wynoszącą 2 bity na piksel.
+
+\begin{equation}
+  BPP = 8 / CR
+\end{equation}
+
+
 \subsection{Kodowanie rożnicowe}
+\label{sec:roznicowe}
 
 Kodowanie różnicowe (ang. \emph{differential coding}) polega na porównaniu każdej ramki z ramką
 poprzednią oraz kodowaniu tylko tych pikseli, których wartość zmienia się. W wyniku
@@ -660,6 +626,7 @@ zmniejszenia wartości, otrzymujemy mniej informacji do zakodowania. Jeśli komp
 być bezstratna, to wówczas każda zmiana wartości piksela musi być uwzględniona. Algorytm może stać się wtedy nie efektywny pod względem czasu przetwarzania, jak również objętość sygnału po kompresji może przewyższać objętość tego samego sygnału przed kompresja.  Weźmy pod uwagę sygnały dwuwymiarowe, którymi są obrazy, możemy zaobserwować podobieństwo między sąsiednimi pikselami. Modelowanie danych wykonuje się w takim przypadku przez usunięcie jak największej ilości informacji wzajemnej, które występują między sąsiadującymi pikselami, jest to zatem pewien proces dekompozycji danych. Po tym etapie możemy uznać, iż przekształcony sygnał cyfrowy stanowi w przybliżeniu zbiór symboli wzajemnie niezależnych. Wówczas dla danych tego typu, entropię bezwarunkową może być wyznaczona ze wzoru:
 
 \begin{equation}
+    \label{eq:entropia}
     H = -\sum_{i=\varepsilon_{\textrm{min}}}^{e_{\textrm{emax}}} p_{i} \cdot \log_{2} p_{i}
 \end{equation}
 
@@ -718,7 +685,6 @@ Najprostszym podejściem jest algorytm zapisu wartości absolutnej błędu \emph
 Wynikowy zakres liczb \emph{e(0)} (nazywanych dalej zmodyfikowanymi błędami predykcji) jest przedział od \emph{0} do \emph{$2^8 - 1$}, dzięki czemu możliwe jest ich kodowanie przy użyciu kodu Golomba.
 
 
-
 \textbf{Algorytm działania kodera Golomba}
 
 W pierwszym kroku wykonujemy konwersje liczby całkowitej e(n) na parę liczb \emph{$u_G$} oraz \emph{$v_G$}:
@@ -761,6 +727,7 @@ p=0,5 \text { dla } S<2
 Dopiero mając p podstawiamy do wzoru na m. Liczba m powinna być od \emph{1} do \emph{$2^8$}.
 
 \subsection{Koder Golomba}
+\label{sec:golomb}
 
 Mając wyznaczoną wartość \emph{$e(0)$} oraz m, wyliczamy \emph{$u_G$} oraz \emph{$v_G$}. Następnie wysyłamy liczbę \emph{$u_G$} w postaci kodu unarnego (\emph{$u_G$} zer zakończonych jedynką), a potem liczbę \emph{$v_G$} jako kod dwufazowy z parametrem \emph{m}:
 
@@ -805,13 +772,44 @@ Wejście: Wczytać \emph{k - 1} bitów do liczby \emph{$v_G$}:
 
 \section{Badania}
 
-\subsection{Algorytm LBG z losową inicjalizacją słownika}
+\subsection{Jaki procent stanowi dana rozdzielczość
+  obrazu względem wielkości zdefiniowanego słownika?}
+  
+ Przeprowadzono statyczną analizę stosunku części książki kodowej do rozmiaru zakodowanego przy użyciu kwantyzacji wektorowej. Wyniki przedstawiono w tabeli (\ref{tab:procentowa_analiza_slownika}).
 
-Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
+\begin{table}[!h]
+  \caption{Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}\
+  \label{tab:procentowa_analiza_slownika}
+  \centering
+  \begin{tabular}{cclclcl}
+    \toprule
+    \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} Rozdzielczość \\obrazu \end{tabular}} & \multicolumn{2}{c}{$C_S = 2^8$}                           & \multicolumn{2}{c}{$C_S = 2^9$}                           & \multicolumn{2}{c}{$C_S = 2^{10}$}                         \\
+                   & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} & $\frac{C_S}{I_S}$ & \multicolumn{1}{c}{$\frac{C_S}{Q_S}$} \\ 
+    \midrule \\
+    256 x 256 px   & 6.25\%            & 50.00\%                               & 12.50\%           & 64.00\%                               & 25.00\%           & 76.19\%                               \\
+    512 x 512 px   & 1.56\%            & 20.00\%                               & 3.13\%            & 30.77\%                               & 6.25\%            & 44.44\%                               \\
+    720 x 576 px   & 0.99\%            & 13.65\%                               & 1.98\%            & 21.93\%                               & 3.95\%            & 33.58\%                               \\
+    1920 x 1080 px & 0.20\%            & 3.06\%                                & 0.40\%            & 5.32\%                                & 0.79\%            & 9.18\%                                \\
+    3840 x 2160 px & 0.05\%            & 0.78\%                                & 0.10\%            & 1.39\%                                & 0.20\%            & 2.47\%                                \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Oznaczenia wykorzystane w tabeli:
+\begin{itemize}[label=]
+  \item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
+  \item $I_S$ - image size - rozmiar obrazu oryginalnego.
+  \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
+\end{itemize}
+
+Tabela \ref{tab:procentowa_analiza_slownika} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
+
+\subsection{Algorytm LBG z losową inicjalizacją słownika}
+\label{sec:lbg_psnr}
+
+W kolejnym eksperymencie przebadano algorytm budowy słownika LBG. Przeprowadzono kwantyzację wektorową na blokach o rozmiarach $4 \times 4$ oraz dla książki
 kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_random}} i podsumowano w tabeli \mbox{\ref{tab:lbg_summary}}.
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
 \begin{table}[!ht]
   \caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
   \label{tab:lbg_random}
@@ -869,8 +867,6 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_
   \end{tabular}
 \end{table}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
 \begin{table}[H]
   \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
   \label{tab:lbg_summary}
@@ -884,6 +880,8 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_
     \bottomrule
   \end{tabular}
 \end{table}
+
+\FloatBarrier
 
 \subsubsection{Wyznaczenie optymalnej liczby iteracji w algorytmie budowy słownika LBG}
 
@@ -906,10 +904,26 @@ Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich
 
 \subsection{Algorytm MRVQ z losową inicjalizacją słownika}
 
-Przeprowadzono badania na wszystkich dostarczonych obrazach badawczych. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
+Przeprowadzono badanie algorytmu MRVQ z losowym słownikiem. Kwantyzację przeprowadzono na blokach o rozmiarach $4 \times 4$ oraz dla książki
 kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq_random}} i podsumowano w tabeli \mbox{\ref{tab:mrvq_summary}}.
 
-\begin{table}[H]
+Uzyskane wyniki są podobieństwa obrazów są lepsze w porównaniu do wyników klasycznej kwantyzacji wektorowej zebranych w sekcji \ref{sec:lbg_psnr}. Średni poziom PSNR dla MRVQ wynosi 33.664910 [dB] a dla klasycznej kwantyzacji wektorowej wynosi 31.789057 [dB]. Oczywiście zysk jakości uzyskano dzięki stracie współczynnika kompresji wynikające z potrzeby przechowywania wartości średnich dla każdego bloku.
+
+\begin{table}[h]
+  \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
+  \label{tab:mrvq_summary}
+  \centering
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+             & PSNR {[}dB{]} & SSIM     & MSE        & NRMSE    \\ \midrule
+    Minimum  & 29.379325     & 0.661741 & 8.685005   & 0.022933 \\
+    Maksimum & 39.609384     & 0.967245 & 673.800110 & 0.388628 \\
+    Średnia  & 33.664910     & 0.859542 & 142.266146 & 0.090000 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
   \caption{Porównanie jakości kwantyzacji algorytmu MRVQ z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
   \label{tab:mrvq_random}
   \centering
@@ -969,55 +983,53 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:mrvq
   \end{tabular}
 \end{table}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
-\begin{table}[H]
-  \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu MRVQ.}
-  \label{tab:mrvq_summary}
-  \centering
-  \begin{tabular}{@{}lrrrr@{}}
-    \toprule
-             & PSNR {[}dB{]} & SSIM     & MSE        & NRMSE    \\ \midrule
-    Minimum  & 29.379325     & 0.661741 & 8.685005   & 0.022933 \\
-    Maksimum & 39.609384     & 0.967245 & 673.800110 & 0.388628 \\
-    Średnia  & 33.664910     & 0.859542 & 142.266146 & 0.090000 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+
+
 
 \FloatBarrier
 
 \subsection{Kodowanie różnicowe}
 
+Zaimplementowano trzy metody kodowania różnicowego, których opisy przedstawiono w sekcji \ref{sec:roznicowe}.
+Sporządzono wykres częstości występowania wartości (histogram) dla wartości wejściowych oraz wartości wyjściowych
+z różnych metod kodowania różnicowego.
+
+Na rysunku (\ref{fig:de_histogram_image}) porównanie rozkładów dla obrazu Lennagrey (linia niebieska) oraz różnicowego (linia czerwona).
+Na podstawie rozkładów można wywnioskować, że wartości po kodowaniu różnicowym lepiej będą podlegać kompresji.
+Przyjmuje się bowiem, że im bardziej niezrównoważone są wartości poszczególnych prawdopodobieństw (duża dysproporcja między prawdopodobieństwami najczęściej i najrzadziej występującymi), tym lepszą efektywność kodowania można uzyskać \cite{ulacha_roznicowe}.
+
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.9\linewidth]{images/differential_encoding_histogram_image.eps}
+  \includegraphics[width=.5\linewidth]{images/differential_encoding_histogram_image.eps}
   \caption{Porównanie histogramu wartości średnich bloków $4\times4$ obrazu \emph{lennagrey} i histogramu po kodowaniu różnicowym}
   \label{fig:de_histogram_image}
 \end{figure}
 
 \begin{figure}[H]
+\begin{subfigure}{.49\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}
   \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison}
-\end{figure}
-
-\begin{figure}[H]
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}
   \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison_zoom}
+\end{subfigure}
 \end{figure}
 
-\todo{Te wykresy będzie można przenieść do teorii. Narazie zostawiam tutaj.}
+% TODO: podmienić te obrazki aby nie było legendy
 
-Przeprowadzono kodowanie wartości średnich z bloków uzyskiwanych w procesie kwantyzacji wektorowej z usuniętą średnią (MRVQ). Przeprowadzono porównanie trzech metod kodowania na podstawie pomiaru entropii. \todo{Dodać wzór do obliczania entropii w sekcji z teorią}.
 
-Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania różnicowego i adaptacyjnego predyktora medianowego.
-\todo{Dodać odnośniki do opisów metod w sekcji z teorią}.
+Przeprowadzono kodowanie wartości średnich z bloków uzyskiwanych w procesie kwantyzacji wektorowej z usuniętą średnią (MRVQ). Przeprowadzono porównanie trzech metod kodowania na podstawie pomiaru entropii według wzoru (\ref{eq:entropia}) w celu wybrania docelowej metody kodowania w całym procesie kompresji obrazów.
 
-Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}).
+Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania różnicowego i adaptacyjnego predyktora medianowego, które zostały opisane w sekcji \ref{sec:roznicowe}.
+
+Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}). Najmniejsze wartości entropii uzyskuje adaptacyjny predyktor medianowy.
+Z tego powodu używamy tej metody w procesie kompresji.
 
 \begin{table}[H]
   \caption{Obliczenie entropii dla średnich uzyskanych w procesie MRVQ i kodowania tych średnich za pomocą kodowania różnicowego}
@@ -1025,8 +1037,10 @@ Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) ora
   \centering
   \begin{tabular}{lrrrr}
     \toprule
-    {Obraz}            & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego}  & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-    {}                 & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    {}                 & \multicolumn{4}{c}{Entropia} \\
+    \cmidrule(lr){2-5}
+    {Obraz}            & \multicolumn{1}{c}{Wartości} & \multicolumn{1}{c}{Kodowania} & \multicolumn{1}{c}{Medianowego kodowania}  & \multicolumn{1}{c}{Adaptacyjnego} \\
+    {}                 & \multicolumn{1}{c}{wejściowych} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
     \midrule
     Aerial.bmp         & 6.799397                     & 6.370003                               & 6.346111                                  & 6.281835                                   \\
     airfield.bmp       & 7.600676                     & 6.335829                               & 6.200263                                  & 6.115437                                   \\
@@ -1084,8 +1098,10 @@ Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) ora
   \centering
   \begin{tabular}{lrrrr}
     \toprule
-    {}       & \multicolumn{1}{c}{entropia} & \multicolumn{1}{c}{entropia kodowania} & \multicolumn{1}{c}{entropia medianowego}  & \multicolumn{1}{c}{entropia adaptacyjnego} \\
-    {}       & \multicolumn{1}{c}{średnich} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{kodowania różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
+    {}                 & \multicolumn{4}{c}{Entropia} \\
+    \cmidrule(lr){2-5}
+    {}            & \multicolumn{1}{c}{Wartości} & \multicolumn{1}{c}{Kodowania} & \multicolumn{1}{c}{Medianowego kodowania}  & \multicolumn{1}{c}{Adaptacyjnego} \\
+    {}                 & \multicolumn{1}{c}{wejściowych} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
     \midrule
     minimum  & 4.114868                     & 3.784849                               & 3.874582                                  & 3.495424                                   \\
     maksimum & 7.612662                     & 7.141744                               & 6.895302                                  & 6.848980                                   \\
