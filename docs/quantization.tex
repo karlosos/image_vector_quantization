@@ -100,6 +100,7 @@ W przetwarzaniu analogowo-cyfrowym dokładność liniowej kwantyzacji jest okre�
 Zwiększenie liczby bitów prowadzi do zwiększenia liczby przedziałów, co w rezultacie prowadzi do dokładniejszego odwzorowania \mbox{sygnału \cite{drozdek2007wprowadzenie}.}
 
 \section{Opis projektu}
+\label{sec:opis}
 
 Celem projektu było stworzenie aplikacji umożliwiającej przeprowadzanie kwantyzacji wektorowej oraz przeprowadzenie badań
 zaimplementowanych metod. 
@@ -1112,7 +1113,7 @@ Z tego powodu używamy tej metody w procesie kompresji.
 
 \subsection{Kompresja z koderem Golomba}
 
-W poniższym eksperymencie przeprowadzono integrację wszystkich zaimplementowanych elementów. Cały proces składa się z:
+Ostatni eksperyment polegał na integracji wszystkich zaimplementowanych komponentów składowych. Cały proces, opisany w sekcji \ref{sec:opis}, składa się z:
 
 \begin{enumerate}
     \item kwantyzacji wektorowej z usunięciem średnich (MRVQ),
@@ -1121,7 +1122,26 @@ W poniższym eksperymencie przeprowadzono integrację wszystkich zaimplementowan
     \item kompresji koderem Golomba wartości z adaptacyjnego predyktora medianowego.
 \end{enumerate}
 
-Uzyskane wyniki przedstawiono w tabeli \ref{tab:compression}.
+Pogrupowane wyniki względem rozmiaru obrazu przedstawiono w tabeli \ref{tab:compression_agg} oraz wyniki zbiorcze w tabeli \ref{tab:compression}. Wraz z wzrostem długości słownika wzrasta PSNR oraz maleje współczynnik kompresji. Wybór odpowiedniej długości słownika zależy od oczekiwań użytkownika. Musi on wybrać pomiędzy współczynnikiem kompresji a jakością obrazu. Należy wtedy zadać pytanie czy ważniejszy jest dla niego mały rozmiar pliku, np. dla projektanta stron WWW, czy może ważniejsza jest jakość obrazu, czyli najlepsza wartość PSNR względem obrazu oryginalnego.
+
+\begin{table}[H]
+  \caption{Rozmiary obrazów po kompresji z wykorzystaniem MRVQ z książką kodową z LBG z średnimi zakodowanymi adaptacyjnym predyktorem medianowym i po kompresji koderem Golomba pogrupowane po rozmiarze obrazu wejściowego.}
+  \label{tab:compression_agg}
+  \centering
+\begin{tabular}{lrrrrrr}
+\toprule
+{} & \multicolumn{2}{l}{Długość słownika $256$} & \multicolumn{2}{l}{Długość słownika $512$} & \multicolumn{2}{l}{Długość słownika $1024$} \\
+    \cmidrule(lr){2-3}
+    \cmidrule(lr){4-5}
+    \cmidrule(lr){6-7}
+    Rozmiar &    CR &   PSNR [dB] &    CR &   PSNR [dB] &   CR &  PSNR [dB] \\
+\midrule
+(256, 256) &  2.705329 &  32.591843 &  1.901402 &  33.792097 &  1.215311 &  35.417871 \\
+(512, 512) &  3.767819 &  31.554161 &  3.162515 &  32.315816 &  2.486568 &  33.195739 \\
+(576, 720) &  4.054608 &  34.733730 &  3.515051 &  35.517362 &  2.902147 &  36.471608 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
   \caption{Rozmiary obrazów po kompresji z wykorzystaniem MRVQ z książką kodową z LBG z średnimi zakodowanymi adaptacyjnym predyktorem medianowym i po kompresji koderem Golomba.}
@@ -1184,6 +1204,107 @@ Uzyskane wyniki przedstawiono w tabeli \ref{tab:compression}.
 \end{adjustbox}
 \end{table}
 
+\subsection{Porównanie z JPEG}
+
+\begin{table}[H]
+  \caption{Porównanie współczynnika PSNR kompresji naszą metodą dla 3 różnych długości słownika z metodą JPEG o zbliżonym rozmiarze pliku wynikowego.}
+  \label{tab:jpg}
+\begin{adjustbox}{center}
+\tiny
+\begin{tabular}{llrrrrrrrrrrrr}
+\toprule
+    {} & {} & \multicolumn{4}{c}{Długość słownika $256$} & \multicolumn{4}{c}{Długość słownika $512$} & \multicolumn{4}{c}{Długość słownika $1024$} \\
+    \cmidrule(lr){3-6}
+    \cmidrule(lr){7-10}
+    \cmidrule(lr){11-14}
+    {} & {} & \multicolumn{2}{c}{Rozmiar [kB]} & \multicolumn{2}{c}{PSNR [dB]} & \multicolumn{2}{c}{Rozmiar [kB]} & \multicolumn{2}{c}{PSNR [dB]} & \multicolumn{2}{c}{Rozmiar [kB]} & \multicolumn{2}{c}{PSNR [dB]}  \\ 
+    \cmidrule(lr){3-4}
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    \cmidrule(lr){9-10}
+    \cmidrule(lr){11-12}
+    \cmidrule(lr){13-14}
+    Nazwa obrazu &  Rozmiar &  Golomb &  JPEG &  Golomb  &  JPEG &  Golomb &  JPEG &  Golomb &  JPEG & Golomb &  JPEG &  Golomb &  JPEG \\
+\midrule
+     Aerial.bmp &  (512, 512) &   34.4162 &    33.711 &   28.0334 &   32.5383 &   34.4162 &    33.711 &   28.8989 &   33.1456 &   34.4162 &    33.711 &   29.7250 &   34.1329 \\
+      airfield.bmp &  (512, 512) &   34.0189 &    32.781 &   27.2596 &   31.4220 &   34.0189 &    32.781 &   28.0302 &   31.7726 &   34.0189 &    32.781 &   28.8619 &   32.3789 \\
+      airplane.bmp &  (512, 512) &   31.1985 &    30.423 &   32.6753 &   37.9808 &   31.1985 &    30.423 &   33.4918 &   38.8627 &   31.1985 &    30.423 &   34.3153 &   40.5920 \\
+     baboonTMW.bmp &  (512, 512) &   33.8255 &    32.080 &   25.5092 &   30.4432 &   33.8255 &    32.080 &   26.1752 &   30.8150 &   33.8255 &    32.080 &   26.8473 &   31.3651 \\
+       balloon.bmp &  (576, 720) &   43.2940 &    39.893 &   40.1153 &   44.6200 &   43.2940 &    39.893 &   41.0893 &   45.5254 &   43.2940 &    39.893 &   42.2164 &   46.4712 \\
+ balloon\_noise.bmp &  (576, 720) &   43.3241 &    40.472 &   40.2846 &   44.2803 &   43.3241 &    40.472 &   40.9243 &   44.7617 &   43.3241 &    40.472 &   42.0169 &   46.0299 \\
+          BARB.bmp &  (576, 720) &   47.8209 &    46.953 &   30.1062 &   34.5656 &   47.8209 &    46.953 &   31.0281 &   35.2651 &   47.8209 &    46.953 &   32.1647 &   36.6358 \\
+         BARB2.bmp &  (576, 720) &   47.7149 &    46.863 &   29.8419 &   33.6837 &   47.7149 &    46.863 &   30.6713 &   34.2495 &   47.7149 &    46.863 &   31.5924 &   35.2254 \\
+       barb512.bmp &  (512, 512) &   32.0452 &    31.418 &   29.8261 &   34.2914 &   32.0452 &    31.418 &   30.6507 &   35.2355 &   32.0452 &    31.418 &   31.7542 &   36.8252 \\
+         BOARD.bmp &  (576, 720) &   43.5746 &    40.873 &   35.7221 &   40.3695 &   43.5746 &    40.873 &   36.5536 &   41.2419 &   43.5746 &    40.873 &   37.4770 &   41.9145 \\
+       boat512.bmp &  (512, 512) &   32.0998 &    31.632 &   31.2360 &   34.7576 &   32.0998 &    31.632 &   31.8741 &   35.4121 &   32.0998 &    31.632 &   32.7992 &   36.2887 \\
+         boats.bmp &  (576, 720) &   45.8806 &    43.956 &   33.6047 &   37.7882 &   45.8806 &    43.956 &   34.2592 &   38.8097 &   45.8806 &    43.956 &   35.1151 &   40.0806 \\
+        bridge.bmp &  (512, 512) &   33.9129 &    32.992 &   27.4956 &   31.2898 &   33.9129 &    32.992 &   28.1271 &   31.6453 &   33.9129 &    32.992 &   28.9414 &   32.3447 \\
+     bridge256.bmp &  (256, 256) &   12.0279 &    11.909 &   27.3845 &   31.4732 &   12.0279 &    11.909 &   28.5610 &   32.5382 &   12.0279 &    11.909 &   30.1172 &   35.4518 \\
+     camera256.bmp &  (256, 256) &   11.3428 &    10.800 &   28.5822 &   35.6744 &   11.3428 &    10.800 &   29.7333 &   38.2916 &   11.3428 &    10.800 &   31.2850 &   44.1368 \\
+        couple.bmp &  (512, 512) &   31.8002 &    30.784 &   31.0338 &   34.5318 &   31.8002 &    30.784 &   31.8778 &   35.3827 &   31.8002 &    30.784 &   32.6510 &   36.6474 \\
+     couple256.bmp &  (256, 256) &   11.2174 &    10.961 &   34.5623 &   39.9855 &   11.2174 &    10.961 &   36.0677 &   42.9445 &   11.2174 &    10.961 &   37.7377 &   46.5294 \\
+      crowd512.bmp &  (512, 512) &   33.3734 &    32.920 &   31.9236 &   36.3526 &   33.3734 &    32.920 &   32.7417 &   37.2457 &   33.3734 &    32.920 &   33.7827 &   38.7233 \\
+         EARTH.bmp &  (256, 256) &   11.1611 &    10.523 &   30.6002 &   35.6603 &   11.1611 &    10.523 &   31.9055 &   39.0474 &   11.1611 &    10.523 &   34.3462 &   46.7902 \\
+        elaine.bmp &  (512, 512) &   31.7848 &    29.896 &   33.5118 &   34.0715 &   31.7848 &    29.896 &   34.2198 &   34.4668 &   31.7848 &    29.896 &   34.9235 &   34.9409 \\
+          ELIF.bmp &  (256, 256) &   11.0631 &    10.654 &   37.4957 &   45.0617 &   11.0631 &    10.654 &   38.6844 &   47.4601 &   11.0631 &    10.654 &   40.3134 &   51.2749 \\
+        finger.bmp &  (512, 512) &   35.6330 &    33.731 &   28.5940 &   31.2669 &   35.6330 &    33.731 &   29.4487 &   32.1603 &   35.6330 &    33.731 &   30.3349 &   33.2817 \\
+       FROG512.BMP &  (512, 512) &   33.4479 &    31.972 &   26.8390 &   30.0100 &   33.4479 &    31.972 &   27.4431 &   30.2246 &   33.4479 &    31.972 &   28.1910 &   30.5601 \\
+          GIRL.bmp &  (576, 720) &   47.7829 &    46.546 &   35.9459 &   38.9900 &   47.7829 &    46.546 &   36.7534 &   39.8366 &   47.7829 &    46.546 &   37.7213 &   40.9274 \\
+          GOLD.bmp &  (576, 720) &   47.1920 &    46.516 &   33.1445 &   35.4906 &   47.1920 &    46.516 &   33.8301 &   36.0945 &   47.1920 &    46.516 &   34.5978 &   36.8153 \\
+      GOLDHILL.BMP &  (512, 512) &   32.0097 &    31.573 &   32.5069 &   34.7873 &   32.0097 &    31.573 &   33.1433 &   35.4317 &   32.0097 &    31.573 &   34.0618 &   36.4029 \\
+    harbour512.bmp &  (512, 512) &   31.0968 &    30.927 &   28.0168 &   33.0602 &   31.0968 &    30.927 &   28.8110 &   33.5153 &   31.0968 &    30.927 &   29.7005 &   34.8211 \\
+         HOTEL.bmp &  (576, 720) &   47.2054 &    46.297 &   31.3163 &   35.8090 &   47.2054 &    46.297 &   32.0676 &   36.4854 &   47.2054 &    46.297 &   33.1332 &   37.3551 \\
+        lax512.bmp &  (512, 512) &   32.6806 &    31.197 &   27.0035 &   30.9771 &   32.6806 &    31.197 &   27.7005 &   31.2686 &   32.6806 &    31.197 &   28.5110 &   31.7049 \\
+       lenaTMW.bmp &  (512, 512) &   31.7190 &    30.388 &   32.2526 &   35.8756 &   31.7190 &    30.388 &   32.9664 &   36.6187 &   31.7190 &    30.388 &   33.9852 &   37.5438 \\
+     lennagrey.bmp &  (512, 512) &   31.2536 &    30.735 &   33.7618 &   37.7113 &   31.2536 &    30.735 &   34.3904 &   38.4112 &   31.2536 &    30.735 &   35.3032 &   39.6337 \\
+        man512.bmp &  (512, 512) &   32.7319 &    31.436 &   31.4241 &   34.8599 &   32.7319 &    31.436 &   32.3166 &   35.6405 &   32.7319 &    31.436 &   33.0664 &   36.7061 \\
+   noisesquare.bmp &  (256, 256) &   10.9651 &     9.951 &   32.3340 &   31.7693 &   10.9651 &     9.951 &   33.2783 &   33.1160 &   10.9651 &     9.951 &   34.6237 &   38.2980 \\
+         OMAHA.bmp &  (256, 256) &   12.4265 &    11.476 &   23.3660 &   29.7893 &   12.4265 &    11.476 &   24.3867 &   30.4198 &   12.4265 &    11.476 &   25.9420 &   32.4079 \\
+    peppersTMW.bmp &  (512, 512) &   31.3865 &    30.310 &   33.3309 &   36.1815 &   31.3865 &    30.310 &   33.8405 &   36.7279 &   31.3865 &    30.310 &   34.9136 &   37.3054 \\
+      SAILBOAT.bmp &  (512, 512) &   32.1825 &    31.792 &   31.3366 &   34.5480 &   32.1825 &    31.792 &   31.9918 &   35.0836 &   32.1825 &    31.792 &   32.8278 &   36.0483 \\
+       seismic.bmp &  (512, 512) &   30.2431 &    29.190 &   41.8003 &   45.2439 &   30.2431 &    29.190 &   42.7125 &   46.4856 &   30.2431 &    29.190 &   43.6948 &   48.2663 \\
+          SENA.bmp &  (256, 256) &   11.0311 &    10.824 &   37.2712 &   43.3898 &   11.0311 &    10.824 &   38.8685 &   45.3245 &   11.0311 &    10.824 &   40.2600 &   51.2076 \\
+        SENSIN.bmp &  (256, 256) &   11.6690 &    10.857 &   36.4501 &   42.1659 &   11.6690 &    10.857 &   37.5735 &   44.5099 &   11.6690 &    10.857 &   39.0704 &   47.4580 \\
+        shapes.bmp &  (512, 512) &   29.3044 &    28.415 &   36.5155 &   40.7606 &   29.3044 &    28.415 &   37.9932 &   41.8120 &   29.3044 &    28.415 &   39.5774 &   45.4807 \\
+         SINAN.bmp &  (256, 256) &   11.4265 &    10.698 &   37.8722 &   43.7106 &   11.4265 &    10.698 &   38.8620 &   45.8253 &   11.4265 &    10.698 &   40.4832 &   51.2768 \\
+       Tank512.bmp &  (512, 512) &   31.8850 &    30.601 &   33.6388 &   34.6563 &   31.8850 &    30.601 &   34.2551 &   35.2721 &   31.8850 &    30.601 &   35.0069 &   36.1873 \\
+      Truck512.bmp &  (512, 512) &   32.2201 &    31.825 &   34.2517 &   35.5862 &   32.2201 &    31.825 &   34.9273 &   36.1671 &   32.2201 &    31.825 &   35.7052 &   37.1496 \\
+        woman1.bmp &  (512, 512) &   31.7065 &    30.122 &   31.3258 &   34.6832 &   31.7065 &    30.122 &   32.1475 &   35.3117 &   31.7065 &    30.122 &   32.8994 &   36.5116 \\
+        woman2.bmp &  (512, 512) &   29.9165 &    28.946 &   39.3053 &   42.8195 &   29.9165 &    28.946 &   40.0361 &   43.4190 &   29.9165 &    28.946 &   40.7087 &   44.7620 \\
+         ZELDA.bmp &  (576, 720) &   44.8986 &    43.806 &   37.2558 &   40.1375 &   44.8986 &    43.806 &   37.9967 &   40.6282 &   44.8986 &    43.806 &   38.6813 &   41.1865 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+
+
+\begin{table}[H]
+  \caption{Porównanie średniego współczynnika PSNR kompresji naszą metodą dla 3 różnych długości słownika z metodą JPEG o zbliżonym rozmiarze pliku wynikowego pogrupowane względem rozmiaru obrazu wejściowego.}
+  \label{tab:jpg_summary}
+  \centering
+\begin{tabular}{lrrrrrr}
+\toprule
+{} & \multicolumn{6}{c}{PSNR [dB]} \\
+\cmidrule(lr){2-7}
+{} & \multicolumn{2}{c}{Długość słownika $256$} & \multicolumn{2}{c}{Długość słownika $512$} & \multicolumn{2}{c}{Długość słownika $1024$} \\
+\cmidrule(lr){2-3}
+\cmidrule(lr){4-5}
+\cmidrule(lr){6-7}
+Rozmiar &   Golomb &   JPEG &   Golomb &   JPEG &   Golomb &   JPEG \\
+\midrule
+(256, 256) &  32.591843 &  37.868005 &  33.792097 &  39.947736 &  35.417871 &  44.483146 \\
+(512, 512) &  31.554161 &  35.027174 &  32.315816 &  35.674378 &  33.195739 &  36.792489 \\
+(576, 720) &  34.733730 &  38.573444 &  35.517362 &  39.289808 &  36.471608 &  40.264184 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+Ostatnim eksperymentem było porównanie naszej metody z metodą JPEG \cite{jpeg}. W tym celu przeprowadzono kompresję z obrazu wejściowego do obrazu JPEG tak aby uzyskać zbliżony rozmiar pliku do pliku po kompresji opisanej na łamach tej pracy. W tym celu wykorzystano oprogramowanie ImageMagick \cite{imagemagick}.
+
+Wyniki zbiorcze przedstawiono w tabeli \ref{tab:jpg} oraz pogrupowane po rozmiarach obrazu wejściowego w tabeli \ref{tab:jpg_summary}. Na podstawie zebranych danych stwierdzamy że nasze podejście znacząco odbiega od standardu JPEG, gdzie różnice wynoszą średnio ponad 4 dB na korzyść standardu JPEG dla najmniejszego rozmiaru słownika. Zwiększając rozmiar słownika różnice te się powiększają.
 
 \section{Podsumowanie}
 
