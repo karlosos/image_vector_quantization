@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from vector_quantization.codebooks import random_codebook
+from vector_quantization.codebooks import random_codebook, pnn
 
 
 class TestRandomCodebook(unittest.TestCase):
@@ -21,3 +21,13 @@ class TestRandomCodebook(unittest.TestCase):
         codebook_1 = random_codebook(vectors, 4, seed=42)
         codebook_2 = random_codebook(vectors, 4, seed=42)
         npt.assert_almost_equal(codebook_1, codebook_2)
+
+
+class TestPNNCodebook(unittest.TestCase):
+    def test_generation(self):
+        # TODO: write test for generating codebook from given input vectors
+        vectors = np.array([[1, 1], [2, 2], [1, 1], [3, 3], [4, 4], [1, 1]])
+        codebook = pnn(vectors, 2)
+        codebook = np.array(codebook)
+
+        self.assertTrue(False)
