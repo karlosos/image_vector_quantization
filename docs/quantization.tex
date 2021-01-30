@@ -66,7 +66,13 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  \lipsum[1-2]
+Problem kompresji plików multimedialnych jest kluczowy w akwizycji, przechowywaniu i przesyłaniu takiego rodzaju danych. Większośc multimediów z jakimi mamy do czynienia na codzień jest poddawana kompresji.
+
+W ramach zajęć Zespołowy projekt badawczy 2 zaimplementowano algorytm kompresji bazujący na kwantyzacji wektorowej oraz stworzono raport opisujący podstawy teoretyczne zaproponowanego rozwiązania. 
+
+W procesie kompresji wykorzystywana jest kwantyzacja wektorowa z usuniętymi średnimi. Słownik służący kwantyzacji zbudowany jest za pomocą algorytmu LBG. Usunięte średnie z kwantyzacji wektorowej zostały poddane kompresji przy użyciu kodowania różnicowego i koderu Golomba.
+
+Podczas realizacji projektu przeprowadzono badania dotyczące pojedynczych elementów zaproponowanej kompresji. Zaproponowany algorytm jest gorszy od standardu JPEG pod względem podobieństwa do obrazu oryginalnego porównanego zgodnie z metryką PSNR dla takich samych współczynników kompresji.
 \end{abstract}
 
 \newpage
@@ -110,6 +116,22 @@ Podczas zajęć stworzono rozwiązanie end-to-end, które realizuje kompresję o
 W rozdziale trzecim wyłożono teorię potrzebną do implementacji wykorzystanych metod. Rozdział czwarty przedstawia badania empiryczne na zaimplementowanych metodach i algorytmach. 
 
 Praca została wykonana na kursie \emph{Zespołowy projekt badawczy 2} w semestrze zimowym 2020/21. Kod źródłowy tego raportu oraz zaimplementowanych metod i przeprowadzonych badań dostępny jest pod adresem \url{https://github.com/karlosos/image_vector_quantization}.
+
+\subsection{Metodologia pracy}
+
+W ramach zespołu dokonaliśmy podziału pracy zgodnie z trzema rolami. Pierwszą z nich była rola dokumentalisty, która polegała na zbieraniu i opracowywaniu materiałów w postaci tego dokumentu. Druga rola to ,,zdobywacz wiedzy'', która w założeniu miała za zadania akwizycję wiedzy i jej przekazywanie pozostałym członkom zespołu. Trzecia rola to klasyczny programista mający za zadanie implementację opracowanych algorytmów.
+
+Podział ról wyglądał następująco:
+
+\begin{itemize}
+    \item Karol Działowski -- programista i dokumentalista,
+    \item Wojciech Olejnik -- dokumentalista i zdobywacz wiedzy,
+    \item Paweł Kalicji -- programista i zdobywacz wiedzy.
+\end{itemize}
+
+W przypadku naszego zespołu taki podział ról się nie sprawdził i nie był ściśle przestrzegany. Do podziału pracy w ramach zespołu wykorzystano podejście elastyczne. Opierało się na transparentnym spisie zadań na współdzielonej tablicy, gdzie po każdych zajęciach dodawano nowe zadania. Ponadto jeden z członków zespołu był odpowiedzialny za integrację całego projektu, kontakt z prowadzącym oraz kontrolę nad współdzieloną tablicą.
+
+Rola ,,zdobywacza wiedzy'' w praktyce nie była realizowana. Materiały niezbędne do implementacji w większości były dostarczane nam przez prowadzącego. Dodatkowo próbowaliśmy pomijać wymianę wiedzy pomiędzy członkami zespołu, co mogło przełożyć się na mniejszą produktywność zespołu.
 
 \section{Wstęp teoretyczny}
 
