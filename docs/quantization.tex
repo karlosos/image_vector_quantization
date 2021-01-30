@@ -458,7 +458,7 @@ W takim przypadku sygnałem są nieskompresowane dane źródłowe, a szumem – 
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
 \begin{equation}
-  MSE = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
+    \mathrm{MSE} = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
 \end{equation}
 
 gdzie:
@@ -471,7 +471,7 @@ gdzie:
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
 \begin{equation}
-  PSNR = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
+    \mathrm{PSNR} = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
 \end{equation}
 
 gdzie:
@@ -483,17 +483,17 @@ gdzie:
 \subsubsection{SSIM}
 
 Podobieństwo strukturalne miarą indeksu (ang. \emph{structural similarity index measure}) jest to metoda, która służy 
-do pomiaru podobieństwa między dwoma obrazami. Indeks $SSIM$ to pomiar jakości obrazu bazowego (nieskompresowanego) 
+do pomiaru podobieństwa między dwoma obrazami. Indeks SSIM to pomiar jakości obrazu bazowego (nieskompresowanego) 
 do obrazu po przekształceniach. SSIM to model oparty na percepcji, który traktuje degradację obrazu jako postrzeganą zmianę
 w informacjach strukturalnych, przy jednoczesnym uwzględnieniu ważnych zjawisk percepcyjnych, w tym zarówno terminów maskowania 
-luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak $MSE$ lub $PSNR$,
+luminancji, jak i maskowania kontrastu. Różnica w stosunku do innych technik, takich jak MSE lub PSNR,
 polega na tym, że te podejścia szacują błędy bezwzględne. Idea informacji strukturalnych polega na tym, że piksele mają silne współzależności,
 zwłaszcza gdy są znajdują się blisko siebie w przestrzenni. Zależności te niosą ważne informacje o strukturze obiektów \mbox{na scenie wizualnej \cite{channappayya2008rate}.}
 
 Algorytm SSIM:
 
 \begin{equation}
-  SSIM(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) \cdot (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) \cdot (\delta_{x}^2 + \delta_{x}^2 + c_2)}
+    \mathrm{SSIM}(x, y) = \frac{(2\mu_{x}\mu_{y} + c_{1}) \cdot (2\delta_{xy} + c_2)}{(\mu_{x}^2 + \mu_{y}^2 + c_{1}) \cdot (\delta_{x}^2 + \delta_{x}^2 + c_2)}
 \end{equation}
 
 gdzie:
@@ -579,7 +579,7 @@ Dlatego używa się wartości maksymalnych $PC_m(x) = max (PC_1(x), PC_2(x))$, a
 ogólnym podobieństwie między $f_1$ i $f_2$, i odpowiednio zdefiniowano indeks FSIM między $f_1$ i $f_2$ w sposób przedstawiony poniżej:
 
 \begin{equation}
-  {FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
+  \mathrm{FSIM} = {{\sum\limits {_{{\bf x} \in \Omega } {S_{L}}({\bf x}) \cdot PC_{m}({\bf x})} } \over {\sum\limits {_{{\bf x} \in \Omega } PC_{m}({\bf x})}}}
 \end{equation}
 
 gdzie:
@@ -589,17 +589,17 @@ gdzie:
 
 \subsubsection{RMSE}
 
-Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy średnią wielkość błędu. Jest to pierwiastek kwadratowy każdej różnicy między prognozowaną a odpowiadającą jej wartościom, podniesiona do kwadratu, a następnie uśredniona w próbie. Ponieważ błędy są podnoszone do kwadratu, zanim zostaną uśrednione, sprawia to, że RMSE nadaje stosunkowo dużą wagę dużym błędom. Oznacza to, że RMSE jest najbardziej przydatny, gdy duże błędy są szczególnie niepożądane.
+Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy średnią wielkość błędu. Jest to pierwiastek kwadratowy każdej różnicy między prognozowaną a odpowiadającą jej wartościom, podniesiona do kwadratu, a następnie uśredniona w próbie. Ponieważ błędy są podnoszone do kwadratu, zanim zostaną uśrednione, sprawia to, że RMSE nadaje stosunkowo dużą wagę dużym błędom. Oznacza to, że RMSE jest najbardziej przydatny, gdy duże błędy są szczególnie niepożądane \cite{rmse}.
 
 Wzór RMSE:
 
 \begin{equation}
-  \mathrm{FSIM}=\frac{\sum_{\mathrm{x} \in \Omega} S_{L}(\mathbf{x}) \cdot P C_{m}(\mathbf{x})}{\sum_{\mathrm{x} \in \Omega} P C_{m}(\mathbf{x})}
+    \mathrm{RMSE}=\sqrt{\frac{1}{2}\sum_{j=1}^{n}(y_j - \hat{y}_j)^2}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-  \item $n$ - średnia próby,
+  \item $n$ - liczba prób,
   \item $y_{j}$ - prognozowana wartość błędu,
   \item $\hat{y_{j}}$ - rzeczywista wartość błędu \cite{rmse}.
 \end{itemize}
@@ -611,12 +611,12 @@ Znormalizowany błąd średniokwadratowy (NRMSE) - ułatwiający porównywanie z
 Wzór NRMSE:
 
 \begin{equation}
-  NRMSE = \frac{RMSE}{y_{max} - y_{min}}
+    \mathrm{NRMSE} = \frac{\mathrm{RMSE}}{y_{max} - y_{min}}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-  \item $RMSE$ - Podstawowy błąd średniokwadratowy
+  \item $\mathrm{RMSE}$ - Podstawowy błąd średniokwadratowy
   \item $y_{max}$ - wartość maksymalna
   \item $y_{min}$ - wartość minimalna
 \end{itemize}
@@ -628,7 +628,7 @@ gdzie:
 Współczynnik kompresji danych (\textit{ang. data compression ratio}), znany również jako moc kompresji, jest miarą względnego zmniejszenia rozmiaru reprezentacji danych, który otrzymywany jest w procesie kompresji danych. Zwykle definiowany jest jako stosunek między rozmiarem nieskompresowanym a rozmiarem po kompresji:
 
 \begin{equation}
-  Współczynnik\;kompresji\;danych = \frac{Rozmiar\;nieskompresowany}{Rozmiar\;skompresowany}
+    \mathrm{CR} = \frac{\mathrm{rozmiar\;przed\;kompresją}}{\mathrm{rozmiar\;po\;kompresji}}
   \label{eq:cr}
 \end{equation}
 
@@ -639,7 +639,7 @@ Zatem w wyniku kompresji pliku o rozmiarze 10 MB do 2 MB, otrzymujemy współczy
 Średnia bitowa (ang. \emph{Bits Per Pixel}) (BPP) określa liczbę bitów przypadającą na 1 piksel zakodowanego obrazu. Początkowo każdy nasz plik miał 8 bitów na piksel. Stąd wzór ten dotyczy danego typu obrazów, które w naszym przypadku są 8-mio bitowe. Na przykład, jeśli stopień kompresji, który możemy obliczyć ze wzoru (\ref{eq:cr}) wynosi 4, daje nam średnią bitową wynoszącą 2 bity na piksel.
 
 \begin{equation}
-  BPP = 8 / CR
+    \textrm{BPP} = \frac{8}{\textrm{CR}}
 \end{equation}
 
 
