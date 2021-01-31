@@ -69,7 +69,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Problem kompresji plików multimedialnych jest kluczowy w akwizycji, przechowywaniu i przesyłaniu takiego rodzaju danych. Większośc multimediów z jakimi mamy do czynienia na codzień jest poddawana kompresji.
+Problem kompresji plików multimedialnych jest kluczowy w akwizycji, przechowywaniu i przesyłaniu takiego rodzaju danych. Większośc multimediów z jakimi mamy do czynienia jest poddawana kompresji.
 
 W ramach zajęć Zespołowy projekt badawczy 2 zaimplementowano algorytm kompresji bazujący na kwantyzacji wektorowej oraz stworzono raport opisujący podstawy teoretyczne zaproponowanego rozwiązania. 
 
@@ -196,7 +196,7 @@ Problemy jakie możemy napotkać podczas kwantyzacji wektorowej:
 \label{sec:lgb_file_size}
 Plik wynikowy kwantyzacji wektorowej składa się ze słownika o określonej długości $K$ oraz wartości przyporządkowanych indeksów do każdego bloku. Każdy element słownika reprezentowany jest przez wektor o długości $v$, który zapisywany jest na $v \cdot 8$ bitach.
 
-Każdy blok jest opisywany przez indeks, który można zapisać na $log_2(K)$ bitach. Przykładowo dla słownika $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
+Każdy blok jest opisywany przez indeks, który można zapisać na $\log_2(K)$ bitach. Przykładowo dla słownika $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
 
 
 Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
@@ -209,7 +209,7 @@ Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości we
 Każdy blok przechowujący indeks ma rozmiar:
 
 \begin{equation}
-  \textrm{block\_size} = log_2(K)  \quad  \textrm{[bitów]}.
+  \textrm{block\_size} = \log_2(K)  \quad  \textrm{[bitów]}.
   \label{eq:lgb_indeks_size}
 \end{equation}
 
@@ -321,7 +321,7 @@ Algorytm metody PNN:
           ||T_{i} - C_{j0}||^2 = \displaystyle \min_{j_1,\dots ,M} ||T_{i} - C_{j}||^2
         \end{equation}
 
-  \item Metoda ta rozpoczyna się od zainicjowania każdego wektor szkoleniowy $T_{i}$ jako własny klaster $S_{i}$.
+  \item Metoda ta rozpoczyna się od zainicjowania każdego wektora szkoleniowego $T_{i}$ jako własny klaster $S_{i}$.
         Na każdym etapie algorytmu, dwa najbliższe klastry ($S_{a}$ i $S_{b}$) są przeszukiwane i łączone.
         Odległość (koszt połączenia) $d$ pomiędzy dwoma klastrami jest definiowany jako wzrost zniekształcenia książki kodowej w przypadku połączenia klastrów:
 
@@ -408,7 +408,7 @@ Algorytm Lindego-Buza-Graya (LBG), powstał 1980, służy on do generowania ksi�
         wybrać losowo $K$ wektorów stanowiących wstępną wersję słownika,
   \item korzystając z metryki euklidesowej, $d(X,Y)$, dokonać klasteryzacji wektorów danych wokół słów kodowych bieżącej wersji słownika
         \begin{itemize}
-          \item wybrać każdy kwadrat z obrazu o rozmiarze $(4x4)$ i sprawdzić, któremu reprezentantowi ze słownika jest najbliżej do
+          \item wybrać każdy kwadrat z obrazu o rozmiarze $(4 \times 4)$ i sprawdzić, któremu reprezentantowi ze słownika jest najbliżej do
                 aktualnego kwadratu. Każdy piksel wewnątrz tego kwadratu należy porównać ze sobą i wyliczyć ich różnice w kwadracie.
                 
                 \begin{equation}
@@ -471,12 +471,12 @@ gdzie:
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
 
 \begin{equation}
-    \mathrm{PSNR} = 10 \cdot \log_{10} \frac{[max(f(i,j))]^2}{MSE}
+    \mathrm{PSNR} = 10 \cdot \log_{10} \frac{[\max(f(i,j))]^2}{MSE}
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-  \item $max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała,
+  \item $\max(f(i,j))$ - wartość maksymalna danego sygnału; w przypadku obrazów zwykle jest to wartość stała,
         np. dla obrazów monochromatycznych o reprezentacji 8-bitowej wynosi 255.
 \end{itemize}
 
@@ -697,6 +697,7 @@ oraz w pozostałych przypadkach:
 \end{equation}
 
 \subsection{Kodowanie Golomba}
+\label{sec:golomb}
 
 Kodowanie Golomba (ang. \emph{Golomb coding}) jest bezstratną metodą kompresji danych wykorzystująca rodzinę kodów kompresji danych wynalezionych przez Solomona W. Golomb w latach 60. Alfabety zgodne z rozkładem geometrycznym będą miały kod Golomba jako optymalny kod prefiksu, dzięki czemu kodowanie Golomba będzie wysoce odpowiednie w sytuacjach, w których wystąpienie małych wartości w strumieniu wejściowym jest znacznie bardziej prawdopodobne niż duże wartości.
 
@@ -707,7 +708,6 @@ Ponadto, aby można było kodować te błędy predykcji przy użyciu kodu Golomb
 Najprostszym podejściem jest algorytm zapisu wartości absolutnej błędu $e(0)=|e(0)|$, a następnie zapis bitu znaku, np. 1 odpowiada liczbie nieujemnej), o ile $e(0)>0$, w przypadku zera nie ma potrzeby zapisywać bit znaku do pliku wynikowego (dekoder zauważy, że nie ma zer ujemnych, więc nie wczyta bitu znaku).
 
 Wynikowy zakres liczb $e(0)$ (nazywanych dalej zmodyfikowanymi błędami predykcji) jest przedział od $0$ do $2^8 - 1$, dzięki czemu możliwe jest ich kodowanie przy użyciu kodu Golomba.
-
 
 \textbf{Algorytm działania kodera Golomba}
 
@@ -748,14 +748,11 @@ p=0,5 \text { dla } S<2
 \end{array}
 \end{equation}
 
-Dopiero mając p podstawiamy do wzoru na m. Liczba m powinna być od $1$ do $2^8$.
+Dopiero mając $p$ podstawiamy do wzoru na $m$. Liczba $m$ powinna być od $1$ do $2^8$.
 
-\subsection{Koder Golomba}
-\label{sec:golomb}
+Mając wyznaczoną wartość $e(0)$ oraz $m$, wyliczamy $u_G$ oraz $v_G$. Następnie wysyłamy liczbę $u_G$ w postaci kodu unarnego ($u_G$ zer zakończonych jedynką), a potem liczbę $v_G$ jako kod dwufazowy z parametrem $m$:
 
-Mając wyznaczoną wartość $e(0)$ oraz m, wyliczamy $u_G$ oraz $v_G$. Następnie wysyłamy liczbę $u_G$ w postaci kodu unarnego ($u_G$ zer zakończonych jedynką), a potem liczbę $v_G$ jako kod dwufazowy z parametrem $m$:
-
-Liczba $v_G$ kodowana jest za pomocą kodu dwufazowego z parametrem $m$ (to wersja kodu Huffmana dla źródła o m równo prawdopodobnych symbolach). Przyjęcie pomocniczego parametru $k = \log_2 m$ oznacza, że w każdej grupie pierwszych $l = 2_k - m$ wartości kodowanych jest za pomocą $k - 1$ bitów, a pozostałych $m-l$ jest kodowanych w postaci liczby $v + k^2 - m$ za pomocą k bitów \cite{golomb}.
+Liczba $v_G$ kodowana jest za pomocą kodu dwufazowego z parametrem $m$ (to wersja kodu Huffmana dla źródła o $m$ równo prawdopodobnych symbolach). Przyjęcie pomocniczego parametru $k = \log_2 m$ oznacza, że w każdej grupie pierwszych $l = 2_k - m$ wartości kodowanych jest za pomocą $k - 1$ bitów, a pozostałych $m-l$ jest kodowanych w postaci liczby $v + k^2 - m$ za pomocą k bitów \cite{golomb}.
 
 \textbf{Algorytm kodera liczby $v_G$}
 
@@ -915,14 +912,14 @@ Przeprowadzono kwantyzację dla każdego obrazu wymuszając wykonanie wszystkich
   \centering
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_50_iterations.eps}
-  \caption{Błędy w poszczególnych iteracjach algorytmu LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
+  \caption{Błędy w poszczególnych iteracjach algorytmu LGB dla wektorów 16 elementowych i słownikiem o długości 512.}
   \label{fig:lbg_iterations}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=.9\linewidth]{images/lbg_4x4_32_mean_iterations.eps}
-  \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 32.}
+  \caption{Średni błąd w poszczególnych iteracjach algorytm LGB dla wektorów 16 elementowych i słownikiem o długości 512.}
   \label{fig:lbg_iterations_mean}
 \end{figure}
 
