@@ -712,33 +712,33 @@ Wynikowy zakres liczb $e(0)$ (nazywanych dalej zmodyfikowanymi błędami predykc
 \textbf{Algorytm działania kodera Golomba}
 
 W pierwszym kroku wykonujemy konwersje liczby całkowitej $e(n)$ na parę liczb $u_G$ oraz $v_G$:
-	
+  
 \begin{equation}
 u_{G}=\left\lfloor\frac{\bar{e}(0)}{m}\right\rfloor
 \end{equation}	
-	
+  
 dla $m > 1$:
-	
+  
 \begin{equation}
 v_{G}=\bar{e}(0)-u_{G} \cdot m
 \end{equation}	
-	
+  
 Dla $m = 1$, wartość $v_G$ nie istnieje. Każda kodowana wartość $e(0)$ wymaga indywidualnej wartości parametru $m$, który wyliczamy ze wzoru:
-	
+  
 \begin{equation}
 m=\left[-\frac{\log_{10}(1+p)}{\log_{10} p}\right]
 \end{equation}
-	
+  
 gdzie:
 
 p - obliczamy wcześniej $S$ jako średnią zrzutowanych błędów predykcji w najbliższym otoczeniu:
-	
+  
 \begin{equation}
 S=\frac{1}{x} \sum_{j=1}^{3} \bar{e}(j)
 \end{equation}
-	
+  
 gdzie:
-	
+  
 x - liczba ilości sąsiednich pikseli, które możliwe jest od drugiego wiersza i drugiej kolumny. W przypadku pierwszego wiersza i pierwszej kolumny:
 
 \begin{equation}
@@ -762,8 +762,8 @@ Liczba $v_G$ kodowana jest za pomocą kodu dwufazowego z parametrem $m$ (to wers
 Wejście: Liczba $v_G$ (k bitów):
 
 \begin{enumerate}
-	\item Jeśli $v_G < 1$ to wyślij liczbę $v_G$ ($k-1$ najmłodszych bitów) na wyjście,
-	\item W przeciwnym wypadku wysłać $v_G = v_G + 1$ ($k$ bitów - zapis pozycyjny liczby binarnej) na wyjście,
+  \item Jeśli $v_G < 1$ to wyślij liczbę $v_G$ ($k-1$ najmłodszych bitów) na wyjście,
+  \item W przeciwnym wypadku wysłać $v_G = v_G + 1$ ($k$ bitów - zapis pozycyjny liczby binarnej) na wyjście,
 \end{enumerate}
 
 \textbf{Algorytm dekodera liczby $v_G$}
@@ -771,26 +771,26 @@ Wejście: Liczba $v_G$ (k bitów):
 Wejście: Wczytać $k - 1$ bitów do liczby $v_G$:
 
 \begin{enumerate}
-	\item Jeśli $v_G < 1$ to liczbę $v_G$ jest już zdekodowana,
-	\item W przeciwnym wypadku wczytać z wyjścia jeden bit do liczby $q$, a następnie policzyć 
-	\begin{equation}
-	v_{G}:=2 \cdot v_{G}+q-l ; \text { (liczba } k \text { bitowa })
-	\end{equation}
+  \item Jeśli $v_G < 1$ to liczbę $v_G$ jest już zdekodowana,
+  \item W przeciwnym wypadku wczytać z wyjścia jeden bit do liczby $q$, a następnie policzyć 
+  \begin{equation}
+  v_{G}:=2 \cdot v_{G}+q-l ; \text { (liczba } k \text { bitowa })
+  \end{equation}
 \end{enumerate}
 
 \textbf{Algorytm działania dekodera Golomba}
 
 \begin{enumerate}
-	\item Wczytujemy i zliczamy (jako wartość u) zera aż trafimy na jedynkę
-	\item Następnie zastosować algorytm dekodera liczby $v_G$
-	\item Odtwarzamy z pary liczb $u_G$ i $v_G$ wartość:
-	
-	\begin{equation}
-	\bar{e}(0)=u_{G} \cdot m+v_{G}
-	\end{equation}
-	
-	a po zakończonych obliczeniach jeśli $e(0) > 0$ wczytujemy jeszcze bit znaku, żeby odtworzyć pierwotną liczbę $e(0)$.	
-	
+  \item Wczytujemy i zliczamy (jako wartość u) zera aż trafimy na jedynkę
+  \item Następnie zastosować algorytm dekodera liczby $v_G$
+  \item Odtwarzamy z pary liczb $u_G$ i $v_G$ wartość:
+  
+  \begin{equation}
+  \bar{e}(0)=u_{G} \cdot m+v_{G}
+  \end{equation}
+  
+  a po zakończonych obliczeniach jeśli $e(0) > 0$ wczytujemy jeszcze bit znaku, żeby odtworzyć pierwotną liczbę $e(0)$.	
+  
 \end{enumerate}
 
 
@@ -1333,7 +1333,13 @@ Wyniki zbiorcze przedstawiono w tabeli \ref{tab:jpg} oraz pogrupowane po rozmiar
 
 \section{Podsumowanie}
 
-\lipsum[1-3]
+W ramach zespołowego projektu badawczego udało nam się zrealizować postawione cele. Opisano i zaimplementowano kompleksowy algorytm do kompresji obrazów w odcieniach szarości korzystając z kwantyzacji wektorowej. Przebadano poszczególne składowe zaimplementowanej metody. Były to: kwantyzacja wektorowa z usuniętymi średnimi, budowa słownika algorytmem LBG, metody kodowania różnicowego oraz koder i dekoder Golomba.
+
+Zaproponowane rozwiązanie porównano z standardem JPEG uzyskując słabsze wyniki metryki PSNR dla takich samych współczynników kompresji. Porównanie przeprowadzono na obrazach o małych rozdzielczościach ($512 \times 512$, $256 \times 256$ oraz  $576 \times 720$).
+
+Kod źródłowy tego raportu oraz zaimplementowanych metod i przeprowadzonych badań udostępniono pod adresem \url{https://github.com/karlosos/image_vector_quantization}. 
+
+Przedstawiony algorytm można rozwinąć implementując dodatkowe sposoby inicjalizacji słownika.
 
 \bibliographystyle{unsrt}
 \bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
