@@ -667,7 +667,7 @@ Algorytm kodowania różnicowego polega na kodowaniu różnic pomiędzy elementa
 
 \begin{enumerate}
  \item Lewy górny piksel obrazu jest zapisywany do pliku wynikowego bez zmian, ponieważ nie posiada sąsiadów.
- \item Pozostałe piksele w każdym wierszu kodowane są różnicowo z wy-korzystaniem lewego sąsiada $e = P(0) - P(1)$, a pozostałe piksele w pierwszej kolumnie z wykorzystaniem górnego sąsiada $e = P(0) - P(2)$.
+ \item Pozostałe piksele w każdym wierszu kodowane są różnicowo z wykorzystaniem lewego sąsiada $e = P(0) - P(1)$, a pozostałe piksele w pierwszej kolumnie z wykorzystaniem górnego sąsiada $e = P(0) - P(2)$.
 \end{enumerate}
 To bardzo prosty algorytm do realizacji sprzętowego przetwarzania danych oraz w kodowaniu audio.
 
@@ -731,7 +731,7 @@ m=\left[-\frac{\log_{10}(1+p)}{\log_{10} p}\right]
   
 gdzie:
 
-p - obliczamy wcześniej $S$ jako średnią zrzutowanych błędów predykcji w najbliższym otoczeniu:
+$p$ - obliczamy wcześniej $S$ jako średnią zrzutowanych błędów predykcji w najbliższym otoczeniu:
   
 \begin{equation}
 S=\frac{1}{x} \sum_{j=1}^{3} \bar{e}(j)
@@ -739,7 +739,7 @@ S=\frac{1}{x} \sum_{j=1}^{3} \bar{e}(j)
   
 gdzie:
   
-x - liczba ilości sąsiednich pikseli, które możliwe jest od drugiego wiersza i drugiej kolumny. W przypadku pierwszego wiersza i pierwszej kolumny:
+$x$ - liczba ilości sąsiednich pikseli, które możliwe jest od drugiego wiersza i drugiej kolumny. W przypadku pierwszego wiersza i pierwszej kolumny:
 
 \begin{equation}
 \begin{array}{l}
