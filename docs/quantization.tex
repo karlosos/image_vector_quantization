@@ -199,7 +199,7 @@ Plik wynikowy kwantyzacji wektorowej składa się ze słownika o określonej dł
 Każdy blok jest opisywany przez indeks, który można zapisać na $\log_2(K)$ bitach. Przykładowo dla słownika $512$ elementowego każdy wektor będzie reprezentowany przez indeks zapisany na $9$ bitach.
 
 
-Dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
+Dla rozmiaru obrazu wejściowego $m \times n$ pikseli, długości słownika $K$ i wielkości wektora wyrażanej przez $v$ otrzymujemy słownik o rozmiarze
 
 \begin{equation}
   \textrm{dict\_size} = K \cdot v \cdot 8 \quad \textrm{[bitów]}.
@@ -276,7 +276,7 @@ W związku z odejmowaniem wartości średniej od każdego piksela w bloku musimy
   \label{eq:mrvq_image_size}
 \end{equation}
 
-dla rozmiaru o wielkości $m \times n$, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
+dla obrazu o rozmiarze $m \times n$ pikseli, długości słownika $K$ i wielkości wektora wyrażanej przez $v$.
 
 \subsection{Inicjalizacja książki kodowej}
 
@@ -666,10 +666,16 @@ Algorytm kodowania różnicowego polega na kodowaniu różnic pomiędzy elementa
 
 \begin{enumerate}
  \item Lewy górny piksel obrazu jest zapisywany do pliku wynikowego bez zmian, ponieważ nie posiada sąsiadów.
- \item Pozostałe piksele w każdym wierszu kodowane są różnicowo z wykorzystaniem lewego sąsiada $e = P(0) - P(1)$, a pozostałe piksele w pierwszej kolumnie z wykorzystaniem górnego sąsiada $e = P(0) - P(2)$.
+ \item Pozostałe piksele w każdym wierszu kodowane są różnicowo z wykorzystaniem lewego sąsiada $e = P(0) - P(1)$, a pozostałe piksele w pierwszej kolumnie z wykorzystaniem górnego sąsiada $e = P(0) - P(2)$. Numerację pikseli sąsiedztwa przedstawiono na rysunku \ref{fig:piksele_sasiedztwa}.
 \end{enumerate}
 To bardzo prosty algorytm do realizacji sprzętowego przetwarzania danych oraz w kodowaniu audio.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{images/piksele_sasiedztwa.png}
+  \caption{Numeracja pikseli sąsiedztwa. Źródło \cite{differential_coding}.}
+  \label{fig:piksele_sasiedztwa}
+\end{figure}
 
 Algorytmy metod medianowych kodują różnice na podstawie średniej sąsiadów. Przebieg algorytmu możemy opisać w następujący sposób:
 \begin{enumerate}
@@ -1060,7 +1066,7 @@ Z tego powodu używamy tej metody w procesie kompresji.
     \toprule
     {}                 & \multicolumn{4}{c}{Entropia} \\
     \cmidrule(lr){2-5}
-    {Obraz}            & \multicolumn{1}{c}{Wartości} & \multicolumn{1}{c}{Kodowania} & \multicolumn{1}{c}{Medianowego kodowania}  & \multicolumn{1}{c}{Adaptacyjnego} \\
+    {Obraz}            & \multicolumn{1}{c}{Wartości} & \multicolumn{1}{c}{Kodowania} & \multicolumn{1}{c}{Średniego kodowania}  & \multicolumn{1}{c}{Adaptacyjnego} \\
     {}                 & \multicolumn{1}{c}{wejściowych} & \multicolumn{1}{c}{różnicowego}        & \multicolumn{1}{c}{różnicowego} & \multicolumn{1}{c}{predyktora medianowego} \\
     \midrule
     Aerial.bmp         & 6.799397                     & 6.370003                               & 6.346111                                  & 6.281835                                   \\
