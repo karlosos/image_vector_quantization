@@ -306,10 +306,8 @@ Algorytm metody PNN:
 
 \begin{enumerate}
   \item Rozważamy zestaw $N$ wektorów treningowych w przestrzeni euklidesowej $K$-wymiarowej.
-        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację
-        średniej kwadratowej odległości $M$ pomiędzy wektorami treningowymi $T_{i}$ a ich reprezentatywnymi wektorami z książki kodowej $C_{j}$:
-
-        \begin{equation}
+        Zadaniem konstrukcji książki kodowej jest odnalezienie zestawu wektorów kodowych $M$ poprzez minimalizację średniej kwadratowej odległości $T_i$ pomiędzy wektorami treningowymi $M$, a ich reprezentatywnymi wektorami z książki kodowej $C_j$:
+                \begin{equation}
           D = \frac{1}{N} \sum_{j=1}^M \sum_{T_{i}\in\mathbb{S_{j}}} ||T_{i} - C_{j}||^2
         \end{equation}
 
