@@ -350,7 +350,6 @@ gdzie:
   \item $S_{i}$ - Klaster (zestaw) wektorów treningowych $n_{i}$
   \item $NN_{i}$ - Indeksy najbliższego sąsiada klastra $S_{i}$
   \item $d_{i}$ - Zwiększenie zniekształcenia w przypadku połączenia klastrów $S_{i}$ i $NN_{i}$
-  \item $R_{i}$ - Wskaźnik ważności. $R_{i}$ = true jeśli $d_{i}$ jest poprawne.
         \cite{tkaukoranta}
 \end{itemize}
 
@@ -458,14 +457,14 @@ W takim przypadku sygnałem są nieskompresowane dane źródłowe, a szumem – 
 W celu wyznaczenie PSNR, należy najpierw obliczyć współczynnik MSE (błąd średniokwadratowy) bazując na obu porównywanych obrazkach za pomocą wzoru:
 
 \begin{equation}
-    \mathrm{MSE} = \frac{1}{N \cdot M} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)]^2
+    \mathrm{MSE} = \frac{1}{n \cdot m} \sum_{i=1}^N \sum_{j=1}^M ([f(i, j) - f^{'}(i, j)])^2
 \end{equation}
 
 gdzie:
 \begin{itemize}[label=]
-  \item $N, M$ - wymiary obrazu w pikselach,
-  \item $f(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu oryginalnego
-  \item $f^{'}(i, j)$ - wartość piksela o współrzędnych $i(i, j)$ obrazu skompresowanego
+  \item $n, m$ - wymiary obrazu w pikselach,
+  \item $f(i, j)$ - wartość piksela o współrzędnych $(i, j)$ obrazu oryginalnego
+  \item $f^{'}(i, j)$ - wartość piksela o współrzędnych $(i, j)$ obrazu poddanego kompresji i dekompresji
 \end{itemize}
 
 Następnie wyliczoną wartość MSE należy podstawić do końcowego wzoru: 
@@ -594,7 +593,7 @@ Podstawowy błąd średniokwadratowy (RMSE) - jest to reguła, która mierzy śr
 Wzór RMSE:
 
 \begin{equation}
-    \mathrm{RMSE}=\sqrt{\frac{1}{2}\sum_{j=1}^{n}(y_j - \hat{y}_j)^2}
+    \mathrm{RMSE}=\sqrt{\frac{1}{n}\sum_{j=1}^{n}(y_j - \hat{y}_j)^2}
 \end{equation}
 
 gdzie:
@@ -1047,7 +1046,7 @@ Przyjmuje się bowiem, że im bardziej niezrównoważone są wartości poszczeg�
 
 Przeprowadzono kodowanie wartości średnich z bloków uzyskiwanych w procesie kwantyzacji wektorowej z usuniętą średnią (MRVQ). Przeprowadzono porównanie trzech metod kodowania na podstawie pomiaru entropii według wzoru (\ref{eq:entropia}) w celu wybrania docelowej metody kodowania w całym procesie kompresji obrazów.
 
-Do kodowania użyto trzech metod: kodowania różnicowego, medianowego kodowania różnicowego i adaptacyjnego predyktora medianowego, które zostały opisane w sekcji \ref{sec:roznicowe}.
+Do kodowania użyto trzech metod: kodowania różnicowego, średniego kodowania różnicowego i adaptacyjnego predyktora medianowego, które zostały opisane w sekcji \ref{sec:roznicowe}.
 
 Uzyskane wyniki przedstawiono w tabeli (\ref{tab:differential_encoding_all}) oraz podsumowanie w tabeli (\ref{tab:differential_encoding_summary}). Najmniejsze wartości entropii uzyskuje adaptacyjny predyktor medianowy.
 Z tego powodu używamy tej metody w procesie kompresji.
