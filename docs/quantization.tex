@@ -793,13 +793,14 @@ Wejście: Wczytać $k - 1$ bitów do liczby $v_G$:
   
 \end{enumerate}
 
+\newpage
 
 \section{Eksperymenty w zakresie zaimplementowanych algorytmów oraz całego procesu kompresji}
 
 \subsection{Jaki procent stanowi dana rozdzielczość
   obrazu względem wielkości zdefiniowanego słownika?}
   
- Przeprowadzono statyczną analizę stosunku części książki kodowej do rozmiaru zakodowanego przy użyciu kwantyzacji wektorowej. Wyniki przedstawiono w tabeli (\ref{tab:procentowa_analiza_slownika}).
+ Przeprowadzono statyczną analizę stosunku części książki kodowej do rozmiaru zakodowanego przy użyciu kwantyzacji wektorowej bez uwzględniania średnich. Wyniki przedstawiono w tabeli (\ref{tab:procentowa_analiza_slownika}).
 
 \begin{table}[!h]
   \caption{Procentowa analiza zależności części nagłówkowej względem wielkości obrazu oryginalnego oraz względem obrazu zakodowanego}\
@@ -823,7 +824,7 @@ Oznaczenia wykorzystane w tabeli:
 \begin{itemize}[label=]
   \item $C_S$ - codebook size - rozmiar książki kodowej w bitach. Obliczany ze wzoru (\ref{eq:lgb_dict_size}).
   \item $I_S$ - image size - rozmiar obrazu oryginalnego.
-  \item $Q_S$ - quantized size - rozmiar obrazu po kwantyzacji (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
+  \item $Q_S$ - quantized size - rozmiar obrazu po klasycznej kwantyzacji wektorowej bez uwzględniania średnich z bloków (wielkość słownika + kodowanie poszczególnych bloków). Obliczany ze wzoru (\ref{eq:lgb_image_size}).
 \end{itemize}
 
 Tabela \ref{tab:procentowa_analiza_slownika} została sporządzona dla stałej wielkości bloku o rozmiarze 4 x 4 px.
@@ -834,7 +835,7 @@ Tabela \ref{tab:procentowa_analiza_slownika} została sporządzona dla stałej w
 W kolejnym eksperymencie przebadano algorytm budowy słownika LBG. Przeprowadzono kwantyzację wektorową na blokach o rozmiarach $4 \times 4$ oraz dla książki
 kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_random}} i podsumowano w tabeli \mbox{\ref{tab:lbg_summary}}.
 
-\begin{table}[!ht]
+\begin{table}[H]
   \caption{Porównanie jakości kwantyzacji algorytmu budowy słownika LBG z losową inicjalizacją słownika dla bloku $4 \times 4$ oraz długości słownika $512$.}
   \label{tab:lbg_random}
   \centering
@@ -890,6 +891,7 @@ kodowej o długości $512$ elementów. Dane zebrano w \mbox{tabeli \ref{tab:lbg_
     \bottomrule
   \end{tabular}
 \end{table}
+
 
 \begin{table}[H]
   \caption{Przedstawienie wartości minimalnej, maksymalnej oraz uśrednienie wyników dla poszczególnych metryk dla algorytmu LBG.}
@@ -1138,7 +1140,7 @@ Z tego powodu używamy tej metody w procesie kompresji.
 
 \subsection{Kompresja z koderem Golomba}
 
-Ostatni eksperyment polegał na integracji wszystkich zaimplementowanych komponentów składowych. Cały proces, opisany w sekcji \ref{sec:opis}, składa się z:
+Kolejny eksperyment polegał na integracji wszystkich zaimplementowanych komponentów składowych. Cały proces, opisany w sekcji \ref{sec:opis}, składa się z:
 
 \begin{enumerate}
     \item kwantyzacji wektorowej z usunięciem średnich (MRVQ),
@@ -1325,7 +1327,6 @@ Rozmiar &   Golomb &   JPEG &   Golomb &   JPEG &   Golomb &   JPEG \\
 \end{tabular}
 \end{table}
 
-\newpage
 
 Ostatnim eksperymentem było porównanie naszej metody z metodą JPEG \cite{jpeg}. W tym celu przeprowadzono kompresję z obrazu wejściowego do obrazu JPEG tak aby uzyskać zbliżony rozmiar pliku do pliku po kompresji opisanej na łamach tej pracy. W tym celu wykorzystano oprogramowanie ImageMagick \cite{imagemagick}.
 
