@@ -677,10 +677,10 @@ To bardzo prosty algorytm do realizacji sprzętowego przetwarzania danych oraz w
   \label{fig:piksele_sasiedztwa}
 \end{figure}
 
-Algorytmy metod medianowych kodują różnice na podstawie średniej sąsiadów. Przebieg algorytmu możemy opisać w następujący sposób:
+Algorytm różnicowego kodowania średniej kodują różnice na podstawie średniej sąsiadów. Przebieg algorytmu możemy opisać w następujący sposób:
 \begin{enumerate}
  \item pierwszy wiersz i pierwszą kolumnę kodujemy różnicowo,
- \item każdy piksel począwszy od drugiego wiersza i drugiej kolumny kodujemy medianowo (wymagana jest dostępność w dekoderze lewego sąsiada i dwóch sąsiednich pikseli z wiersza powyżej \cite{differential_coding}.
+ \item każdy piksel począwszy od drugiego wiersza i drugiej kolumny kodujemy średnią wartością (wymagana jest dostępność w dekoderze lewego sąsiada i dwóch sąsiednich pikseli z wiersza powyżej \cite{differential_coding}.
 \end{enumerate}
 
 
@@ -1036,13 +1036,13 @@ Przyjmuje się bowiem, że im bardziej niezrównoważone są wartości poszczeg�
 \begin{subfigure}{.49\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison.eps}
-  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
+  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono średnie kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison}
 \end{subfigure}
 \begin{subfigure}{.49\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{images/differential_encoding_histograms_comparison_zoom.eps}
-  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono medianowe kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
+  \caption{Porównanie histogramów dla metod kodowania różnicowego dla średnich z bloków $4\times4$ obrazu \emph{lennagrey}. Kolorem niebieskim oznaczono klasyczne kodowanie różnicowe, kolorem czerwonym oznaczono średnie kodowanie różnicowe, kolorem fioletowym adaptacyjny predyktor medianowy.}
   \label{fig:de_histograms_comparison_zoom}
 \end{subfigure}
 \end{figure}
